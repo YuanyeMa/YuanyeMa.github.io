@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Uboot on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/uboot/</link>
+    <description>Recent content in Uboot on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Wed, 07 Mar 2018 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/uboot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>uboot</title>
+      <link>http://0.0.0.0:1313/post/embeeding/uboot/uboot/</link>
+      <pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/embeeding/uboot/uboot/</guid>
+      <description>uboot make xxx_defconfig Top Makefile : %config 依赖 scripts_basic $(Q)$(MAKE) $(build)=scripts/basic $(build) 定义在 scripts/Kbuild.include中 build := -f $(srctree)/scripts/Makefile.build obj 即 命令展开为 @ make -f $(srctree)/scripts/Makefile.build obj=scripts/basic 编译生成了 scripts/basic/fixdep outputmakefile FORCE 命令 $(Q)$(MAKE) $(build)=scripts/kconfig $@ 展开</description>
+    </item>
+  </channel>
+</rss>

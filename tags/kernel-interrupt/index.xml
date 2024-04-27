@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kernel Interrupt on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/kernel-interrupt/</link>
+    <description>Recent content in Kernel Interrupt on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/kernel-interrupt/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux设备驱动开发--中断用法</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-27-linux%E9%A9%B1%E5%8A%A8%E4%B9%8B%E4%B8%AD%E6%96%AD%E6%8C%89%E9%94%AE%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-27-linux%E9%A9%B1%E5%8A%A8%E4%B9%8B%E4%B8%AD%E6%96%AD%E6%8C%89%E9%94%AE%E9%A9%B1%E5%8A%A8/</guid>
+      <description>Linux设备驱动开发&amp;ndash;中断用法 [TOC] 1. linux中file cdev inode之间的关系； struct file对象 ： 描述进程中打开文件的信息，包括文</description>
+    </item>
+  </channel>
+</rss>

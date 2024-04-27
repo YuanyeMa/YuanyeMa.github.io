@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LED驱动 on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/led%E9%A9%B1%E5%8A%A8/</link>
+    <description>Recent content in LED驱动 on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/led%E9%A9%B1%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LED驱动</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</guid>
+      <description>linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT.</description>
+    </item>
+  </channel>
+</rss>

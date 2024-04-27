@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kernel Driver on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/kernel-driver/</link>
+    <description>Recent content in Kernel Driver on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/kernel-driver/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>I2C子系统代码跟读</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</guid>
+      <description>Linux内核 I2C子系统代码跟读 听了这个课程感觉讲的很好，很有必要自己跟读一遍Kernel中I2C的代码，以加深对Kernel中I2C子系</description>
+    </item>
+    <item>
+      <title>LED驱动</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</guid>
+      <description>linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT.</description>
+    </item>
+    <item>
+      <title>Linux设备树</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</guid>
+      <description>Linux驱动之设备树（华清创客学院） Open Firmware Device Tree &amp;ndash; 开发固件设备树 描述包括CPU的数量、类别、内存基地址和大小、总线和桥、外设连接、中断控制器、</description>
+    </item>
+    <item>
+      <title>Linux设备驱动基础</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-10-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-10-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%9F%BA%E7%A1%80/</guid>
+      <description>1.2 设备驱动基础 驱动基本结构 // hello_drv.c #include &amp;lt;linux/init.h&amp;gt; #include &amp;lt;linux/module.h&amp;gt; static int __init hello_drv_init(void) { printk(KERN_ERR&amp;#34;-----------from hello.ko : %s %s---------\n&amp;#34;, __FILE__, __FUNCTION__); return 0; } static void __exit hello_drv_exit(void) { printk(&amp;#34;-----------from hello.ko : %s %s---------\n&amp;#34;, __FILE__, __FUNCTION__); } module_init(hello_drv_init); module_exit(hello_drv_exit); MODULE_LICENSE(&amp;#34;GPL&amp;#34;); 基本Makefile结构 # 内核源码路径 KERNEL_DIR</description>
+    </item>
+    <item>
+      <title>Linux设备驱动模型</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9E%8B/2020-10-06-linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9E%8B/2020-10-06-linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9E%8B/</guid>
+      <description>Linux设备驱动模型 本来是看了宋宝华写的《linux设备驱动开发详解（第2版）》的第5章：设备文件系统，关于设备模型的描述做了一些笔记，想</description>
+    </item>
+    <item>
+      <title>platform总线驱动</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/</guid>
+      <description>Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线</description>
+    </item>
+  </channel>
+</rss>

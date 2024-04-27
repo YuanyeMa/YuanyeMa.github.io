@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>NVIDIA on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/nvidia/</link>
+    <description>Recent content in NVIDIA on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/nvidia/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>记一次NVIDIA driver/cuda/cudnn升级</title>
+      <link>http://0.0.0.0:1313/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</guid>
+      <description>记一次NVIDIA driver/cuda/cudnn升级 系统环境：Ubuntu 18.04 / NVIDIA_Driver version:390 / cuda 9.0 / cudnn 7.1 目标： 升级NVIDIA_Driver version :410.104 /cuda</description>
+    </item>
+  </channel>
+</rss>

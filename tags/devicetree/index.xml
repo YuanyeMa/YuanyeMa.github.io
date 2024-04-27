@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Devicetree on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/devicetree/</link>
+    <description>Recent content in Devicetree on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/devicetree/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux设备树</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</guid>
+      <description>Linux驱动之设备树（华清创客学院） Open Firmware Device Tree &amp;ndash; 开发固件设备树 描述包括CPU的数量、类别、内存基地址和大小、总线和桥、外设连接、中断控制器、</description>
+    </item>
+  </channel>
+</rss>

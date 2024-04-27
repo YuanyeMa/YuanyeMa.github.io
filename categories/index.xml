@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/categories/</link>
+    <description>Recent content in Categories on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 13 May 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hackintosh</title>
+      <link>http://0.0.0.0:1313/categories/hackintosh/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/hackintosh/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux Kernel</title>
+      <link>http://0.0.0.0:1313/categories/linux-kernel/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/linux-kernel/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Programing</title>
+      <link>http://0.0.0.0:1313/categories/programing/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/programing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Services</title>
+      <link>http://0.0.0.0:1313/categories/services/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/services/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>操作系统</title>
+      <link>http://0.0.0.0:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Embeeding</title>
+      <link>http://0.0.0.0:1313/categories/embeeding/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/embeeding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Git</title>
+      <link>http://0.0.0.0:1313/categories/git/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/git/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>折腾</title>
+      <link>http://0.0.0.0:1313/categories/%E6%8A%98%E8%85%BE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/categories/%E6%8A%98%E8%85%BE/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

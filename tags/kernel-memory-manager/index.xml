@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kernel Memory Manager on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/tags/kernel-memory-manager/</link>
+    <description>Recent content in Kernel Memory Manager on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/tags/kernel-memory-manager/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux kernel slab系统</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</guid>
+      <description>linux kernel slab系统 基于linux kernel v2.6.30.4 基本原理 ​ 以字节为单位的内存管理 ​ SLAB 为了提高内核中一些十分频繁进行分配释放的“对象”的分配效率， SLAB 的做法是</description>
+    </item>
+    <item>
+      <title>Linux 内核内存管理</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/linux-%E5%86%85%E6%A0%B8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/linux-%E5%86%85%E6%A0%B8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid>
+      <description>0xFFtypora-copy-images-to: ./ Linux 内核内存管理 [toc] 越整理发现知识越多，分页机制、伙伴算法、slab等任何一块单独拿出来都有很多东西，因此本文先粗略的统揽全貌，有时间再针对</description>
+    </item>
+  </channel>
+</rss>

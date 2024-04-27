@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Yuanye Ma&#39;s Blog</title>
+    <link>http://0.0.0.0:1313/post/</link>
+    <description>Recent content in Posts on Yuanye Ma&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor>
+    <webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster>
+    <lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate>
+    <atom:link href="http://0.0.0.0:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2019秋招笔试题</title>
+      <link>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/2019-08-14-2019%E7%AC%94%E8%AF%95%E9%A2%98/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/2019-08-14-2019%E7%AC%94%E8%AF%95%E9%A2%98/</guid>
+      <description>2019贝壳找房四道笔试题 1. 计算绝对值 题目描述： 给出n个正整数，要求将找出相邻两个数字中差的绝对值最小的一对数字，如果有差的绝对值相同的，则</description>
+    </item>
+    <item>
+      <title>buntu 部署NIS服务</title>
+      <link>http://0.0.0.0:1313/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</guid>
+      <description>Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如</description>
+    </item>
+    <item>
+      <title>C&#43;&#43; Primer Plus笔记</title>
+      <link>http://0.0.0.0:1313/post/programing/2019-06-04-c&#43;&#43;-primer-plus%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/programing/2019-06-04-c&#43;&#43;-primer-plus%E7%AC%94%E8%AE%B0/</guid>
+      <description>C++ Primer Plus笔记 第十章：对象和类 类和结构(class和struct)的区别：结构的默认访问类型是public，而类的默认访问类型是priva</description>
+    </item>
+    <item>
+      <title>C&#43;&#43;基础面试题</title>
+      <link>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</guid>
+      <description>const和指针 const int * a // a是一个指针，指向一个const int类型的内存， a本身可以修改指向别的变量，但是a所指向的内存中的数据不能修改。</description>
+    </item>
+    <item>
+      <title>C&#43;&#43;继承和多态</title>
+      <link>http://0.0.0.0:1313/post/programing/c&#43;&#43;%E7%BB%A7%E6%89%BF/2019-08-06-c&#43;&#43;%E7%BB%A7%E6%89%BF/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/programing/c&#43;&#43;%E7%BB%A7%E6%89%BF/2019-08-06-c&#43;&#43;%E7%BB%A7%E6%89%BF/</guid>
+      <description>C++继承和多态 继承 语法 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类内部以及</description>
+    </item>
+    <item>
+      <title>GDT LDT IDT TSS</title>
+      <link>http://0.0.0.0:1313/post/os/gdtldtidttss/gdt-ldt-idt-tss/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/gdtldtidttss/gdt-ldt-idt-tss/</guid>
+      <description>GDT LDT IDT TSS 和一个段有关的信息需要8个字节来描述，所以称之为段描述符（Segment Descriptor），每个段都需要一个描述符。为了存放这些</description>
+    </item>
+    <item>
+      <title>gitbook部署</title>
+      <link>http://0.0.0.0:1313/post/service/gitbook/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/service/gitbook/</guid>
+      <description>使用gitbook记笔记 $ sudo apt update $ sudo apt install nodejs npm $ nodejs --version v10.19.0 $ npm config set registry http://registry.npm.taobao.org/ # 设置npm源为淘宝的源 # 设置回官方的源 npm config set registry http://registry.npmjs.org/ $ sudo npm install gitbook-cli -g 常用命令 git clone blog</description>
+    </item>
+    <item>
+      <title>GNU C 内联汇编</title>
+      <link>http://0.0.0.0:1313/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</guid>
+      <description>GNU C 内联汇编 内核代码中有很多内联汇编，为了更好的读懂内核，上网搜罗了一些内联汇编的文章在这里，方便自己随时查阅。这篇文章比较有价值，特别是后</description>
+    </item>
+    <item>
+      <title>Hackintosh</title>
+      <link>http://0.0.0.0:1313/post/hackintosh/hackintosh/2019-04-15-hackintosh%E9%BB%91%E8%8B%B9%E6%9E%9C/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/hackintosh/hackintosh/2019-04-15-hackintosh%E9%BB%91%E8%8B%B9%E6%9E%9C/</guid>
+      <description>黑苹果安装步骤简记 最近突然对安装黑苹果系统很感兴趣，就上网找了一些资料来看看，下边简单记录一下我的收获。以下操作都在虚拟机中进行。工具软件在</description>
+    </item>
+    <item>
+      <title>I2C子系统代码跟读</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</guid>
+      <description>Linux内核 I2C子系统代码跟读 听了这个课程感觉讲的很好，很有必要自己跟读一遍Kernel中I2C的代码，以加深对Kernel中I2C子系</description>
+    </item>
+    <item>
+      <title>input子系统</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</guid>
+      <description>[toc] input子系统特性、用途 1， input子系统是用来解决输入问题的，所谓输入，即驱动为应用层提供数据。 2， 使用字符设备的read或者ioc</description>
+    </item>
+    <item>
+      <title>Kobject和sysfs</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/kobject%E5%92%8Csysfs/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/kobject%E5%92%8Csysfs/</guid>
+      <description>Kobject和sysfs kobject、ktype、kset 以及其相互关系 kobject /* include/linux/kobject.h */ struct kobject { const char *name; struct list_head entry; struct kobject *parent; // 指向kobject的父对象，这</description>
+    </item>
+    <item>
+      <title>kzalloc &amp; kmalloc</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/kzalloc--kmalloc/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/kzalloc--kmalloc/</guid>
+      <description>kzalloc &amp;amp; kmalloc /* include/linux/slab.h */ /** * kzalloc - allocate memory. The memory is set to zero. * @size: how many bytes of memory are required. * @flags: the type of memory to allocate (see kmalloc). */ static inline void *kzalloc(size_t size, gfp_t flags) { return kmalloc(size, flags | __GFP_ZERO); } /* 调用了 kmalloc此函数在inc</description>
+    </item>
+    <item>
+      <title>LED驱动</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/2020-10-11-linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</guid>
+      <description>linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT.</description>
+    </item>
+    <item>
+      <title>Linux Kernel Makefiles</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-makefiles/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-makefiles/</guid>
+      <description>====================== Linux Kernel Makefiles 这个文档介绍了Linux kernel Makefiles。 .. 目录 === 1 Overview === 2 Who does what === 3 The kbuild files --- 3.1 目标定义(Goal definitions) --- 3.2 要编译进内核的目标(Bui</description>
+    </item>
+    <item>
+      <title>linux kernel slab系统</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</guid>
+      <description>linux kernel slab系统 基于linux kernel v2.6.30.4 基本原理 ​ 以字节为单位的内存管理 ​ SLAB 为了提高内核中一些十分频繁进行分配释放的“对象”的分配效率， SLAB 的做法是</description>
+    </item>
+    <item>
+      <title>Linux 内核临时页表初始化</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</guid>
+      <description>Linux 内核临时页表初始化 基于 linux 2.6.30.4分析x86平台相关代码 **64位系统：**使用四级分页或三级分页，跟硬件有关。 **未开启PAE(物</description>
+    </item>
+    <item>
+      <title>Linux 内核内存管理</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/linux-%E5%86%85%E6%A0%B8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/linux-%E5%86%85%E6%A0%B8%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid>
+      <description>0xFFtypora-copy-images-to: ./ Linux 内核内存管理 [toc] 越整理发现知识越多，分页机制、伙伴算法、slab等任何一块单独拿出来都有很多东西，因此本文先粗略的统揽全貌，有时间再针对</description>
+    </item>
+    <item>
+      <title>Linux设备树</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/%E5%85%B3%E4%BA%8E%E8%AE%BE%E5%A4%87%E6%A0%91/</guid>
+      <description>Linux驱动之设备树（华清创客学院） Open Firmware Device Tree &amp;ndash; 开发固件设备树 描述包括CPU的数量、类别、内存基地址和大小、总线和桥、外设连接、中断控制器、</description>
+    </item>
+    <item>
+      <title>Linux设备驱动基础</title>
+      <link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-10-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%9F%BA%E7%A1%80/</link>
+      <pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author>
+      <guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-10-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%9F%BA%E7%A1%80/</guid>
+      <description>1.2 设备驱动基础 驱动基本结构 // hello_drv.c #include &amp;lt;linux/init.h&amp;gt; #include &amp;lt;linux/module.h&amp;gt; static int __init hello_drv_init(void) { printk(KERN_ERR&amp;#34;-----------from hello.ko : %s %s---------\n&amp;#34;, __FILE__, __FUNCTION__); return 0; } static void __exit hello_drv_exit(void) { printk(&amp;#34;-----------from hello.ko : %s %s---------\n&amp;#34;, __FILE__, __FUNCTION__); } module_init(hello_drv_init); module_exit(hello_drv_exit); MODULE_LICENSE(&amp;#34;GPL&amp;#34;); 基本Makefile结构 # 内核源码路径 KERNEL_DIR</description>
+    </item>
+  </channel>
+</rss>
