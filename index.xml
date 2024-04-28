@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuanye Ma's Blog</title><link>http://0.0.0.0:1313/</link><description>Recent content on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 29 Mar 2020 16:01:23 +0800</lastBuildDate><atom:link href="http://0.0.0.0:1313/index.xml" rel="self" type="application/rss+xml"/><item><title>noVNC+frp访问学校的服务器桌面</title><link>http://0.0.0.0:1313/post/service/novnc/</link><pubDate>Sun, 29 Mar 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/service/novnc/</guid><description>&lt;h1 id="novncfrp访问学校的服务器桌面">noVNC+frp访问学校的服务器桌面&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuanye Ma's Blog</title><link>/</link><description>Recent content on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 29 Mar 2020 16:01:23 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>noVNC+frp访问学校的服务器桌面</title><link>/post/service/novnc/</link><pubDate>Sun, 29 Mar 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/novnc/</guid><description>&lt;h1 id="novncfrp访问学校的服务器桌面">noVNC+frp访问学校的服务器桌面&lt;/h1>
 &lt;h2 id="1-阿里云开一个实例">1. 阿里云开一个实例&lt;/h2>
 &lt;p>开一个实例&lt;/p>
 &lt;p>配置安全组&lt;/p>
@@ -76,12 +76,12 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nohup ./utils/launch.sh --vnc 127.0.0.1:5902 &amp;amp;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="5-测试">5. 测试&lt;/h2>
 &lt;p>在本地打开浏览器，地址栏输入&lt;code>http://vps_ip:8806/vnc.html&lt;/code>点击&lt;code>链接&lt;/code>，输入前边配置&lt;code>vncserver&lt;/code>时设置的密码。刚进入桌面的时候会让选择面板，我点了默认。&lt;/p>
-&lt;p>&lt;img alt="image-20200329232232358" src="http://0.0.0.0:1313/post/service/novnc/image-20200329232232358.png">&lt;/p>
+&lt;p>&lt;img alt="image-20200329232232358" src="/post/service/novnc/image-20200329232232358.png">&lt;/p>
 &lt;h2 id="6-bug">6. bug&lt;/h2>
 &lt;p>刚进入桌面发现点&lt;code>Terminal模拟器&lt;/code>没有相应，参照&lt;a href="https://forum.ubuntu.com.cn/viewtopic.php?t=473914">这篇文章&lt;/a>设置后就可以用了。&lt;/p>
-&lt;p>&lt;img alt="image-20200329232454210" src="http://0.0.0.0:1313/post/service/novnc/image-20200329232454210.png">&lt;/p>
-&lt;p>&lt;img alt="image-20200329232521576" src="http://0.0.0.0:1313/post/service/novnc/image-20200329232521576.png">&lt;/p>
-&lt;p>&lt;img alt="image-20200329232550112" src="http://0.0.0.0:1313/post/service/novnc/image-20200329232550112.png">&lt;/p></description></item><item><title>2019秋招笔试题</title><link>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</link><pubDate>Thu, 15 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="2019贝壳找房四道笔试题">2019贝壳找房四道笔试题&lt;/h1>
+&lt;p>&lt;img alt="image-20200329232454210" src="/post/service/novnc/image-20200329232454210.png">&lt;/p>
+&lt;p>&lt;img alt="image-20200329232521576" src="/post/service/novnc/image-20200329232521576.png">&lt;/p>
+&lt;p>&lt;img alt="image-20200329232550112" src="/post/service/novnc/image-20200329232550112.png">&lt;/p></description></item><item><title>2019秋招笔试题</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</link><pubDate>Thu, 15 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="2019贝壳找房四道笔试题">2019贝壳找房四道笔试题&lt;/h1>
 &lt;h2 id="1-计算绝对值">1. 计算绝对值&lt;/h2>
 &lt;p>题目描述：&lt;/p>
 &lt;p>给出n个正整数，要求将找出相邻两个数字中差的绝对值最小的一对数字，如果有差的绝对值相同的，则输出最前面的一对数。&lt;/p>
@@ -263,8 +263,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="图森笔试题">图森笔试题&lt;/h1>
 &lt;h2 id="1-求卷积">1. 求卷积&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/01.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/02.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/01.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/02.png">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -309,8 +309,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="2-迷宫求最短路径">2. 迷宫求最短路径&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/03.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/04.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/03.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/04.png">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;queue&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -392,8 +392,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="3-我也不知道是什么题">3. 我也不知道是什么题&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/05.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/06.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/05.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/06.png">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -502,7 +502,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="华为">华为&lt;/h1>
 &lt;h2 id="1-计算数轴上关系匹配的点">1. 计算数轴上关系匹配的点&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-01.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-01.jpg">&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -600,8 +600,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="2-翻转字符串">2. 翻转字符串&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-02.jpg">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-03.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-02.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-03.jpg">&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -688,8 +688,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">45&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">46&lt;/span> }
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="3-修改机票信息">3. 修改机票信息&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-04.jpg">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-05.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-04.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-05.jpg">&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#75715e">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;vector&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -841,7 +841,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="3-天平问题">3. 天平问题&lt;/h2>
-&lt;p>&lt;a href="https://blog.csdn.net/L__ear/article/details/86757928">类似与这道题&lt;/a>&lt;/p></description></item><item><title>C++继承和多态</title><link>http://0.0.0.0:1313/post/programing/c++%E7%BB%A7%E6%89%BF/</link><pubDate>Tue, 06 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/programing/c++%E7%BB%A7%E6%89%BF/</guid><description>&lt;h1 id="c继承和多态">C++继承和多态&lt;/h1>
+&lt;p>&lt;a href="https://blog.csdn.net/L__ear/article/details/86757928">类似与这道题&lt;/a>&lt;/p></description></item><item><title>C++继承和多态</title><link>/post/programing/c++%E7%BB%A7%E6%89%BF/</link><pubDate>Tue, 06 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/c++%E7%BB%A7%E6%89%BF/</guid><description>&lt;h1 id="c继承和多态">C++继承和多态&lt;/h1>
 &lt;h2 id="继承">继承&lt;/h2>
 &lt;h3 id="语法">语法&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">子类名/派生类名 ： 继承方式 父类名/基类名&lt;/span>
@@ -1176,13 +1176,13 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">16&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">32&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">48&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="http://0.0.0.0:1313/post/programing/c++%E7%BB%A7%E6%89%BF/jicheng.png">&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="/post/programing/c++%E7%BB%A7%E6%89%BF/jicheng.png">&lt;/p>
 &lt;blockquote>
 &lt;p>64位机器所以指针占8个字节的内存。&lt;/p>
 &lt;p>对于类A：a占两个字节的内存，八字节内存对齐，后边的虚函数表是个指针因此也占8个字节的内存，因此sizeof(A) = 16B;&lt;/p>
 &lt;p>由于B继承自A，因此B内又完全包含一个A，a+b=4个字节仍然不满8个字节，仍然需要填充4个字节来保持内存对齐，因此sizeof(B) = 16+16 = 32B。&lt;/p>
 &lt;p>同理sizeof(C) = 48B。&lt;/p>
-&lt;/blockquote></description></item><item><title>tensorboardX的用法</title><link>http://0.0.0.0:1313/post/programing/tensorboard/</link><pubDate>Sat, 20 Jul 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/programing/tensorboard/</guid><description>&lt;h1 id="pytorchtensorboardx">pytorch+tensorboardX&lt;/h1>
+&lt;/blockquote></description></item><item><title>tensorboardX的用法</title><link>/post/programing/tensorboard/</link><pubDate>Sat, 20 Jul 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/tensorboard/</guid><description>&lt;h1 id="pytorchtensorboardx">pytorch+tensorboardX&lt;/h1>
 &lt;p>简单总结一下tensorboardX的用法。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> numpy &lt;span style="color:#66d9ef">as&lt;/span> np
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">from&lt;/span> tensorboardX &lt;span style="color:#f92672">import&lt;/span> SummaryWriter
@@ -1195,11 +1195,11 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>write&lt;span style="color:#f92672">.&lt;/span>close()
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在终端中运行上边代码:&lt;code>python ./tensorboard_scales.py&lt;/code>，查看代码目录下多了一个&lt;code>runs&lt;/code>的目录，里边保存的就是代码运行时的数据。&lt;/p>
-&lt;p>&lt;img alt="01" src="http://0.0.0.0:1313/post/programing/tensorboard/01.png">&lt;/p>
+&lt;p>&lt;img alt="01" src="/post/programing/tensorboard/01.png">&lt;/p>
 &lt;p>再使用&lt;code>tensorboard --logdir runs&lt;/code>,在浏览器地址栏输入&lt;code>ip_address:6006&lt;/code>就能看到图像。&lt;/p>
-&lt;p>&lt;img alt="04" src="http://0.0.0.0:1313/post/programing/tensorboard/04.png">&lt;/p>
+&lt;p>&lt;img alt="04" src="/post/programing/tensorboard/04.png">&lt;/p>
 &lt;p>此时再次运行代码，再查看目录结构，会发现又多了一些目录，这是因为tensorboard会保存几个历史版本。这个功能很好用，可以通过点击左下角的复选框勾选要对比的曲线，进而对比模型的性能。&lt;/p>
-&lt;p>&lt;img alt="02" src="http://0.0.0.0:1313/post/programing/tensorboard/02.png">&lt;/p>
+&lt;p>&lt;img alt="02" src="/post/programing/tensorboard/02.png">&lt;/p>
 &lt;p>试试&lt;code>graph&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> torch.nn &lt;span style="color:#66d9ef">as&lt;/span> nn
@@ -1236,7 +1236,7 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">with&lt;/span> SummaryWriter(comment&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;Net1&amp;#39;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> w:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> w&lt;span style="color:#f92672">.&lt;/span>add_graph(model, (dummy_input,))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在运行的时候报错了。&lt;/p>
-&lt;p>&lt;img alt="error" src="http://0.0.0.0:1313/post/programing/tensorboard/error.png">&lt;/p>
+&lt;p>&lt;img alt="error" src="/post/programing/tensorboard/error.png">&lt;/p>
 &lt;p>上网搜索了一番说是&lt;code>pytorch&lt;/code>版本的问题，为了跑写好的强化学习的代码，我用的是比较老的&lt;code>0.4.0&lt;/code>版本的，回头有机会测一下&lt;code>pytorch 1.0+&lt;/code>的看可不可以用。&lt;/p>
 &lt;h2 id="总结一下tensorboardx的用法">总结一下TensorboardX的用法&lt;/h2>
 &lt;ul>
@@ -1436,7 +1436,7 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>train_writer&lt;span style="color:#f92672">.&lt;/span>close()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>test_writer&lt;span style="color:#f92672">.&lt;/span>close()
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>在ubuntu上安装vnc服务</title><link>http://0.0.0.0:1313/post/service/vnc/</link><pubDate>Wed, 15 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/service/vnc/</guid><description>&lt;h1 id="在ubuntu上安装vnc服务">在ubuntu上安装vnc服务&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>在ubuntu上安装vnc服务</title><link>/post/service/vnc/</link><pubDate>Wed, 15 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/vnc/</guid><description>&lt;h1 id="在ubuntu上安装vnc服务">在ubuntu上安装vnc服务&lt;/h1>
 &lt;h2 id="故事起因">故事起因&lt;/h2>
 &lt;p>由于需要运行一些桌面程序，但是又没有多余的地方放置显示器以及鼠标键盘balaba乱七八糟的东西，于是就想在跑代码的机器上开启共享桌面，然后在自己的座位上用写代码的机器远程桌面连接上去。&lt;/p>
 &lt;h2 id="最初的想法">最初的想法&lt;/h2>
@@ -1499,8 +1499,8 @@ sudo systemctl start lightdm
 默认以图形界面方式启动：
 sudo systemctl set-default graphical.target
 &lt;/code>&lt;/pre>&lt;h3 id="最终效果">最终效果&lt;/h3>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/service/vnc/final.png">&lt;/p>
-&lt;p>启动训练代码，然后关闭窗口，随时重新连接查看运行结果。美滋滋。。。。&lt;/p></description></item><item><title>在黑苹果上部署开发环境</title><link>http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 13 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="在黑苹果上部署开发环境">在黑苹果上部署开发环境&lt;/h1>
+&lt;p>&lt;img src="/post/service/vnc/final.png">&lt;/p>
+&lt;p>启动训练代码，然后关闭窗口，随时重新连接查看运行结果。美滋滋。。。。&lt;/p></description></item><item><title>在黑苹果上部署开发环境</title><link>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 13 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="在黑苹果上部署开发环境">在黑苹果上部署开发环境&lt;/h1>
 &lt;h1 id="使用ubuntu的nfs">使用ubuntu的nfs&lt;/h1>
 &lt;p>首先在ubuntu上安装nfs服务&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install nfs-kernel-server
@@ -1519,21 +1519,21 @@ Exports list on 192.168.50.30:
 /home/rl/share *
 &lt;/code>&lt;/pre>&lt;p>然后在&lt;code>Finder&lt;/code>中链接nfs服务&lt;/p>
 &lt;p>在&lt;code>Finder&lt;/code>图标上右键选择&lt;code>连接服务器&lt;/code>，填入共享目录，如下图点击&lt;code>connect&lt;/code>。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/images/20190514/finder-nfs.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/images/20190514/finder.png">&lt;/p>
+&lt;p>&lt;img src="/images/20190514/finder-nfs.png">&lt;/p>
+&lt;p>&lt;img src="/images/20190514/finder.png">&lt;/p>
 &lt;h1 id="深度学习环境搭建">深度学习环境搭建&lt;/h1>
 &lt;p>参照&lt;a href="https://blog.csdn.net/wz22881916/article/details/78807993/">此教程&lt;/a>安装CUDA&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/0.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/0.png">&lt;/p>
 &lt;h2 id="nvidia-driver">Nvidia driver&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png">&lt;/p>
 &lt;h2 id="cuda-driver">CUDA driver&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png">&lt;/p>
 &lt;h2 id="cuda-toolkits">CUDA Toolkits&lt;/h2>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png">&lt;/p>
 &lt;p>添加环境变量&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export CUDA_HOME&lt;span style="color:#f92672">=&lt;/span>/usr/local/cuda
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export DYLD_LIBRARY_PATH&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>$CUDA_HOME&lt;span style="color:#e6db74">/lib:&lt;/span>$CUDA_HOME&lt;span style="color:#e6db74">/extras/CUPTI/lib&amp;#34;&lt;/span>
@@ -1544,7 +1544,7 @@ Exports list on 192.168.50.30:
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr>
 &lt;p>以下为尝试，未能解决问题。&lt;/p>
 &lt;p>首先需要安装&lt;code>Xcode&lt;/code>，登录&lt;a href="https://developer.apple.com/download/more/">苹果开发者&lt;/a>&lt;/p>
-&lt;p>&lt;img alt="1557821485474" src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1557821485474.png">&lt;/p>
+&lt;p>&lt;img alt="1557821485474" src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1557821485474.png">&lt;/p>
 &lt;p>下载完成后得到一个&lt;code>.xip&lt;/code>压缩文件，双击进行校验，校验完成后会自动解压。解压完成得到&lt;code>Xcode.app&lt;/code>拖进&lt;code>/Applications&lt;/code>中完成安装。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>再次执行编译命令
@@ -1561,9 +1561,9 @@ Exports list on 192.168.50.30:
 &lt;p>网上找到&lt;a href="https://www.twblogs.net/a/5c1f8fedbd9eee16b3daa981/">解决方案&lt;/a>，此错误是&lt;code>Xcode Command Line&lt;/code>版本太高了，需要切换为低版本的。&lt;/p>
 &lt;p>下载安装&lt;code>Command Line Tools macOS 10.13 for Xcode9.2&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo xcode-select --switch /Library/Developer/CommandLineTools
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/00.png">&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/00.png">&lt;/p>
 &lt;p>如图，编译成功，执行编译完的程序，发现能够正常识别显卡。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png">&lt;/p>
 &lt;h2 id="cudnn">cudnn&lt;/h2>
 &lt;p>参照教程我也下载了&lt;code>cudnn v7.2.1&lt;/code>下载完成双击解压，然后按照下边过程安装。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo cp cuda/include/cudnn.h /usr/local/cuda/include/
@@ -1576,12 +1576,12 @@ Exports list on 192.168.50.30:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>测试
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ echo -e &lt;span style="color:#e6db74">&amp;#39;#include &amp;#34;cudnn.h&amp;#34;\n void main(){}&amp;#39;&lt;/span> | nvcc -x -c - -o /dev/null -I/usr/local/cuda/include -L /usr/local/cuda/lib -lcudnn
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png">&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png">&lt;/p>
 &lt;h2 id="测试">测试&lt;/h2>
 &lt;h3 id="cuda">cuda&lt;/h3>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png">&lt;/p>
 &lt;h3 id="cudnn-1">cudnn&lt;/h3>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png">&lt;/p>
 &lt;h2 id="pytorch">pytorch&lt;/h2>
 &lt;p>&lt;code>cuda&lt;/code>和&lt;code>cudnn&lt;/code>都安装完了后，安装pytorch。&lt;/p>
 &lt;p>首先按照这篇&lt;a href="http://richard.blog.nctu.edu.tw/pytorch/">&lt;code>blog&lt;/code>&lt;/a>尝试安装&lt;code>pytorch 0.4.0&lt;/code>但是切换到&lt;code>v0.4.0&lt;/code>执行&lt;code>git submodule update init&lt;/code>的时候一直报 错，说找不到仓库。&lt;/p>
@@ -1590,7 +1590,7 @@ Exports list on 192.168.50.30:
 git submodule update --init --recursive
 python setup.py install
 &lt;/code>&lt;/pre>&lt;p>安装完成后需要切换出&lt;code>pytorch&lt;/code>的源码目录，再执行&lt;code>python&lt;/code>然后&lt;code>import torch&lt;/code>才有效，不然会报错&lt;code>ModuleNotFoundError: No module named 'torch._C'&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png">&lt;/p></description></item><item><title>buntu 部署NIS服务</title><link>http://0.0.0.0:1313/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</guid><description>&lt;h1 id="ubuntu-部署nis服务">Ubuntu 部署NIS服务&lt;/h1>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png">&lt;/p></description></item><item><title>buntu 部署NIS服务</title><link>/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</guid><description>&lt;h1 id="ubuntu-部署nis服务">Ubuntu 部署NIS服务&lt;/h1>
 &lt;p>在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如果能够有一部账号主控服务器来管理网域中所有主机的账号， 当其他的主机有用户登入的需求时，才到这部主控服务器上面要求相关的账号、密码等用户信息， 如此一来，如果想要增加、修改、删除用户数据，只要到这部主控服务器上面处理即可， 这样就能够降低重复设定使用者账号的步骤了。&lt;/p>
 &lt;p>&lt;a href="http://cn.linux.vbird.org/linux_server/0430nis.php">CentOS的配置方法在这里&lt;/a>&lt;/p>
 &lt;pre tabindex="0">&lt;code>实验环境
@@ -1693,7 +1693,7 @@ slave : ubuntu 18.04.03 LTS 192.168.50.185
 &lt;li>共享(Sharing)-&amp;gt;Unix (NFS) Shares -&amp;gt; ADD, 选中前边创建的数据集路径，高级模式，Maproot User和Maproot Group都设置为前边创建的用户-&amp;gt; SAVE&lt;/li>
 &lt;/ol>
 &lt;/li>
-&lt;/ol></description></item><item><title>C++ Primer Plus笔记</title><link>http://0.0.0.0:1313/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
+&lt;/ol></description></item><item><title>C++ Primer Plus笔记</title><link>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
 &lt;h2 id="第十章对象和类">第十章：对象和类&lt;/h2>
 &lt;p>类和结构(class和struct)的区别：结构的默认访问类型是public，而类的默认访问类型是private。&lt;/p>
 &lt;p>所创建的每个新对象都有自己的存储空间，用于存储其内部变量和类成员；但同一个类的所有对象共享同一组类方法，即每种方法只有一个副本。&lt;/p>
@@ -1933,7 +1933,7 @@ fir dou
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// 即输出大于等于40的数字个数
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>C++基础面试题</title><link>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</guid><description>&lt;h1 id="const和指针">const和指针&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>C++基础面试题</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-24-%E5%BC%80%E5%8F%91%E5%B2%97%E7%AC%94%E8%AF%95%E5%9F%BA%E7%A1%80%E9%A2%98%E6%80%BB%E7%BB%93/</guid><description>&lt;h1 id="const和指针">const和指针&lt;/h1>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span> a &lt;span style="color:#75715e">// a是一个指针，指向一个const int类型的内存， a本身可以修改指向别的变量，但是a所指向的内存中的数据不能修改。
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#f92672">*&lt;/span> a &lt;span style="color:#75715e">// 和第一种相同
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> a &lt;span style="color:#75715e">// const修饰的是a， a是一个int *型的变量。也就是说a本身不能修改，即指向确定的内存，但所指向的内存中的数据可以修改。
@@ -2145,26 +2145,26 @@ fir dou
 &lt;/ul>
 &lt;h1 id="linux-io多路复用">Linux I/O多路复用&lt;/h1>
 &lt;p>&lt;a href="https://www.jianshu.com/p/dfd940e7fca2">聊聊IO多路复用之select、poll、epoll详解&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://blog.csdn.net/zhang2531/article/details/52136790">epoll例程&lt;/a>&lt;/p></description></item><item><title>GDT LDT IDT TSS</title><link>http://0.0.0.0:1313/post/os/gdtldtidttss/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/gdtldtidttss/</guid><description>&lt;h1 id="gdt-ldt-idt-tss">GDT LDT IDT TSS&lt;/h1>
+&lt;p>&lt;a href="https://blog.csdn.net/zhang2531/article/details/52136790">epoll例程&lt;/a>&lt;/p></description></item><item><title>GDT LDT IDT TSS</title><link>/post/os/gdtldtidttss/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/gdtldtidttss/</guid><description>&lt;h1 id="gdt-ldt-idt-tss">GDT LDT IDT TSS&lt;/h1>
 &lt;p>和一个段有关的信息需要8个字节来描述，所以称之为&lt;strong>段描述符（Segment Descriptor）&lt;/strong>，每个段都需要一个描述符。为了存放这些描述符，需要在内存中开辟出一段空间。在这段空间中，所有的描述符都是挨在一起的，集中存放的，这就构成了描述符表。&lt;/p>
 &lt;p>i386中，除了段描述符，还有一种描述符叫做“&lt;strong>门描述符&lt;/strong>”，描述控制转移的入口点，也就是异常控制中断的入口点，通过这种门可以实现特权级的转变和任务的切换。&lt;/p>
 &lt;h2 id="gdt--gdtr">GDT &amp;amp; GDTR&lt;/h2>
 &lt;p>GDT : &lt;strong>Global Descriptor Table&lt;/strong> , 全局描述符表，用来存放全局的段描述符。&lt;/p>
 &lt;p>GDTR ： &lt;strong>Global Descriptor Table Register&lt;/strong>， 用来保存全局描述符表（GDT）的起始地址。&lt;/p>
 &lt;p>整个系统中，全局描述符表GDT只有一张(一个处理器对应一个GDT)，GDT可以被放在内存的任何位置，但CPU必须知道GDT的入口，也就是基地址放在哪里，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址，程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。GDTR中存放的是GDT在内存中的基地址和其表长界限。&lt;/p>
-&lt;p>&lt;img alt="image-20201120211741700" src="http://0.0.0.0:1313/post/os/gdtldtidttss/1.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120211741700" src="/post/os/gdtldtidttss/1.png">&lt;/p>
 &lt;ul>
 &lt;li>全局描述符表线性基地址：保存的是全局描述符表在内存中的起始线性地址；&lt;/li>
 &lt;li>16位的全局描述符表边界：在数值上等于表的大小（总字节数）减一，16位决定了表最大65536字节（64KB），又因为每个描述符占8个字节，所以最多能有8192个描述符；&lt;/li>
 &lt;/ul>
 &lt;p>**段选择子（Selector）**由GDTR访问全局描述符表是通过“段选择子”（实模式下的段寄存器）来完成的。段选择子是一个16位的寄存器（同实模式下的段寄存器相同）。&lt;/p>
-&lt;p>&lt;img alt="image-20201120213926975" src="http://0.0.0.0:1313/post/os/gdtldtidttss/2.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120213926975" src="/post/os/gdtldtidttss/2.png">&lt;/p>
 &lt;ul>
 &lt;li>描述符索引 ： 指示段描述符在GDT中的下标；&lt;/li>
 &lt;li>TI ： 描述符表指示器（Table Indicator）0表示此描述符在GDT中，1表示此描述符在LDT中；&lt;/li>
 &lt;li>RPL：请求特权级，表示给出当前选择子的那个程序的特权级；&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img alt="image-20201120212305819" src="http://0.0.0.0:1313/post/os/gdtldtidttss/3.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120212305819" src="/post/os/gdtldtidttss/3.png">&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>G ：粒度（Granularity）位，解释段界限的含义，0表示段界限以字节为单位；1表示段界限以4KB为单位；&lt;/p>
@@ -2186,7 +2186,7 @@ fir dou
 &lt;/li>
 &lt;li>
 &lt;p>TYPE段共4位，用于指示描述符的子类型，X表示是否可执行。E表示数据段的扩展方向，E=0表示向上扩展，也就是向高地址方向扩展，即普通数据段；E=1表示向下扩展，即栈段；W=0表示不可写入；C=0表示非依从代码段，这样的代码段可以从与它特权级相同的代码段调用；C=1表示允许从低特权级的程序转移到该段执行。&lt;/p>
-&lt;p>&lt;img alt="image-20201120213542008" src="http://0.0.0.0:1313/post/os/gdtldtidttss/4.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120213542008" src="/post/os/gdtldtidttss/4.png">&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="ldt--ldtr">LDT &amp;amp; LDTR&lt;/h2>
@@ -2196,24 +2196,24 @@ fir dou
 &lt;h2 id="idt--idtr">IDT &amp;amp; IDTR&lt;/h2>
 &lt;p>中断描述符表（Interrupt Descriptor Table, IDT）保存的是和中断过程有关的描述符，包括中断门、陷阱门和任务门，整个系统中只有一个IDT。&lt;/p>
 &lt;p>中断描述符表寄存器（Interrupt Descriptor Table Register,IDTR）保存着中断描述符表在内存中的线性基地址和界限。&lt;/p>
-&lt;p>&lt;img alt="image-20201120221137076" src="http://0.0.0.0:1313/post/os/gdtldtidttss/5.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120221137076" src="/post/os/gdtldtidttss/5.png">&lt;/p>
 &lt;p>中断描述符表的每一行是一个门描述符。&lt;/p>
 &lt;p>门描述符：中断门(Interrupt Gate)，陷阱门（Trap Gate） 任务门(Task Gate)和调用门(Interrupt Gate)，其中中断门和陷阱门必须存放在IDT中，任务门和调用门可以存储在GDT\LDT和IDT中。除了任务门外其他三种门的结构基本相同， 中断门，陷阱门，调用门结构如下图所示。任务门结构在下一小节&lt;code>TSS&amp;amp;TR&lt;/code>后边有贴图。&lt;/p>
-&lt;p>&lt;img alt="image-gate" src="http://0.0.0.0:1313/post/os/gdtldtidttss/6.png">&lt;/p>
+&lt;p>&lt;img alt="image-gate" src="/post/os/gdtldtidttss/6.png">&lt;/p>
 &lt;p>中断i发生 -&amp;gt;确定与中断或异常关联的向量i-&amp;gt; 通过查询IDT的第i项目 -&amp;gt; 得到中断描述符（门）-&amp;gt; 得到段选择符 -&amp;gt; 查询GDT - &amp;gt;得到段描述符 -&amp;gt; 得到段的基地址 -&amp;gt; 段基地址加上中断描述符中的偏移地址 -&amp;gt; 得到中断服务程序的入口地址。 过程中或检查特权级，如果特权级发生了变化还会发生栈切换。&lt;/p>
 &lt;p>中断门和陷阱门的唯一区别在于，通过中断门进入中断服务程序时CPU会自动关闭中断，也就是将CPU中的&lt;code>EFLAGS&lt;/code>寄存器的&lt;code>IF&lt;/code>标志位清成0，即防止中断嵌套。而通过陷阱门进入服务程序时则维持&lt;code>IF&lt;/code>标志位不变。&lt;/p>
 &lt;h2 id="tss--tr">TSS &amp;amp; TR&lt;/h2>
 &lt;p>任务状态段(Task State Segment : TSS）是一个专门用来保存任务运行&lt;strong>现场&lt;/strong>的数据结构，其中包括CPU中所有与具体进程有关的寄存器的内容（包含页面目录指针CR3），还包括了三个堆栈指针。中断发生时，CPU在中断向量表中找到相应的表项。如果找到的表项是一个&lt;strong>任务门&lt;/strong>，并且通过了优先级别的检查，CPU就会将当前任务的运行现场保存相应的TSS中，并将任务门所指向的TSS作为当前任务，将其内容装入CPU中各个寄存器，从而完成一次任务的切换。&lt;/p>
 &lt;p>任务寄存器TR用来指向当前任务的TSS。 TR寄存器在处理器中也是只有一个，当任务切换发生时，TR寄存器的内容会跟着指向新的任务的TSS。这个过程是这样的：首先，处理器将当前任务的现场信息保存到由TR寄存器指向的TSS, 然后，再使TR寄存器指向新的TSS，并从新任务的TSS中恢复现场。&lt;/p>
-&lt;p>&lt;img alt="image-20201120220217034" src="http://0.0.0.0:1313/post/os/gdtldtidttss/7.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201120220217034" src="/post/os/gdtldtidttss/7.png">&lt;/p>
 &lt;p>进入中断服务函数，或者发生任务切换时，栈也要发生切换，TSS中除了保存有常规的寄存器内容外，还有三个额外的堆栈指针（&lt;code>SS&lt;/code>和&lt;code>ESP&lt;/code>），这三个额外的堆栈指针分别用于当CPU在目标代码段中的运行级别为0,1,2时的栈。图中的&lt;code>SS0&lt;/code> &lt;code>ESP0&lt;/code> &lt;code>SS1&lt;/code> &lt;code>ESP1&lt;/code>等就对应不同级别下的栈。&lt;/p>
-&lt;p>&lt;img alt="image-task_gate" src="http://0.0.0.0:1313/post/os/gdtldtidttss/task_gate.png">&lt;/p>
+&lt;p>&lt;img alt="image-task_gate" src="/post/os/gdtldtidttss/task_gate.png">&lt;/p>
 &lt;h2 id="dpl--cpl--rpl">DPL &amp;amp; CPL &amp;amp; RPL&lt;/h2>
 &lt;p>DPL : Descriptor Privilege Level, 存放在段描述符中，用于表示段的特权级;&lt;/p>
 &lt;p>CPL : Current Privilege Level, 代表当前执行程序的特权级;&lt;/p>
 &lt;p>RPL : Request Privilege Level, 请求特权级，存放在段选择子中.&lt;/p>
 &lt;p>每个段描述符中都有一个&lt;code>DPL&lt;/code>位段，即&lt;strong>描述项优先级别&lt;/strong>位段。当CPU通过中断门找到一个代码段描述符，并进而转入相应的服务程序时，就把这个代码段描述项装入CPU中，而描述项的&lt;code>DPL&lt;/code>就变成CPU的当前运行级别，即&lt;code>CPL&lt;/code>。&lt;/p>
-&lt;p>而中断门也有一个&lt;code>DPL&lt;/code>，当通过&lt;code>int&lt;/code>指令进入一个中断服务程序时，在指令中给出一个中断向量，CPU先根据该中断向量找到中断门，将中断门的&lt;code>DPL&lt;/code>和当前CPU的&lt;code>CPL&lt;/code>进行对比，&lt;code>CPL&lt;/code>必须小于等于&lt;code>DPL&lt;/code>才能通过该中断门。穿过门后再对比CPU的&lt;code>CPL&lt;/code>和段描述符的&lt;code>DPL&lt;/code>。&lt;/p></description></item><item><title>gitbook部署</title><link>http://0.0.0.0:1313/post/service/gitbook/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/service/gitbook/</guid><description>&lt;h1 id="使用gitbook记笔记">使用gitbook记笔记&lt;/h1>
+&lt;p>而中断门也有一个&lt;code>DPL&lt;/code>，当通过&lt;code>int&lt;/code>指令进入一个中断服务程序时，在指令中给出一个中断向量，CPU先根据该中断向量找到中断门，将中断门的&lt;code>DPL&lt;/code>和当前CPU的&lt;code>CPL&lt;/code>进行对比，&lt;code>CPL&lt;/code>必须小于等于&lt;code>DPL&lt;/code>才能通过该中断门。穿过门后再对比CPU的&lt;code>CPL&lt;/code>和段描述符的&lt;code>DPL&lt;/code>。&lt;/p></description></item><item><title>gitbook部署</title><link>/post/service/gitbook/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/gitbook/</guid><description>&lt;h1 id="使用gitbook记笔记">使用gitbook记笔记&lt;/h1>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo apt update
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo apt install nodejs npm
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -2229,7 +2229,7 @@ fir dou
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gitbook install ./
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd ../
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gitbook build /root/blog /var/www/html/_book
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>GNU C 内联汇编</title><link>http://0.0.0.0:1313/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</guid><description>&lt;h1 id="gnu-c-内联汇编">GNU C 内联汇编&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>GNU C 内联汇编</title><link>/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</guid><description>&lt;h1 id="gnu-c-内联汇编">GNU C 内联汇编&lt;/h1>
 &lt;blockquote>
 &lt;p>内核代码中有很多内联汇编，为了更好的读懂内核，上网搜罗了一些内联汇编的文章在这里，方便自己随时查阅。&lt;a href="https://dirtysalt.github.io/html/gcc-asm.html">这篇文章&lt;/a>比较有价值，特别是后半段引用的中国科大BBS站的一些邮件列表，“对 《gcc中的内嵌汇编语言》一文的补充说明”中的一些例子描述的很好，能够帮助更好的理解内联汇编。这里摘抄一些。&lt;/p>
 &lt;/blockquote>
@@ -2380,8 +2380,8 @@ movl foo,eax
 movl eax,bar
 &lt;/code>&lt;/pre>&lt;/li>
 &lt;/ul>
-&lt;p>该语句虽然有点怪怪的,但它很好的体现了gcc的运作方式.　&lt;/p></description></item><item><title>Hackintosh</title><link>http://0.0.0.0:1313/post/hackintosh/hackintosh/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/hackintosh/hackintosh/</guid><description>&lt;h1 id="黑苹果安装步骤简记">黑苹果安装步骤简记&lt;/h1>
-&lt;p>最近突然对安装黑苹果系统很感兴趣，就上网找了一些资料来看看，下边简单记录一下我的收获。以下操作都在虚拟机中进行。&lt;a href="http://0.0.0.0:1313/resources/2019415">工具软件在这里&lt;/a>(显示不出来了，可以直接到tonymac.com下载)&lt;/p>
+&lt;p>该语句虽然有点怪怪的,但它很好的体现了gcc的运作方式.　&lt;/p></description></item><item><title>Hackintosh</title><link>/post/hackintosh/hackintosh/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/hackintosh/</guid><description>&lt;h1 id="黑苹果安装步骤简记">黑苹果安装步骤简记&lt;/h1>
+&lt;p>最近突然对安装黑苹果系统很感兴趣，就上网找了一些资料来看看，下边简单记录一下我的收获。以下操作都在虚拟机中进行。&lt;a href="/resources/2019415">工具软件在这里&lt;/a>(显示不出来了，可以直接到tonymac.com下载)&lt;/p>
 &lt;p>今天无意间发现&lt;a href="https://www.sqlsec.com/2018/07/hackintosh.html#toc-heading-1">大神们&lt;/a>整理的&lt;a href="https://dev.tencent.com/u/sqlsec/p/Coding_clover/git/tree/1d6efb70475a2a1bf2477a1fa479fbf5baf98281">资源&lt;/a>，然后刚好和我的一台台式机型号匹配，打算有时间的时候操刀试试。&lt;/p>
 &lt;hr>
 &lt;h2 id="目录">目录&lt;/h2>
@@ -2397,12 +2397,12 @@ movl eax,bar
 &lt;/ul>
 &lt;h3 id="格式化u盘">格式化U盘&lt;/h3>
 &lt;p>在虚拟机中新建一个大小为10G的硬盘，插入后MacOS会检测到，然后点击&lt;code>Initialize...&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/initialize-01.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/initialize-02.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-01.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-02.png">&lt;/p>
 &lt;p>左边选择好要擦除的硬盘后，点击上方的&lt;code>Erase&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/initialize-03.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-03.png">&lt;/p>
 &lt;p>&lt;code>Name&lt;/code>随便写，&lt;code>Format&lt;/code>选择&lt;code>OS X Extended&lt;/code>， 最后一行的&lt;code>Scheme&lt;/code> 一定选&lt;code>GUID&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/initialize-04.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-04.png">&lt;/p>
 &lt;h3 id="方式一使用镜像中的工具制作">方式一：使用镜像中的工具制作&lt;/h3>
 &lt;p>命令如下 :&lt;br>
 &lt;code>sudo /Applications/Install\ macOS\ Mojave.app/Contents/Resources/createinstallmedia --volume /Volumes/Mojave /Applications/Install\ macOS\ Mojave.app --nointeraction&lt;/code>&lt;/p>
@@ -2417,9 +2417,9 @@ movl eax,bar
 &lt;li>输入密码，输入&lt;code>Y&lt;/code>，开始刻录U盘；&lt;/li>
 &lt;li>刻录完成；&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/cl-01.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/cl-02.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/cl-done.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-01.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-02.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-done.png">&lt;/p>
 &lt;p>此种方法刻录的U盘好像不用再用&lt;code>Clover&lt;/code>写入引导，我在虚拟机中测试可以引导，具体情况还得到实体机上测试。&lt;/p>
 &lt;h3 id="方案二windows下使用transmac软件制作---todo">方案二：windows下使用transmac软件制作 &amp;ndash;TODO&lt;/h3>
 &lt;p>&lt;a href="http://www.acutesystems.com/tmac/tmsetup.zip">下载&lt;/a>安装后会在桌面生成快捷方式。右键&lt;strong>以管理员身份&lt;/strong>打开。&lt;/p>
@@ -2431,52 +2431,52 @@ movl eax,bar
 &lt;p>先在虚拟机中分了一个10G大小的硬盘当做的我U盘，挂载到Mac的虚拟机后格式化为GPT分区格式。&lt;/p>
 &lt;p>然后打开UniBeast工具开始制作。&lt;/p>
 &lt;p>此软件要求系统语言是英文，所以如果系统语言不是英文会要求更改，只需打开&lt;code>系统偏好设置&lt;/code> 然后将英文拖动到第一位，点击重启就好了。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-01.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-02.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-03.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-04.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-05.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-01.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-02.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-03.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-04.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-05.png">&lt;/p>
 &lt;p>点击&lt;code>Agree&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-06.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-06.png">&lt;/p>
 &lt;p>选中U盘，我这里前边把U盘命名为&lt;code>boot&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-07.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-07.png">&lt;/p>
 &lt;p>选中要刻录的系统，这里的&lt;code>Mojave&lt;/code>系统要拖动到&lt;code>Application&lt;/code>目录中才能自动识别出来。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-08.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-08.png">&lt;/p>
 &lt;p>选择&lt;code>UEFI&lt;/code>引导模式。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-09.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-09.png">&lt;/p>
 &lt;p>注入显卡驱动&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/UniBeast-10.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-10.png">&lt;/p>
 &lt;p>开始拷贝文件&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/coping-file-to-usb.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/copying-done.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/coping-file-to-usb.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/copying-done.png">&lt;/p>
 &lt;p>制作完成后桌面会多出来一个EFI分区。&lt;/p>
 &lt;h3 id="写入clover引导">写入Clover引导&lt;/h3>
 &lt;p>打开&lt;code>Clover&lt;/code>开始写入引导。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-0.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-1.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-0.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-1.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-2.png">&lt;/p>
 &lt;p>这里要选择&lt;code>Change Install Location...&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-3.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-3.png">&lt;/p>
 &lt;p>选择&lt;code>Install ...&lt;/code> 这个是写入镜像后的U盘，名字变了可以通过分区大小区分。然后点击&lt;code>Continue&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-4.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-4.png">&lt;/p>
 &lt;p>点击&lt;code>Customize&lt;/code> 进入配置页面，选择一些必要的驱动，点击&lt;code>Install&lt;/code>&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-5.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-6.png">&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-7.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-5.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-6.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-7.png">&lt;/p>
 &lt;p>关闭虚拟机，在虚拟机重启时进入BIOS,选择做好的U盘引导系统。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-boot.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-boot.png">&lt;/p>
 &lt;h2 id="3-配置clover">3. 配置Clover&lt;/h2>
 &lt;p>使用前边制作好的U盘就可以插入电脑从U盘启动了，接下来进入安装黑苹果最难的部分：配置Clover驱动。&lt;/p>
 &lt;p>使用&lt;code>Clover Configure&lt;/code>软件进行配置。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-config-1.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-1.png">&lt;/p>
 &lt;p>打开软件后，在左边找到&lt;code>Mount EFI&lt;/code> 左下会出现可以挂载的&lt;code>EFI&lt;/code>分区。点击&lt;code>Mount Partition -&amp;gt; Open Parition&lt;/code>。如下图，选择&lt;code>EFI -&amp;gt; CLOVER -&amp;gt; config.plist&lt;/code> 双击打开。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-config-2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-2.png">&lt;/p>
 &lt;p>然后就进入了下边的配置界面。&lt;/p>
-&lt;p>&lt;img src="http://0.0.0.0:1313/post/hackintosh/hackintosh/clover-config-3.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-3.png">&lt;/p>
 &lt;p>后边的内容需要在实体机上根据具体的硬件信息进行配置，暂时不看。&lt;/p>
 &lt;h2 id="4-安装系统">4. 安装系统&lt;/h2>
 &lt;h2 id="5-进入系统解决驱动问题">5. 进入系统解决驱动问题&lt;/h2>
-&lt;h2 id="6-将clover引导写入硬盘">6. 将Clover引导写入硬盘&lt;/h2></description></item><item><title>I2C子系统代码跟读</title><link>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</guid><description>&lt;h1 id="linux内核-i2c子系统代码跟读">Linux内核 I2C子系统代码跟读&lt;/h1>
+&lt;h2 id="6-将clover引导写入硬盘">6. 将Clover引导写入硬盘&lt;/h2></description></item><item><title>I2C子系统代码跟读</title><link>/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/2020-10-05-linux-i2c%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E8%B7%9F%E8%AF%BB/</guid><description>&lt;h1 id="linux内核-i2c子系统代码跟读">Linux内核 I2C子系统代码跟读&lt;/h1>
 &lt;p>&lt;a href="https://www.bilibili.com/video/BV1CK411N7dB">听了这个课程&lt;/a>感觉讲的很好，很有必要自己跟读一遍Kernel中I2C的代码，以加深对Kernel中I2C子系统的理解。&lt;/p>
 &lt;h1 id="相关文件">相关文件&lt;/h1>
 &lt;blockquote>
@@ -2962,7 +2962,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">kfree&lt;/span>(tmp);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> ret;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>input子系统</title><link>http://0.0.0.0:1313/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</guid><description>&lt;p>[toc]&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>input子系统</title><link>/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/</guid><description>&lt;p>[toc]&lt;/p>
 &lt;h1 id="input子系统特性用途">input子系统特性、用途&lt;/h1>
 &lt;p>1， input子系统是用来解决&lt;strong>输入问题&lt;/strong>的，所谓输入，即驱动为应用层提供数据。&lt;/p>
 &lt;p>2， 使用字符设备的read或者ioctl也可以实现输入操作，这种方式的弊端在于：驱动程序员自己定义数据格式，导致数据格式不统一，比如同样是按键输入，不同人实现的方式不一样，有人定义key=‘1’，有的人定义key=&amp;lsquo;key1&amp;rsquo;。导致应用层程序调用驱动时传参不一致。此外，字符设备驱动框架提供数据的双向交流，input子系统只处理输入数据。&lt;/p>
@@ -2972,7 +2972,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/dev/input/event0 /dev/input/event1 /dev/input/event2 /dev/input/event3 /dev/input/event4
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>myye@myye-vm:~$ sudo cat /dev/input/event0 &lt;span style="color:#75715e"># 查看键盘的事件，按下键盘按键，终端会打印相应的信息&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="input子系统的框架结构">input子系统的框架结构&lt;/h1>
-&lt;p>&lt;img alt="image-20210401161158636" src="http://0.0.0.0:1313/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/input%E5%AD%90%E7%B3%BB%E7%BB%9F.png">&lt;/p>
+&lt;p>&lt;img alt="image-20210401161158636" src="/post/os/linux-kernel/input%E5%AD%90%E7%B3%BB%E7%BB%9F/input%E5%AD%90%E7%B3%BB%E7%BB%9F.png">&lt;/p>
 &lt;p>对于驱动开发来说，只需要实现 &lt;strong>事件处理层&lt;/strong>和&lt;strong>设备驱动层&lt;/strong>， 其中设备驱动层是关键，事件处理层内核也有通用事件处理的代码，可以更具需要进行修改。&lt;/p>
 &lt;h1 id="相关头文件">相关头文件&lt;/h1>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;linux/input.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -3287,7 +3287,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Kobject和sysfs</title><link>http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/</guid><description>&lt;h1 id="kobject和sysfs">Kobject和sysfs&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Kobject和sysfs</title><link>/post/os/linux-kernel/kobjectsysfs/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/kobjectsysfs/</guid><description>&lt;h1 id="kobject和sysfs">Kobject和sysfs&lt;/h1>
 &lt;h2 id="kobjectktypekset-以及其相互关系">kobject、ktype、kset 以及其相互关系&lt;/h2>
 &lt;h3 id="kobject">kobject&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* include/linux/kobject.h */&lt;/span>
@@ -3346,7 +3346,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> kobject kobj; &lt;span style="color:#75715e">// 内嵌一个kobject对象，作为集合中其他kobject的基类
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> kset_uevent_ops &lt;span style="color:#f92672">*&lt;/span>uevent_ops; &lt;span style="color:#75715e">// 指向一个结构体，用于处理集合中kobject对象的热插拔操作
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>} __randomize_layout;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img alt="kobject" src="http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/kobject&amp;kset.png">&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img alt="kobject" src="/post/os/linux-kernel/kobjectsysfs/kobject&amp;kset.png">&lt;/p>
 &lt;h2 id="基本操作">基本操作&lt;/h2>
 &lt;h3 id="kobject基本操作">kobject基本操作&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">kobject_init&lt;/span>(&lt;span style="color:#66d9ef">struct&lt;/span> kobject &lt;span style="color:#f92672">*&lt;/span>kobj, &lt;span style="color:#66d9ef">struct&lt;/span> kobj_type &lt;span style="color:#f92672">*&lt;/span>ktype);
@@ -3367,7 +3367,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">kobject_put&lt;/span>(&lt;span style="color:#66d9ef">struct&lt;/span> kobject &lt;span style="color:#f92672">*&lt;/span>kobj); &lt;span style="color:#75715e">// 减少引用计数
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="sysfs">sysfs&lt;/h2>
 &lt;p>sysfs文件系统是一个位于内存中的虚拟文件系统，它提供了kobject对象层次结构的视图。帮助用户能以一个简单文件系统的方式来观察系统中各种设备的拓扑结构。借助属性对象，kobject可以以文件的形式，导出内核变量提供给用户读取或者写入。&lt;/p>
-&lt;p>&lt;img alt="sysfs" src="http://0.0.0.0:1313/post/os/linux-kernel/kobjectsysfs/sysfs.png">&lt;/p>
+&lt;p>&lt;img alt="sysfs" src="/post/os/linux-kernel/kobjectsysfs/sysfs.png">&lt;/p>
 &lt;h3 id="sysfs中添加和删除目录kobject">sysfs中添加和删除目录（kobject）&lt;/h3>
 &lt;p>仅仅初始化kobject是不能自动将其导出到sysfs中的，需要调用以下函数才行。&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#include&lt;/span> &lt;span style="color:#75715e">&amp;lt;linux/kobject.h&amp;gt;&lt;/span>&lt;span style="color:#75715e">
@@ -3436,7 +3436,7 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> KOBJ_BIND,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> KOBJ_UNBIND,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>kzalloc &amp; kmalloc</title><link>http://0.0.0.0:1313/post/os/linux-kernel/kzalloc--kmalloc/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/kzalloc--kmalloc/</guid><description>&lt;h1 id="kzalloc--kmalloc">kzalloc &amp;amp; kmalloc&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>kzalloc &amp; kmalloc</title><link>/post/os/linux-kernel/kzalloc--kmalloc/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/kzalloc--kmalloc/</guid><description>&lt;h1 id="kzalloc--kmalloc">kzalloc &amp;amp; kmalloc&lt;/h1>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* include/linux/slab.h */&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/**
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * kzalloc - allocate memory. The memory is set to zero.
@@ -3892,12 +3892,12 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;no&lt;/span>&lt;span style="color:#ae81ff">\n&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>LED驱动</title><link>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</guid><description>&lt;h1 id="linux驱动之led驱动">linux驱动之LED驱动&lt;/h1>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>LED驱动</title><link>/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/</guid><description>&lt;h1 id="linux驱动之led驱动">linux驱动之LED驱动&lt;/h1>
 &lt;p>试验平台： NanoPi M1 全志H3&lt;/p>
-&lt;p>&lt;img alt="电路图" src="http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-LED.png">&lt;/p>
+&lt;p>&lt;img alt="电路图" src="/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-LED.png">&lt;/p>
 &lt;p>寄存器地址在全志H3的Datasheet 4.23节有介绍。&lt;/p>
-&lt;p>&lt;img alt="电路图" src="http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PLR.png">&lt;/p>
-&lt;p>&lt;img alt="电路图" src="http://0.0.0.0:1313/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PL11CFG.png">&lt;/p>
+&lt;p>&lt;img alt="电路图" src="/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PLR.png">&lt;/p>
+&lt;p>&lt;img alt="电路图" src="/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PL11CFG.png">&lt;/p>
 &lt;p>![电路图]H3-PL11DAT.png)&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * led.h : 定义ioctl的命令
@@ -4171,7 +4171,7 @@ gpio_set_value
 gpio_to_irq
 gpio_free(unsigned gpio)
 &lt;/code>&lt;/pre>
-&lt;p>&lt;a href="https://www.bilibili.com/video/BV1nD4y1D7Hz">视频中&lt;/a>gpio操作方法是基于S5PV210的，全志H3暂时还不知道怎么操作。&lt;/p></description></item><item><title>Linux Kernel Makefiles</title><link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-makefiles/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-makefiles/</guid><description>&lt;p>======================&lt;/p>
+&lt;p>&lt;a href="https://www.bilibili.com/video/BV1nD4y1D7Hz">视频中&lt;/a>gpio操作方法是基于S5PV210的，全志H3暂时还不知道怎么操作。&lt;/p></description></item><item><title>Linux Kernel Makefiles</title><link>/post/os/linux-kernel/linux-kernel-makefiles/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel-makefiles/</guid><description>&lt;p>======================&lt;/p>
 &lt;h1 id="linux-kernel-makefiles">Linux Kernel Makefiles&lt;/h1>
 &lt;p>这个文档介绍了&lt;code>Linux kernel Makefiles&lt;/code>。&lt;/p>
 &lt;p>.. 目录&lt;/p>
@@ -4437,13 +4437,13 @@ The two flags listed above are similar to ccflags-y and asflags-y.
 The difference is that the subdir- variants have effect for the kbuild
 file where they are present and all subdirectories.
 Options specified using subdir-* are added to the commandline before
-the options specified using the non-subdir variants. &lt;/code>&lt;/pre></description></item><item><title>linux kernel slab系统</title><link>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="linux-kernel-slab系统">linux kernel slab系统&lt;/h1>
+the options specified using the non-subdir variants. &lt;/code>&lt;/pre></description></item><item><title>linux kernel slab系统</title><link>/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="linux-kernel-slab系统">linux kernel slab系统&lt;/h1>
 &lt;p>基于linux kernel v2.6.30.4&lt;/p>
 &lt;h2 id="基本原理">基本原理&lt;/h2>
 &lt;p>​ 以字节为单位的内存管理
 ​ SLAB 为了提高内核中一些十分频繁进行分配释放的“对象”的分配效率， SLAB 的做法是：每次释放掉某个对象之后，不是立即将其返回给伙伴系统，而是存放在一个叫 array_cache 的结构中，下次要分配的时候就可以直接从这里分配，从而加快了速度。&lt;/p>
 &lt;p>slab系统的内存区域主要分为专用和通用，专用指的是用于存放数据结构的，通用主要指&lt;code>kmalloc&lt;/code>用于通用目的而分配的内存。&lt;/p>
-&lt;p>&lt;img alt="image-20201227201452112" src="http://0.0.0.0:1313/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/image-20201227201452112.png">&lt;/p>
+&lt;p>&lt;img alt="image-20201227201452112" src="/post/os/linux-kernel/linux-kernel-slab%E7%B3%BB%E7%BB%9F/image-20201227201452112.png">&lt;/p>
 &lt;h2 id="概念以及数据结构">概念以及数据结构&lt;/h2>
 &lt;h3 id="struct-kmem_cache">&lt;code>struct kmem_cache&lt;/code>&lt;/h3>
 &lt;p>“高速缓存” 其实是一个管理slab的结构&lt;/p>
