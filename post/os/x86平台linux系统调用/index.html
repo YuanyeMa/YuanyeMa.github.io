@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>x86平台linux系统调用分析 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86平台linux系统调用分析"><meta property="og:description" content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86平台linux系统调用分析"><meta itemprop=description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="3732"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86平台linux系统调用分析"><meta name=twitter:description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86平台linux系统调用分析"><meta property="og:description" content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86平台linux系统调用分析"><meta itemprop=description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="4015"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86平台linux系统调用分析"><meta name=twitter:description content="x86平台linux系统调用分析 [toc] kernel version : linux 2.6.30.4 x86 系统调用整体流程 用户空间调用libc库的syscall函数，此函数内嵌汇编，汇编代码先将系统调"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -7,121 +7,235 @@
 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
 </button>
 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>x86平台linux系统调用分析</h1><div class=post-meta><div class=post-meta-author>by
-<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div></div></div></header><div class=post-content><h1 id=x86平台linux系统调用分析>x86平台linux系统调用分析</h1><p>[toc]</p><p>kernel version : linux 2.6.30.4</p><h2 id=x86-系统调用整体流程>x86 系统调用整体流程</h2><p><img alt=chenweixiang.github.io系统调用章节 src=http://chenweixiang.github.io/assets/System_Call_Procedure.jpg></p><p>用户空间调用<code>libc</code>库的<code>syscall</code>函数，此函数内嵌汇编，汇编代码先将系统调用号写入<code>eax</code>寄存器，其他参数写入<code>ebx ecx edx esi edi</code>五个寄存器，若参数总个数超过五个，则应该用一个单独的寄存器存放指向所有这些参数在用户空间地址的指针。然后调用<code>int 0x80</code>指令陷入内核。</p><p><img alt=system_call_process src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/system_call_process.png></p><p>CPU从<code>IDTR</code>中得到<code>IDT</code>（中断向量表）地址，并根据中断号(0x80)找到<code>IDT</code>下标为<code>0x80</code>的元素，即门描述符，检查<code>CPL=3</code>, 门描述符<code>DPL=0</code>，不相符，发生栈切换。</p><p>CPU根据寄存器<code>TR</code>的内容找到当前<code>TSS</code>,并根据目标代码段的<code>DPL</code>，从<code>TSS</code>结构中取出新的堆栈指针（SS和ESP），并装入其堆栈段寄存器<code>SS</code>和堆栈指针<code>ESP</code>中，达到更换堆栈的目的。这种情况下CPU不但要将<code>EFLAGS</code>、返回地址以及出错代码压入堆栈，还要先将原来的堆栈指针也压入新堆栈中。</p><p><img alt=stack_sw src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/stack_sw.png></p><p>栈切换完成后，CPU从陷阱门描述符中找到中断服务程序所在内存段的段选择子和地址偏移，根据段选择子去<code>GDT</code>或者<code>LDT</code>中找到对应的段描述符，装入<code>CS</code>段选择寄存器，找到段基地址，并加上地址偏移后找到中断服务程序入口地址，跳转过去运行。</p><h2 id=中断向量表idt的初始化>中断向量表IDT的初始化</h2><p>基于<code>linux 2.6.30.4</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/* &#34;arch/x86/kernel/traps.c&#34; */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> __init <span style=color:#a6e22e>trap_init</span>(<span style=color:#66d9ef>void</span>)
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div></div></div></header><div class=post-content><h1 id=x86平台linux系统调用分析>x86平台linux系统调用分析</h1><p>[toc]</p><p>kernel version : linux 2.6.30.4</p><h2 id=x86-系统调用整体流程>x86 系统调用整体流程</h2><p><img alt=chenweixiang.github.io系统调用章节 src=http://chenweixiang.github.io/assets/System_Call_Procedure.jpg></p><p>用户空间调用<code>libc</code>库的<code>syscall</code>函数，此函数内嵌汇编，汇编代码先将系统调用号写入<code>eax</code>寄存器，其他参数写入<code>ebx ecx edx esi edi</code>五个寄存器，若参数总个数超过五个，则应该用一个单独的寄存器存放指向所有这些参数在用户空间地址的指针。然后调用<code>int 0x80</code>指令陷入内核。</p><p><img alt=system_call_process src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/system_call_process.png></p><p>CPU从<code>IDTR</code>中得到<code>IDT</code>（中断向量表）地址，并根据中断号(0x80)找到<code>IDT</code>下标为<code>0x80</code>的元素，即门描述符，检查<code>CPL=3</code>, 门描述符<code>DPL=0</code>，不相符，发生栈切换。</p><p>CPU根据寄存器<code>TR</code>的内容找到当前<code>TSS</code>,并根据目标代码段的<code>DPL</code>，从<code>TSS</code>结构中取出新的堆栈指针（SS和ESP），并装入其堆栈段寄存器<code>SS</code>和堆栈指针<code>ESP</code>中，达到更换堆栈的目的。这种情况下CPU不但要将<code>EFLAGS</code>、返回地址以及出错代码压入堆栈，还要先将原来的堆栈指针也压入新堆栈中。</p><p><img alt=stack_sw src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/stack_sw.png></p><p>栈切换完成后，CPU从陷阱门描述符中找到中断服务程序所在内存段的段选择子和地址偏移，根据段选择子去<code>GDT</code>或者<code>LDT</code>中找到对应的段描述符，装入<code>CS</code>段选择寄存器，找到段基地址，并加上地址偏移后找到中断服务程序入口地址，跳转过去运行。</p><h2 id=中断向量表idt的初始化>中断向量表IDT的初始化</h2><p>基于<code>linux 2.6.30.4</code></p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-34>34</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* &#34;arch/x86/kernel/traps.c&#34; */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>void</span> __init <span style=color:#06287e>trap_init</span>(<span style=color:#902000>void</span>)
 </span></span><span style=display:flex><span>{	
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>0</span>, <span style=color:#f92672>&amp;</span>divide_error);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate_ist</span>(<span style=color:#ae81ff>1</span>, <span style=color:#f92672>&amp;</span>debug, DEBUG_STACK);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate_ist</span>(<span style=color:#ae81ff>2</span>, <span style=color:#f92672>&amp;</span>nmi, NMI_STACK);
-</span></span><span style=display:flex><span>        <span style=color:#75715e>/* int3 can be called from all */</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_system_intr_gate_ist</span>(<span style=color:#ae81ff>3</span>, <span style=color:#f92672>&amp;</span>int3, DEBUG_STACK);
-</span></span><span style=display:flex><span>        <span style=color:#75715e>/* int4 can be called from all */</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_system_intr_gate</span>(<span style=color:#ae81ff>4</span>, <span style=color:#f92672>&amp;</span>overflow);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>5</span>, <span style=color:#f92672>&amp;</span>bounds);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>6</span>, <span style=color:#f92672>&amp;</span>invalid_op);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>7</span>, <span style=color:#f92672>&amp;</span>device_not_available);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>0</span>, <span style=color:#666>&amp;</span>divide_error);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate_ist</span>(<span style=color:#40a070>1</span>, <span style=color:#666>&amp;</span>debug, DEBUG_STACK);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate_ist</span>(<span style=color:#40a070>2</span>, <span style=color:#666>&amp;</span>nmi, NMI_STACK);
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>/* int3 can be called from all */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_system_intr_gate_ist</span>(<span style=color:#40a070>3</span>, <span style=color:#666>&amp;</span>int3, DEBUG_STACK);
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>/* int4 can be called from all */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_system_intr_gate</span>(<span style=color:#40a070>4</span>, <span style=color:#666>&amp;</span>overflow);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>5</span>, <span style=color:#666>&amp;</span>bounds);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>6</span>, <span style=color:#666>&amp;</span>invalid_op);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>7</span>, <span style=color:#666>&amp;</span>device_not_available);
 </span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_task_gate</span>(<span style=color:#ae81ff>8</span>, GDT_ENTRY_DOUBLEFAULT_TSS);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>9</span>, <span style=color:#f92672>&amp;</span>coprocessor_segment_overrun);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>10</span>, <span style=color:#f92672>&amp;</span>invalid_TSS);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>11</span>, <span style=color:#f92672>&amp;</span>segment_not_present);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate_ist</span>(<span style=color:#ae81ff>12</span>, <span style=color:#f92672>&amp;</span>stack_segment, STACKFAULT_STACK);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>13</span>, <span style=color:#f92672>&amp;</span>general_protection);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>14</span>, <span style=color:#f92672>&amp;</span>page_fault);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>15</span>, <span style=color:#f92672>&amp;</span>spurious_interrupt_bug);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>16</span>, <span style=color:#f92672>&amp;</span>coprocessor_error);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_intr_gate</span>(<span style=color:#ae81ff>17</span>, <span style=color:#f92672>&amp;</span>alignment_check);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_task_gate</span>(<span style=color:#40a070>8</span>, GDT_ENTRY_DOUBLEFAULT_TSS);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>9</span>, <span style=color:#666>&amp;</span>coprocessor_segment_overrun);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>10</span>, <span style=color:#666>&amp;</span>invalid_TSS);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>11</span>, <span style=color:#666>&amp;</span>segment_not_present);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate_ist</span>(<span style=color:#40a070>12</span>, <span style=color:#666>&amp;</span>stack_segment, STACKFAULT_STACK);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>13</span>, <span style=color:#666>&amp;</span>general_protection);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>14</span>, <span style=color:#666>&amp;</span>page_fault);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>15</span>, <span style=color:#666>&amp;</span>spurious_interrupt_bug);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>16</span>, <span style=color:#666>&amp;</span>coprocessor_error);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_intr_gate</span>(<span style=color:#40a070>17</span>, <span style=color:#666>&amp;</span>alignment_check);
 </span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>set_system_trap_gate</span>(SYSCALL_VECTOR, <span style=color:#f92672>&amp;</span>system_call);
-</span></span><span style=display:flex><span>    <span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    SYSCALL_VECTOR
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    arch/x86/include/asm/irq_vectors.h:36:# define SYSCALL_VECTOR                   0x80
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    asmlinkage int system_call(void);
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>set_system_trap_gate</span>(SYSCALL_VECTOR, <span style=color:#666>&amp;</span>system_call);
+</span></span><span style=display:flex><span>    <span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    SYSCALL_VECTOR
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    arch/x86/include/asm/irq_vectors.h:36:# define SYSCALL_VECTOR                   0x80
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    asmlinkage int system_call(void);
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    */</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>cpu_init</span>();		
+</span></span><span style=display:flex><span>		<span style=color:#06287e>cpu_init</span>();		
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>程序中首先设置中断向量表的头19个陷阱门，这些中断向量表都是CPU保留用于异常处理的。</p><p><code>set_intr_gate()</code> 等函数都调用了<code>_set_gate()</code>函数设置门描述符，本文重点分析系统调用相关的内容，即 <code>set_system_trap_gate()</code>函数。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/*&#34;arch/x86/include/asm/desc.h&#34; */</span>
+</span></span></code></pre></td></tr></table></div></div><p>程序中首先设置中断向量表的头19个陷阱门，这些中断向量表都是CPU保留用于异常处理的。</p><p><code>set_intr_gate()</code> 等函数都调用了<code>_set_gate()</code>函数设置门描述符，本文重点分析系统调用相关的内容，即 <code>set_system_trap_gate()</code>函数。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13>13</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*&#34;arch/x86/include/asm/desc.h&#34; */</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	set_system_trap_gate(SYSCALL_VECTOR, &amp;system_call); 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	参数
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		n = SYSCALL_VECTOR = 0x80;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		addr = &amp;system_call
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>inline</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>set_system_trap_gate</span>(<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> n, <span style=color:#66d9ef>void</span> <span style=color:#f92672>*</span>addr)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	set_system_trap_gate(SYSCALL_VECTOR, &amp;system_call); 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	参数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		n = SYSCALL_VECTOR = 0x80;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		addr = &amp;system_call
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>void</span> <span style=color:#06287e>set_system_trap_gate</span>(<span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> n, <span style=color:#902000>void</span> <span style=color:#666>*</span>addr)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>BUG_ON</span>((<span style=color:#66d9ef>unsigned</span>)n <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0xFF</span>);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>_set_gate</span>(n, GATE_TRAP, addr, <span style=color:#ae81ff>0x3</span>, <span style=color:#ae81ff>0</span>, __KERNEL_CS);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>BUG_ON</span>((<span style=color:#902000>unsigned</span>)n <span style=color:#666>&gt;</span> <span style=color:#40a070>0xFF</span>);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>_set_gate</span>(n, GATE_TRAP, addr, <span style=color:#40a070>0x3</span>, <span style=color:#40a070>0</span>, __KERNEL_CS);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p><code>_set_gate()</code>函数完成设置门描述符的工作。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/* 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	_set_gate(n, GATE_TRAP, addr, 0x3, 0, __KERNEL_CS); 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	&#34;arch/x86/include/asm/desc_defs.h&#34;	
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        enum {
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                GATE_INTERRUPT = 0xE,
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                GATE_TRAP = 0xF,
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                GATE_CALL = 0xC,
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                GATE_TASK = 0x5,
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        };
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	arch/x86/include/asm/segment.h 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>			#define __KERNEL_CS     (GDT_ENTRY_KERNEL_CS * 8)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>			#define GDT_ENTRY_KERNEL_CS 2
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>_set_gate()</code>函数完成设置门描述符的工作。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-34>34</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	_set_gate(n, GATE_TRAP, addr, 0x3, 0, __KERNEL_CS); 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	&#34;arch/x86/include/asm/desc_defs.h&#34;	
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        enum {
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                GATE_INTERRUPT = 0xE,
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                GATE_TRAP = 0xF,
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                GATE_CALL = 0xC,
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                GATE_TASK = 0x5,
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        };
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	arch/x86/include/asm/segment.h 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>			#define __KERNEL_CS     (GDT_ENTRY_KERNEL_CS * 8)
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>			#define GDT_ENTRY_KERNEL_CS 2
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>inline</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>_set_gate</span>(<span style=color:#66d9ef>int</span> gate, <span style=color:#66d9ef>unsigned</span> type, <span style=color:#66d9ef>void</span> <span style=color:#f92672>*</span>addr,
-</span></span><span style=display:flex><span>                             <span style=color:#66d9ef>unsigned</span> dpl, <span style=color:#66d9ef>unsigned</span> ist, <span style=color:#66d9ef>unsigned</span> seg)
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>void</span> <span style=color:#06287e>_set_gate</span>(<span style=color:#902000>int</span> gate, <span style=color:#902000>unsigned</span> type, <span style=color:#902000>void</span> <span style=color:#666>*</span>addr,
+</span></span><span style=display:flex><span>                             <span style=color:#902000>unsigned</span> dpl, <span style=color:#902000>unsigned</span> ist, <span style=color:#902000>unsigned</span> seg)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    <span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    参数如下：
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    	gate = n = SYSCALL_VECTOR = 0x80;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        type = GATE_TRAP = 0xF;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        addr = &amp;system_call;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        dpl = 0x3;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        ist = 0;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        seg = __KERNEL_CS = 2*8;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    */</span>
+</span></span><span style=display:flex><span>    <span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    参数如下：
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    	gate = n = SYSCALL_VECTOR = 0x80;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        type = GATE_TRAP = 0xF;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        addr = &amp;system_call;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        dpl = 0x3;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        ist = 0;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        seg = __KERNEL_CS = 2*8;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    */</span>
 </span></span><span style=display:flex><span>        gate_desc s;
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>pack_gate</span>(<span style=color:#f92672>&amp;</span>s, type, (<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span>)addr, dpl, ist, seg);
-</span></span><span style=display:flex><span>        <span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>         * does not need to be atomic because it is only done once at
-</span></span></span><span style=display:flex><span><span style=color:#75715e>         * setup time
-</span></span></span><span style=display:flex><span><span style=color:#75715e>         */</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>write_idt_entry</span>(idt_table, gate, <span style=color:#f92672>&amp;</span>s);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>pack_gate</span>(<span style=color:#666>&amp;</span>s, type, (<span style=color:#902000>unsigned</span> <span style=color:#902000>long</span>)addr, dpl, ist, seg);
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         * does not need to be atomic because it is only done once at
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         * setup time
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>write_idt_entry</span>(idt_table, gate, <span style=color:#666>&amp;</span>s);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p><img alt=trap_gate src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/trap_gate.png></p><p>先看看第一行<code>gate_desc s;</code>，主要分配了门描述符的结构。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/*gate_desc 结构 &#34;arch/x86/include/asm/desc_defs.h&#34; */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>typedef</span> <span style=color:#66d9ef>struct</span> desc_struct gate_desc;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> desc_struct {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>union</span> {
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>struct</span> {
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> a; <span style=color:#75715e>// 4字节
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                        <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> b; <span style=color:#75715e>// 4字节
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                };
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>struct</span> {
-</span></span><span style=display:flex><span>                        u16 limit0; <span style=color:#75715e>// 2字节 位移的低16位
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                        u16 base0;  <span style=color:#75715e>// 2字节 段选择码
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                        <span style=color:#66d9ef>unsigned</span> base1: <span style=color:#ae81ff>8</span>, type: <span style=color:#ae81ff>4</span>, s: <span style=color:#ae81ff>1</span>, dpl: <span style=color:#ae81ff>2</span>, p: <span style=color:#ae81ff>1</span>; <span style=color:#75715e>// 2字节
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                        <span style=color:#66d9ef>unsigned</span> limit: <span style=color:#ae81ff>4</span>, avl: <span style=color:#ae81ff>1</span>, l: <span style=color:#ae81ff>1</span>, d: <span style=color:#ae81ff>1</span>, g: <span style=color:#ae81ff>1</span>, base2: <span style=color:#ae81ff>8</span>; <span style=color:#75715e>//2字节
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                };
+</span></span></code></pre></td></tr></table></div></div><p><img alt=trap_gate src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/trap_gate.png></p><p>先看看第一行<code>gate_desc s;</code>，主要分配了门描述符的结构。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-16>16</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*gate_desc 结构 &#34;arch/x86/include/asm/desc_defs.h&#34; */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>typedef</span> <span style=color:#007020;font-weight:700>struct</span> desc_struct gate_desc;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> desc_struct {
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>union</span> {
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>                        <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> a; <span style=color:#60a0b0;font-style:italic>// 4字节
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                        <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> b; <span style=color:#60a0b0;font-style:italic>// 4字节
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                };
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>                        u16 limit0; <span style=color:#60a0b0;font-style:italic>// 2字节 位移的低16位
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                        u16 base0;  <span style=color:#60a0b0;font-style:italic>// 2字节 段选择码
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                        <span style=color:#902000>unsigned</span> <span style=color:#002070;font-weight:700>base1</span>: <span style=color:#40a070>8</span>, <span style=color:#002070;font-weight:700>type</span>: <span style=color:#40a070>4</span>, <span style=color:#002070;font-weight:700>s</span>: <span style=color:#40a070>1</span>, <span style=color:#002070;font-weight:700>dpl</span>: <span style=color:#40a070>2</span>, <span style=color:#002070;font-weight:700>p</span>: <span style=color:#40a070>1</span>; <span style=color:#60a0b0;font-style:italic>// 2字节
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                        <span style=color:#902000>unsigned</span> <span style=color:#002070;font-weight:700>limit</span>: <span style=color:#40a070>4</span>, <span style=color:#002070;font-weight:700>avl</span>: <span style=color:#40a070>1</span>, <span style=color:#002070;font-weight:700>l</span>: <span style=color:#40a070>1</span>, <span style=color:#002070;font-weight:700>d</span>: <span style=color:#40a070>1</span>, <span style=color:#002070;font-weight:700>g</span>: <span style=color:#40a070>1</span>, <span style=color:#002070;font-weight:700>base2</span>: <span style=color:#40a070>8</span>; <span style=color:#60a0b0;font-style:italic>//2字节
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>                };
 </span></span><span style=display:flex><span>        };
-</span></span><span style=display:flex><span>} <span style=color:#a6e22e>__attribute__</span>((packed));
-</span></span></code></pre></div><blockquote><p><strong>attribute</strong> ((packed)) 的作用就是告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐，是GCC特有的语法。这个功能是跟操作系统没关系，跟编译器有关，gcc编译器不是紧凑模式的，在windows下，用vc的编译器也不是紧凑的，用tc的编译器就是紧凑的。</p><p>例如：</p><p>在TC下：struct my{ char ch; int a;} sizeof(int)=2;sizeof(my)=3;（紧凑模式）<br>在GCC下：struct my{ char ch; int a;} sizeof(int)=4;sizeof(my)=8;（非紧凑模式）<br>在GCC下：struct my{ char ch; int a;}<strong>attrubte</strong> ((packed)) sizeof(int)=4;sizeof(my)=5</p></blockquote><p><code>struct desc_struct</code>包含一个联合体，可以用其中任何一种类型，后边可以看到<code>pack_gate()</code>函数使用联合体中的第一种，即<code>struct {unsigned int a; unsigned int b};</code>。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/* 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>参数
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	gate = n = SYSCALL_VECTOR = 0x80;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	type = GATE_TRAP = 0xF;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    addr = &amp;system_call;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    dpl = 0x3;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    ist = 0;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    seg = __KERNEL_CS = 2*8;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>inline</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>pack_gate</span>(gate_desc <span style=color:#f92672>*</span>gate, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>char</span> type,
-</span></span><span style=display:flex><span>                             <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> base, <span style=color:#66d9ef>unsigned</span> dpl, <span style=color:#66d9ef>unsigned</span> flags,
-</span></span><span style=display:flex><span>                             <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>short</span> seg)
+</span></span><span style=display:flex><span>} <span style=color:#06287e>__attribute__</span>((packed));
+</span></span></code></pre></td></tr></table></div></div><blockquote><p><strong>attribute</strong> ((packed)) 的作用就是告诉编译器取消结构在编译过程中的优化对齐,按照实际占用字节数进行对齐，是GCC特有的语法。这个功能是跟操作系统没关系，跟编译器有关，gcc编译器不是紧凑模式的，在windows下，用vc的编译器也不是紧凑的，用tc的编译器就是紧凑的。</p><p>例如：</p><p>在TC下：struct my{ char ch; int a;} sizeof(int)=2;sizeof(my)=3;（紧凑模式）<br>在GCC下：struct my{ char ch; int a;} sizeof(int)=4;sizeof(my)=8;（非紧凑模式）<br>在GCC下：struct my{ char ch; int a;}<strong>attrubte</strong> ((packed)) sizeof(int)=4;sizeof(my)=5</p></blockquote><p><code>struct desc_struct</code>包含一个联合体，可以用其中任何一种类型，后边可以看到<code>pack_gate()</code>函数使用联合体中的第一种，即<code>struct {unsigned int a; unsigned int b};</code>。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-17>17</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>参数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	gate = n = SYSCALL_VECTOR = 0x80;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	type = GATE_TRAP = 0xF;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    addr = &amp;system_call;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    dpl = 0x3;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    ist = 0;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    seg = __KERNEL_CS = 2*8;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>void</span> <span style=color:#06287e>pack_gate</span>(gate_desc <span style=color:#666>*</span>gate, <span style=color:#902000>unsigned</span> <span style=color:#902000>char</span> type,
+</span></span><span style=display:flex><span>                             <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> base, <span style=color:#902000>unsigned</span> dpl, <span style=color:#902000>unsigned</span> flags,
+</span></span><span style=display:flex><span>                             <span style=color:#902000>unsigned</span> <span style=color:#902000>short</span> seg)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        gate<span style=color:#f92672>-&gt;</span>a <span style=color:#f92672>=</span> (seg <span style=color:#f92672>&lt;&lt;</span> <span style=color:#ae81ff>16</span>) <span style=color:#f92672>|</span> (base <span style=color:#f92672>&amp;</span> <span style=color:#ae81ff>0xffff</span>);
-</span></span><span style=display:flex><span>        gate<span style=color:#f92672>-&gt;</span>b <span style=color:#f92672>=</span> (base <span style=color:#f92672>&amp;</span> <span style=color:#ae81ff>0xffff0000</span>) <span style=color:#f92672>|</span>
-</span></span><span style=display:flex><span>                  (((<span style=color:#ae81ff>0x80</span> <span style=color:#f92672>|</span> type <span style=color:#f92672>|</span> (dpl <span style=color:#f92672>&lt;&lt;</span> <span style=color:#ae81ff>5</span>)) <span style=color:#f92672>&amp;</span> <span style=color:#ae81ff>0xff</span>) <span style=color:#f92672>&lt;&lt;</span> <span style=color:#ae81ff>8</span>);
+</span></span><span style=display:flex><span>        gate<span style=color:#666>-&gt;</span>a <span style=color:#666>=</span> (seg <span style=color:#666>&lt;&lt;</span> <span style=color:#40a070>16</span>) <span style=color:#666>|</span> (base <span style=color:#666>&amp;</span> <span style=color:#40a070>0xffff</span>);
+</span></span><span style=display:flex><span>        gate<span style=color:#666>-&gt;</span>b <span style=color:#666>=</span> (base <span style=color:#666>&amp;</span> <span style=color:#40a070>0xffff0000</span>) <span style=color:#666>|</span>
+</span></span><span style=display:flex><span>                  (((<span style=color:#40a070>0x80</span> <span style=color:#666>|</span> type <span style=color:#666>|</span> (dpl <span style=color:#666>&lt;&lt;</span> <span style=color:#40a070>5</span>)) <span style=color:#666>&amp;</span> <span style=color:#40a070>0xff</span>) <span style=color:#666>&lt;&lt;</span> <span style=color:#40a070>8</span>);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p><code>pack_gate()</code>此函数包装一个陷阱门描述符。<code>gate->a</code>在低地址。</p><blockquote><pre><code>/*
+</span></span></code></pre></td></tr></table></div></div><p><code>pack_gate()</code>此函数包装一个陷阱门描述符。<code>gate->a</code>在低地址。</p><blockquote><pre><code>/*
 gate-&gt;a = (seg &lt;&lt; 16) | (base &amp; 0xffff);
 gate-&gt;a = ((2*8)&lt;&lt;16 | (&amp;system_call &amp; 0xffff);
 (&amp;system_call &amp; 0xffff) : 中断服务函数地址段内偏移的低16位
@@ -148,26 +262,45 @@ gate-&gt;b = (&amp;system_call &amp; 0xffff0000) | (((0x80 | 0xF  | (0x3 &lt;&lt
 	D ： 1 表示32位
 	111 ： 类型码 ： 陷阱门
 */
-</code></pre></blockquote><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#define write_idt_entry(dt, entry, g)           \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        native_write_idt_entry(dt, entry, g)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>参数
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    idt = idt_table;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    entry = gate = n = SYSCALL_VECTOR = 0x80;;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    gate = &amp;s；
-</span></span></span><span style=display:flex><span><span style=color:#75715e>其中
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	gate_desc idt_table[256] 
-</span></span></span><span style=display:flex><span><span style=color:#75715e>			__attribute__((__section__(&#34;.data.idt&#34;))) = { { { { 0, 0 } } }, };
-</span></span></span><span style=display:flex><span><span style=color:#75715e>			
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	typedef struct desc_struct gate_desc;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>inline</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>native_write_idt_entry</span>(gate_desc <span style=color:#f92672>*</span>idt, <span style=color:#66d9ef>int</span> entry,
-</span></span><span style=display:flex><span>                                          <span style=color:#66d9ef>const</span> gate_desc <span style=color:#f92672>*</span>gate)
+</code></pre></blockquote><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-19>19</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#define write_idt_entry(dt, entry, g)           \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        native_write_idt_entry(dt, entry, g)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>参数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    idt = idt_table;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    entry = gate = n = SYSCALL_VECTOR = 0x80;;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    gate = &amp;s；
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>其中
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	gate_desc idt_table[256] 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>			__attribute__((__section__(&#34;.data.idt&#34;))) = { { { { 0, 0 } } }, };
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>			
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	typedef struct desc_struct gate_desc;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>void</span> <span style=color:#06287e>native_write_idt_entry</span>(gate_desc <span style=color:#666>*</span>idt, <span style=color:#902000>int</span> entry,
+</span></span><span style=display:flex><span>                                          <span style=color:#007020;font-weight:700>const</span> gate_desc <span style=color:#666>*</span>gate)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>memcpy</span>(<span style=color:#f92672>&amp;</span>idt[entry], gate, <span style=color:#66d9ef>sizeof</span>(<span style=color:#f92672>*</span>gate));
+</span></span><span style=display:flex><span>        <span style=color:#06287e>memcpy</span>(<span style=color:#666>&amp;</span>idt[entry], gate, <span style=color:#007020;font-weight:700>sizeof</span>(<span style=color:#666>*</span>gate));
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p><code>native_write_idt_entry()</code>此函数将<code>pack_gate()</code>函数封装的陷阱门描述符拷贝进<code>idt</code>的0x80位置。</p><h2 id=系统调用的中断服务程序分析>系统调用的中断服务程序分析</h2><pre tabindex=0><code class=language-assembly data-lang=assembly>/*arch/x86/kernel/entry_32.S*/
+</span></span></code></pre></td></tr></table></div></div><p><code>native_write_idt_entry()</code>此函数将<code>pack_gate()</code>函数封装的陷阱门描述符拷贝进<code>idt</code>的0x80位置。</p><h2 id=系统调用的中断服务程序分析>系统调用的中断服务程序分析</h2><pre tabindex=0><code class=language-assembly data-lang=assembly>/*arch/x86/kernel/entry_32.S*/
 
         # system call handler stub
 ENTRY(system_call)
@@ -249,69 +382,131 @@ ENTRY(sys_call_table)
         movl %edx, %fs
         SET_KERNEL_GS %edx
 .endm
-</code></pre><p>穿插一些宏暂时不知道干什么的，先不管。主要看一下寄存器的压栈顺序：<code>%es %ds %eax %ebp %edi %esi %edx %ecx %ebx</code></p><p><img alt=image-stack_status src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/stack_status.png></p><h2 id=系统调用的定义>系统调用的定义</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/* include/linux/syscalls.h */</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE0(sname)                                  \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        static const struct syscall_metadata __used             \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>          __attribute__((__aligned__(4)))                       \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>          __attribute__((section(&#34;__syscalls_metadata&#34;)))       \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>          __syscall_meta_##sname = {                            \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                .name           = &#34;sys_&#34;#sname,                 \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                .nb_args        = 0,                            \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        };                                                      \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        asmlinkage long sys_##sname(void)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#else
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE0(name)      asmlinkage long sys_##name(void)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#endif
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE1(name, ...) SYSCALL_DEFINEx(1, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE2(name, ...) SYSCALL_DEFINEx(2, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE5(name, ...) SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 其中 SYSCALL_DEFINEx*/</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#ifdef CONFIG_FTRACE_SYSCALLS </span><span style=color:#75715e>/*ftrace是内核提供的一种调试工具*/</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINEx(x, sname, ...)                          \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        static const char *types_##sname[] = {                  \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                __SC_STR_TDECL##x(__VA_ARGS__)                  \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        };                                                      \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        static const char *args_##sname[] = {                   \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                __SC_STR_ADECL##x(__VA_ARGS__)                  \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        };                                                      \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        SYSCALL_METADATA(sname, x);                             \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#else
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINEx(x, sname, ...)                          \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#endif
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#ifdef CONFIG_HAVE_SYSCALL_WRAPPERS
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE(name) static inline long SYSC_##name
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#define __SYSCALL_DEFINEx(x, name, ...)                                 \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        asmlinkage long sys##name(__SC_DECL##x(__VA_ARGS__));           \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        static inline long SYSC##name(__SC_DECL##x(__VA_ARGS__));       \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        asmlinkage long SyS##name(__SC_LONG##x(__VA_ARGS__))            \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        {                                                               \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                __SC_TEST##x(__VA_ARGS__);                              \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                return (long) SYSC##name(__SC_CAST##x(__VA_ARGS__));    \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        }                                                               \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        SYSCALL_ALIAS(sys##name, SyS##name);                            \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        static inline long SYSC##name(__SC_DECL##x(__VA_ARGS__))
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#else </span><span style=color:#75715e>/* CONFIG_HAVE_SYSCALL_WRAPPERS */</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#define SYSCALL_DEFINE(name) asmlinkage long sys_##name
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __SYSCALL_DEFINEx(x, name, ...)                                 \
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        asmlinkage long sys##name(__SC_DECL##x(__VA_ARGS__))
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#endif </span><span style=color:#75715e>/* CONFIG_HAVE_SYSCALL_WRAPPERS */</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 后边是所有系统调用的函数声明 */</span>
-</span></span><span style=display:flex><span>asmlinkage <span style=color:#66d9ef>long</span> <span style=color:#a6e22e>sys_time</span>(<span style=color:#66d9ef>time_t</span> __user <span style=color:#f92672>*</span>tloc);
-</span></span></code></pre></div><p>系统调用的定义分布在内核源代码多个源文件中<code>find . -type f -name "*.c" | xargs grep SYSCALL_DEFINE | wc -l</code></p><h2 id=系统调用号>系统调用号</h2><p>每个系统调用<code>xxx</code>都对应着一个系统调用号<code>__NR_xxx</code>。当应用程序调用某系统调用时，寄存器eax中保存该系统调用对应的系统调用号。系统调用号定义于如下头文件中：</p><pre tabindex=0><code>include/linux/unistd.h				
+</code></pre><p>穿插一些宏暂时不知道干什么的，先不管。主要看一下寄存器的压栈顺序：<code>%es %ds %eax %ebp %edi %esi %edx %ecx %ebx</code></p><p><img alt=image-stack_status src=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/stack_status.png></p><h2 id=系统调用的定义>系统调用的定义</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-45>45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-46>46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-47>47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-48>48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-49>49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-50>50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-51>51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-52>52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-53>53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-54>54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-55><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-55>55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-56><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-56>56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-57><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-57>57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-58><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-58>58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-59><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-59>59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-60><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-60>60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-61><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-61>61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-62><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-62>62</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* include/linux/syscalls.h */</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE0(sname)                                  \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        static const struct syscall_metadata __used             \
+</span></span></span><span style=display:flex><span><span style=color:#007020>          __attribute__((__aligned__(4)))                       \
+</span></span></span><span style=display:flex><span><span style=color:#007020>          __attribute__((section(&#34;__syscalls_metadata&#34;)))       \
+</span></span></span><span style=display:flex><span><span style=color:#007020>          __syscall_meta_##sname = {                            \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                .name           = &#34;sys_&#34;#sname,                 \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                .nb_args        = 0,                            \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        };                                                      \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        asmlinkage long sys_##sname(void)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#else
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE0(name)      asmlinkage long sys_##name(void)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE1(name, ...) SYSCALL_DEFINEx(1, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE2(name, ...) SYSCALL_DEFINEx(2, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE5(name, ...) SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 其中 SYSCALL_DEFINEx*/</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#ifdef CONFIG_FTRACE_SYSCALLS </span><span style=color:#60a0b0;font-style:italic>/*ftrace是内核提供的一种调试工具*/</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINEx(x, sname, ...)                          \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        static const char *types_##sname[] = {                  \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                __SC_STR_TDECL##x(__VA_ARGS__)                  \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        };                                                      \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        static const char *args_##sname[] = {                   \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                __SC_STR_ADECL##x(__VA_ARGS__)                  \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        };                                                      \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        SYSCALL_METADATA(sname, x);                             \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#else
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINEx(x, sname, ...)                          \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        __SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#ifdef CONFIG_HAVE_SYSCALL_WRAPPERS
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE(name) static inline long SYSC_##name
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#define __SYSCALL_DEFINEx(x, name, ...)                                 \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        asmlinkage long sys##name(__SC_DECL##x(__VA_ARGS__));           \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        static inline long SYSC##name(__SC_DECL##x(__VA_ARGS__));       \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        asmlinkage long SyS##name(__SC_LONG##x(__VA_ARGS__))            \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        {                                                               \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                __SC_TEST##x(__VA_ARGS__);                              \
+</span></span></span><span style=display:flex><span><span style=color:#007020>                return (long) SYSC##name(__SC_CAST##x(__VA_ARGS__));    \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        }                                                               \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        SYSCALL_ALIAS(sys##name, SyS##name);                            \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        static inline long SYSC##name(__SC_DECL##x(__VA_ARGS__))
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#else </span><span style=color:#60a0b0;font-style:italic>/* CONFIG_HAVE_SYSCALL_WRAPPERS */</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#define SYSCALL_DEFINE(name) asmlinkage long sys_##name
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __SYSCALL_DEFINEx(x, name, ...)                                 \
+</span></span></span><span style=display:flex><span><span style=color:#007020>        asmlinkage long sys##name(__SC_DECL##x(__VA_ARGS__))
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#endif </span><span style=color:#60a0b0;font-style:italic>/* CONFIG_HAVE_SYSCALL_WRAPPERS */</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 后边是所有系统调用的函数声明 */</span>
+</span></span><span style=display:flex><span>asmlinkage <span style=color:#902000>long</span> <span style=color:#06287e>sys_time</span>(<span style=color:#902000>time_t</span> __user <span style=color:#666>*</span>tloc);
+</span></span></code></pre></td></tr></table></div></div><p>系统调用的定义分布在内核源代码多个源文件中<code>find . -type f -name "*.c" | xargs grep SYSCALL_DEFINE | wc -l</code></p><h2 id=系统调用号>系统调用号</h2><p>每个系统调用<code>xxx</code>都对应着一个系统调用号<code>__NR_xxx</code>。当应用程序调用某系统调用时，寄存器eax中保存该系统调用对应的系统调用号。系统调用号定义于如下头文件中：</p><pre tabindex=0><code>include/linux/unistd.h				
 +-  arch/x86/include/asm/unistd.h
     +-  arch/x86/include/asm/unistd_32.h
     |   +-  ...
@@ -321,101 +516,189 @@ ENTRY(sys_call_table)
         +-  ...
         +-  #define __NR_process_vm_writev  311
         +-  __SYSCALL(__NR_process_vm_writev, sys_process_vm_writev)
-</code></pre><p>在应用程序中仅需包含头文件<code>#include &lt;unistd.h></code>即可。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#ifndef _LINUX_UNISTD_H_
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define _LINUX_UNISTD_H_
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * Include machine specific syscall numbers
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;asm/unistd.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#endif </span><span style=color:#75715e>/* _LINUX_UNISTD_H_ */</span><span style=color:#75715e>
-</span></span></span></code></pre></div><p>对于x86而言，<code>asm/unistd.h</code>即为<code>arch/x86/include/asm/unistd.h</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#ifdef __KERNEL__
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  ifdef CONFIG_X86_32
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#    include &#34;unistd_32.h&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  else
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#    include &#34;unistd_64.h&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  endif
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#else
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  ifdef __i386__
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#    include &#34;unistd_32.h&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  else
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#    include &#34;unistd_64.h&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#  endif
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#endif
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>对于</span>x86 <span style=color:#ae81ff>32</span><span style=color:#f92672>-</span>bit而言<span style=color:#960050;background-color:#1e0010>，</span>unistd_32.h即为arch<span style=color:#f92672>/</span>x86<span style=color:#f92672>/</span>include<span style=color:#f92672>/</span><span style=color:#66d9ef>asm</span><span style=color:#f92672>/</span>unistd_32.h:
-</span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_restart_syscall		0
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_exit			1
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_fork			2
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_read			3
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_write			4
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_open			5
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_close			6
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>...
-</span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_process_vm_readv		347
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_process_vm_writev		348
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#ifdef __KERNEL__
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define NR_syscalls			349
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#endif
-</span></span></span></code></pre></div><h2 id=系统调用的返回值>系统调用的返回值</h2><p>如果系统调用执行失败，系统调用并不直接返回错误码，而是将错误码保存到全局变量<code>errno</code>中，因而可根据<code>errno</code>的值来确定错误类型。错误码定义于如下头文件中：</p><pre tabindex=0><code>include/linux/errno.h				// 错误码512-530
+</code></pre><p>在应用程序中仅需包含头文件<code>#include &lt;unistd.h></code>即可。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-3>3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-4>4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-5>5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-6>6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-7>7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-8>8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-9>9</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#ifndef _LINUX_UNISTD_H_
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define _LINUX_UNISTD_H_
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * Include machine specific syscall numbers
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;asm/unistd.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#endif </span><span style=color:#60a0b0;font-style:italic>/* _LINUX_UNISTD_H_ */</span><span style=color:#007020>
+</span></span></span></code></pre></td></tr></table></div></div><p>对于x86而言，<code>asm/unistd.h</code>即为<code>arch/x86/include/asm/unistd.h</code>:</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-29>29</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#ifdef __KERNEL__
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  ifdef CONFIG_X86_32
+</span></span></span><span style=display:flex><span><span style=color:#007020>#    include &#34;unistd_32.h&#34;
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  else
+</span></span></span><span style=display:flex><span><span style=color:#007020>#    include &#34;unistd_64.h&#34;
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  endif
+</span></span></span><span style=display:flex><span><span style=color:#007020>#else
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  ifdef __i386__
+</span></span></span><span style=display:flex><span><span style=color:#007020>#    include &#34;unistd_32.h&#34;
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  else
+</span></span></span><span style=display:flex><span><span style=color:#007020>#    include &#34;unistd_64.h&#34;
+</span></span></span><span style=display:flex><span><span style=color:#007020>#  endif
+</span></span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span>对于</span>x86 <span style=color:#40a070>32</span><span style=color:#666>-</span>bit而言<span>，</span>unistd_32.h即为arch<span style=color:#666>/</span>x86<span style=color:#666>/</span>include<span style=color:#666>/</span><span style=color:#007020;font-weight:700>asm</span><span style=color:#666>/</span>unistd_32.<span style=color:#002070;font-weight:700>h</span>:
+</span></span><span style=display:flex><span><span style=color:#007020>#define __NR_restart_syscall		0
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_exit			1
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_fork			2
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_read			3
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_write			4
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_open			5
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_close			6
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>...
+</span></span><span style=display:flex><span><span style=color:#007020>#define __NR_process_vm_readv		347
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_process_vm_writev		348
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#ifdef __KERNEL__
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define NR_syscalls			349
+</span></span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=系统调用的返回值>系统调用的返回值</h2><p>如果系统调用执行失败，系统调用并不直接返回错误码，而是将错误码保存到全局变量<code>errno</code>中，因而可根据<code>errno</code>的值来确定错误类型。错误码定义于如下头文件中：</p><pre tabindex=0><code>include/linux/errno.h				// 错误码512-530
 -&gt; arch/x86/include/asm/errno.h			// 仅包含asm-generic/errno.h，未新增错误码
    -&gt; include/asm-generic/errno.h		// 错误码35-133
       -&gt; include/asm-generic/errno-base.h	// 错误码1-34
 </code></pre><p>也可以执行<code> man errno</code>查询到。</p><h2 id=新增系统调用>新增系统调用</h2><h3 id=通过修改内核代码>通过修改内核代码</h3><ul><li>确定新增的系统调用号<ol><li>修改arch/x86/include/asm/unistd_32.h，为新增的系统调用定义的系统调用号<code>#define _NR_testsyscall 350</code></li><li>修改arch/x86/kernel/syscall_table_32.S，将新增的系统调用加入到系统调用表，即数组sys_call_table中写入：<code>long sys_testsyscall /* 350 */</code></li></ol></li><li>编写新增的系统调用
-编写一个系统调用意味着要给内核增加一个函数，将该函数写入文件kernel/sys.c中，代码如下：<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#a6e22e>SYSCALL_DEFINE0</span>(testsyscall)
+编写一个系统调用意味着要给内核增加一个函数，将该函数写入文件kernel/sys.c中，代码如下：<div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-14-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-14-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-14-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-14-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-14-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-14-3>3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-14-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-14-4>4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-14-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-14-5>5</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#06287e>SYSCALL_DEFINE0</span>(testsyscall)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>console_print</span>(<span style=color:#e6db74>&#34;hello world</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>      <span style=color:#06287e>console_print</span>(<span style=color:#4070a0>&#34;hello world</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>      <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li><li>使用新增的系统调用
-因为C库中没有新增的系统调用的程序段，必须自己建立其代码，如下：<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#inculde &lt;syscalls.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>SYSCALL_DEFINE0</span>(testsyscall)
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span>()
+</span></span></code></pre></td></tr></table></div></div></li><li>使用新增的系统调用
+因为C库中没有新增的系统调用的程序段，必须自己建立其代码，如下：<div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-3>3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-4>4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-5>5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-15-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-15-6>6</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#inculde &lt;syscalls.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#06287e>SYSCALL_DEFINE0</span>(testsyscall)
+</span></span><span style=display:flex><span><span style=color:#902000>void</span> <span style=color:#06287e>main</span>()
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tsetsyscall</span>();
+</span></span><span style=display:flex><span>    <span style=color:#06287e>tsetsyscall</span>();
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div></li></ul><h3 id=通过编写插入内核模块>通过编写插入内核模块</h3><ul><li>编写系统调用内核模块<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>  <span style=color:#75715e>#inculde &lt;linux/kernel.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>#inculde &lt;linux/module.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>#inculde &lt;linux/modversions.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>#inculde &lt;linux/sched.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>#inculde &lt;asm/uaccess.h&gt;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>  <span style=color:#75715e>#define _NR_testsyscall 350
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>extern</span> <span style=color:#66d9ef>void</span> <span style=color:#f92672>*</span>sys_call_table[];
+</span></span></code></pre></td></tr></table></div></div></li></ul><h3 id=通过编写插入内核模块>通过编写插入内核模块</h3><ul><li>编写系统调用内核模块<div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-16-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-16-28>28</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>  <span style=color:#007020>#inculde &lt;linux/kernel.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>  <span style=color:#007020>#inculde &lt;linux/module.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>  <span style=color:#007020>#inculde &lt;linux/modversions.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>  <span style=color:#007020>#inculde &lt;linux/sched.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>  <span style=color:#007020>#inculde &lt;asm/uaccess.h&gt;
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span>  <span style=color:#007020>#define _NR_testsyscall 350
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>extern</span> <span style=color:#902000>void</span> <span style=color:#666>*</span>sys_call_table[];
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  asmlinkage <span style=color:#66d9ef>long</span> <span style=color:#a6e22e>testsyscall</span>()
+</span></span><span style=display:flex><span>  asmlinkage <span style=color:#902000>long</span> <span style=color:#06287e>testsyscall</span>()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;hello world</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>      <span style=color:#06287e>printf</span>(<span style=color:#4070a0>&#34;hello world</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>      <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span>  <span style=color:#a6e22e>syscall_test_init</span>()
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span>  <span style=color:#06287e>syscall_test_init</span>()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>      sys_call_table[_NR_tsetsyscall] <span style=color:#f92672>=</span> testsyscall;
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>printf</span>(<span style=color:#e6db74>&#34;system call testsyscall() loaded success</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>      sys_call_table[_NR_tsetsyscall] <span style=color:#666>=</span> testsyscall;
+</span></span><span style=display:flex><span>      <span style=color:#06287e>printf</span>(<span style=color:#4070a0>&#34;system call testsyscall() loaded success</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>      <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#a6e22e>module_init</span>(syscall_test_init);
+</span></span><span style=display:flex><span>  <span style=color:#06287e>module_init</span>(syscall_test_init);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>syscall_test_exit</span>()
+</span></span><span style=display:flex><span>  <span style=color:#902000>void</span> <span style=color:#06287e>syscall_test_exit</span>()
 </span></span><span style=display:flex><span>  {
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#a6e22e>module_exit</span>(syscall_test_exit)
-</span></span></code></pre></div></li><li>编写使用新增的系统调用的代码</li><li>编译内核模块并插入内核模块</li></ul><h2 id=从用户空间直接访问系统调用>从用户空间直接访问系统调用</h2><p>方式一：通过C库函数，C库函数封装了所有的系统调用。</p><p>方式二：2.6.18版本之前的内核可以使用<code>_syscall</code>宏。但是自2.6.19版本开始，<code>_syscall</code>宏被废除，我们需要使用<code>syscall</code>函数，通过指定<code>系统调用号</code>和一组参数来调用系统调用。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unistd.h&gt; </span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/syscall.h&gt; </span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/types.h&gt; </span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __NR_gettid      224  
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>int</span> argc, <span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>argv[])  
+</span></span><span style=display:flex><span>  <span style=color:#06287e>module_exit</span>(syscall_test_exit)
+</span></span></code></pre></td></tr></table></div></div></li><li>编写使用新增的系统调用的代码</li><li>编译内核模块并插入内核模块</li></ul><h2 id=从用户空间直接访问系统调用>从用户空间直接访问系统调用</h2><p>方式一：通过C库函数，C库函数封装了所有的系统调用。</p><p>方式二：2.6.18版本之前的内核可以使用<code>_syscall</code>宏。但是自2.6.19版本开始，<code>_syscall</code>宏被废除，我们需要使用<code>syscall</code>函数，通过指定<code>系统调用号</code>和一组参数来调用系统调用。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-17-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-17-11>11</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;unistd.h&gt; </span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;sys/syscall.h&gt; </span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;sys/types.h&gt; </span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __NR_gettid      224  
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#902000>int</span> <span style=color:#06287e>main</span>(<span style=color:#902000>int</span> argc, <span style=color:#902000>char</span> <span style=color:#666>*</span>argv[])  
 </span></span><span style=display:flex><span>{  
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>pid_t</span> tid;  
+</span></span><span style=display:flex><span>    <span style=color:#902000>pid_t</span> tid;  
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    tid <span style=color:#f92672>=</span> <span style=color:#a6e22e>syscall</span>(__NR_gettid);  <span style=color:#75715e>//括号内参数直接写224也可以
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>/*也可以写成tid = syscall(SYS_gettid);*/</span>
+</span></span><span style=display:flex><span>    tid <span style=color:#666>=</span> <span style=color:#06287e>syscall</span>(__NR_gettid);  <span style=color:#60a0b0;font-style:italic>//括号内参数直接写224也可以
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>    <span style=color:#60a0b0;font-style:italic>/*也可以写成tid = syscall(SYS_gettid);*/</span>
 </span></span><span style=display:flex><span>} 
-</span></span></code></pre></div><p><a href=https://www.jianshu.com/p/5e96fd50f3b5>参考</a></p><blockquote><p>注： syscall()函数是glibc中的一个用户空间函数，可以通过<code>man syscall</code>命令查看，函数声明在/usr/include/unistd.h中，对应系统调用号在/usr/include/asm-generic/unistd.h中声明。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+</span></span></code></pre></td></tr></table></div></div><p><a href=https://www.jianshu.com/p/5e96fd50f3b5>参考</a></p><blockquote><p>注： syscall()函数是glibc中的一个用户空间函数，可以通过<code>man syscall</code>命令查看，函数声明在/usr/include/unistd.h中，对应系统调用号在/usr/include/asm-generic/unistd.h中声明。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>2019-04-15</span></p><p class=copyright-item><span class=item-title>License</span>
 <span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div><nav class=post-nav><a class=prev href=/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>

@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>platform总线驱动 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="platform总线驱动"><meta property="og:description" content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="Kernel Driver"><meta property="article:tag" content="Platform总线驱动"><meta itemprop=name content="platform总线驱动"><meta itemprop=description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="2467"><meta itemprop=keywords content="Kernel Driver,Platform总线驱动"><meta name=twitter:card content="summary"><meta name=twitter:title content="platform总线驱动"><meta name=twitter:description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/linux-kernel/2020-10-06-platform%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="platform总线驱动"><meta property="og:description" content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="Kernel Driver"><meta property="article:tag" content="Platform总线驱动"><meta itemprop=name content="platform总线驱动"><meta itemprop=description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="2787"><meta itemprop=keywords content="Kernel Driver,Platform总线驱动"><meta name=twitter:card content="summary"><meta name=twitter:title content="platform总线驱动"><meta name=twitter:description content="Linux内核 platform总线驱动 platform总线驱动 在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -7,327 +7,647 @@
 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
 </button>
 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>platform总线驱动</h1><div class=post-meta><div class=post-meta-author>by
-<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/linux-kernel/>Linux Kernel</a></div></div></div></header><div class=post-content><h1 id=linux内核-platform总线驱动>Linux内核 platform总线驱动</h1><h1 id=platform总线驱动>platform总线驱动</h1><p>在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线将设备和驱动绑定。在系统中每注册一个设备时，总线会寻找与之匹配的驱动；相反的，在系统每注册一个驱动的时候，总线会寻找与之匹配的设备，而匹配绑定工作由总线完成。</p><p><code>platform</code>总线是linux系统中的一种虚拟总线，相应的设备称为<code>platform_device</code>对应的驱动称为<code>platfor_driver</code>。</p><h2 id=platform_device>platform_device</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/platform_device.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>struct</span> platform_device {
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span>	<span style=color:#f92672>*</span> name;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span>		id;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> device	dev;  <span style=color:#75715e>// 在linux设备驱动模型文章中有所介绍，是linux中所有设备对象的抽象
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	u32		num_resources; <span style=color:#75715e>// 设备对应的资源数量
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>struct</span> resource	<span style=color:#f92672>*</span> resource; <span style=color:#75715e>// 设备资源数组
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>struct</span> platform_device_id	<span style=color:#f92672>*</span>id_entry; <span style=color:#75715e>//用于和platform_driver匹配
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>/* MFD cell pointer */</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> mfd_cell <span style=color:#f92672>*</span>mfd_cell;
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/linux-kernel/>Linux Kernel</a></div></div></div></header><div class=post-content><h1 id=linux内核-platform总线驱动>Linux内核 platform总线驱动</h1><h1 id=platform总线驱动>platform总线驱动</h1><p>在linux2.6以后的设备驱动模型中，需要关心总线、设备和驱动三个实体，总线将设备和驱动绑定。在系统中每注册一个设备时，总线会寻找与之匹配的驱动；相反的，在系统每注册一个驱动的时候，总线会寻找与之匹配的设备，而匹配绑定工作由总线完成。</p><p><code>platform</code>总线是linux系统中的一种虚拟总线，相应的设备称为<code>platform_device</code>对应的驱动称为<code>platfor_driver</code>。</p><h2 id=platform_device>platform_device</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-45>45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-46>46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-47>47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-48>48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-49>49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-50>50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-51>51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-52>52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-53>53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-54>54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-55><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-55>55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-56><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-56>56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-57><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-57>57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-58><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-58>58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-59><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-59>59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-60><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-60>60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-61><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-61>61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-62><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-62>62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-63><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-63>63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-64><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-64>64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-65><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-65>65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-66><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-66>66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-67><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-67>67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-68><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-68>68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-69><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-69>69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-70><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-70>70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-71><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-71>71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-72><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-72>72</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/platform_device.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#007020;font-weight:700>struct</span> platform_device {
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>const</span> <span style=color:#902000>char</span>	<span style=color:#666>*</span> name;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span>		id;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> device	dev;  <span style=color:#60a0b0;font-style:italic>// 在linux设备驱动模型文章中有所介绍，是linux中所有设备对象的抽象
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	u32		num_resources; <span style=color:#60a0b0;font-style:italic>// 设备对应的资源数量
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	<span style=color:#007020;font-weight:700>struct</span> resource	<span style=color:#666>*</span> resource; <span style=color:#60a0b0;font-style:italic>// 设备资源数组
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>const</span> <span style=color:#007020;font-weight:700>struct</span> platform_device_id	<span style=color:#666>*</span>id_entry; <span style=color:#60a0b0;font-style:italic>//用于和platform_driver匹配
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* MFD cell pointer */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> mfd_cell <span style=color:#666>*</span>mfd_cell;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>/* arch specific additions */</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> pdev_archdata	archdata;
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* arch specific additions */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> pdev_archdata	archdata;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_device_register</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>); <span style=color:#75715e>//此函数调用platform_device_add(pdev)完成向platform总线注册设备
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>platform_device_unregister</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>); <span style=color:#75715e>//此函数调用platform_device_del(pdev)完成从platform总线中删除设备
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_add_devices</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>**</span>, <span style=color:#66d9ef>int</span>); <span style=color:#75715e>//循环调用platform_device_register函数，批量注册platform_device
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>platform_device_register</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>); <span style=color:#60a0b0;font-style:italic>//此函数调用platform_device_add(pdev)完成向platform总线注册设备
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#902000>void</span> <span style=color:#06287e>platform_device_unregister</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>); <span style=color:#60a0b0;font-style:italic>//此函数调用platform_device_del(pdev)完成从platform总线中删除设备
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#902000>int</span> <span style=color:#06287e>platform_add_devices</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>**</span>, <span style=color:#902000>int</span>); <span style=color:#60a0b0;font-style:italic>//循环调用platform_device_register函数，批量注册platform_device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//函数定义在 drivers/base/platform.c中
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_device_register - add a platform-level device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @pdev: platform device we&#39;re adding
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_device_register</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>pdev)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//函数定义在 drivers/base/platform.c中
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_device_register - add a platform-level device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @pdev: platform device we&#39;re adding
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>platform_device_register</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>pdev)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>device_initialize</span>(<span style=color:#f92672>&amp;</span>pdev<span style=color:#f92672>-&gt;</span>dev);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>platform_device_add</span>(pdev);
+</span></span><span style=display:flex><span>	<span style=color:#06287e>device_initialize</span>(<span style=color:#666>&amp;</span>pdev<span style=color:#666>-&gt;</span>dev);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> <span style=color:#06287e>platform_device_add</span>(pdev);
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#a6e22e>EXPORT_SYMBOL_GPL</span>(platform_device_register);
+</span></span><span style=display:flex><span><span style=color:#06287e>EXPORT_SYMBOL_GPL</span>(platform_device_register);
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_device_unregister - unregister a platform-level device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @pdev: platform device we&#39;re unregistering
-</span></span></span><span style=display:flex><span><span style=color:#75715e> *
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * Unregistration is done in 2 steps. First we release all resources
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * and remove it from the subsystem, then we drop reference count by
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * calling platform_device_put().
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>platform_device_unregister</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>pdev)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_device_unregister - unregister a platform-level device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @pdev: platform device we&#39;re unregistering
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * Unregistration is done in 2 steps. First we release all resources
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * and remove it from the subsystem, then we drop reference count by
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * calling platform_device_put().
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>void</span> <span style=color:#06287e>platform_device_unregister</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>pdev)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>platform_device_del</span>(pdev);
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>platform_device_put</span>(pdev);
+</span></span><span style=display:flex><span>	<span style=color:#06287e>platform_device_del</span>(pdev);
+</span></span><span style=display:flex><span>	<span style=color:#06287e>platform_device_put</span>(pdev);
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#a6e22e>EXPORT_SYMBOL_GPL</span>(platform_device_unregister);
+</span></span><span style=display:flex><span><span style=color:#06287e>EXPORT_SYMBOL_GPL</span>(platform_device_unregister);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_add_devices - add a numbers of platform devices
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @devs: array of platform devices to add
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @num: number of platform devices in array
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_add_devices</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>**</span>devs, <span style=color:#66d9ef>int</span> num)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_add_devices - add a numbers of platform devices
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @devs: array of platform devices to add
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @num: number of platform devices in array
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>platform_add_devices</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>**</span>devs, <span style=color:#902000>int</span> num)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> i, ret <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> i, ret <span style=color:#666>=</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> num; i<span style=color:#f92672>++</span>) {
-</span></span><span style=display:flex><span>		ret <span style=color:#f92672>=</span> <span style=color:#a6e22e>platform_device_register</span>(devs[i]);
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> (ret) {
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>while</span> (<span style=color:#f92672>--</span>i <span style=color:#f92672>&gt;=</span> <span style=color:#ae81ff>0</span>)
-</span></span><span style=display:flex><span>				<span style=color:#a6e22e>platform_device_unregister</span>(devs[i]);
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>break</span>;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>for</span> (i <span style=color:#666>=</span> <span style=color:#40a070>0</span>; i <span style=color:#666>&lt;</span> num; i<span style=color:#666>++</span>) {
+</span></span><span style=display:flex><span>		ret <span style=color:#666>=</span> <span style=color:#06287e>platform_device_register</span>(devs[i]);
+</span></span><span style=display:flex><span>		<span style=color:#007020;font-weight:700>if</span> (ret) {
+</span></span><span style=display:flex><span>			<span style=color:#007020;font-weight:700>while</span> (<span style=color:#666>--</span>i <span style=color:#666>&gt;=</span> <span style=color:#40a070>0</span>)
+</span></span><span style=display:flex><span>				<span style=color:#06287e>platform_device_unregister</span>(devs[i]);
+</span></span><span style=display:flex><span>			<span style=color:#007020;font-weight:700>break</span>;
 </span></span><span style=display:flex><span>		}
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> ret;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> ret;
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#a6e22e>EXPORT_SYMBOL_GPL</span>(platform_add_devices);
-</span></span></code></pre></div><p>在板文件中，<code>platform_device</code>通常被组织成一个数组，通过在板级初始化时调用<code>platform_add_devices()</code>函数统一注册，例如<code>mach-smdkv210.c</code>的<code>smdkv210_machine_init()</code>函数调用<code>platform_add_devices(smdkv210_devices, ARRAY_SIZE(smdkv210_devices));</code>就是采用这种统一注册多个设备的方法。</p><h2 id=platform_driver>platform_driver</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/platform_device.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>struct</span> platform_driver {
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> (<span style=color:#f92672>*</span>probe)(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> (<span style=color:#f92672>*</span>remove)(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>void</span> (<span style=color:#f92672>*</span>shutdown)(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> (<span style=color:#f92672>*</span>suspend)(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>, <span style=color:#66d9ef>pm_message_t</span> state);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> (<span style=color:#f92672>*</span>resume)(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> device_driver driver; <span style=color:#75715e>// 在linux设备驱动模型文章中有所介绍，是linux中所有驱动对象的抽象
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>struct</span> platform_device_id <span style=color:#f92672>*</span>id_table;
+</span></span><span style=display:flex><span><span style=color:#06287e>EXPORT_SYMBOL_GPL</span>(platform_add_devices);
+</span></span></code></pre></td></tr></table></div></div><p>在板文件中，<code>platform_device</code>通常被组织成一个数组，通过在板级初始化时调用<code>platform_add_devices()</code>函数统一注册，例如<code>mach-smdkv210.c</code>的<code>smdkv210_machine_init()</code>函数调用<code>platform_add_devices(smdkv210_devices, ARRAY_SIZE(smdkv210_devices));</code>就是采用这种统一注册多个设备的方法。</p><h2 id=platform_driver>platform_driver</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-40>40</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/platform_device.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#007020;font-weight:700>struct</span> platform_driver {
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> (<span style=color:#666>*</span>probe)(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>);
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> (<span style=color:#666>*</span>remove)(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>);
+</span></span><span style=display:flex><span>	<span style=color:#902000>void</span> (<span style=color:#666>*</span>shutdown)(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>);
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> (<span style=color:#666>*</span>suspend)(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>, <span style=color:#902000>pm_message_t</span> state);
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> (<span style=color:#666>*</span>resume)(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> device_driver driver; <span style=color:#60a0b0;font-style:italic>// 在linux设备驱动模型文章中有所介绍，是linux中所有驱动对象的抽象
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	<span style=color:#007020;font-weight:700>const</span> <span style=color:#007020;font-weight:700>struct</span> platform_device_id <span style=color:#666>*</span>id_table;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// 操作方法如下
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_driver_register</span>(<span style=color:#66d9ef>struct</span> platform_driver <span style=color:#f92672>*</span>drv); <span style=color:#75715e>//初始化platform_driver结构，并向系统中注册struct driver
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>platform_driver_unregister</span>(<span style=color:#66d9ef>struct</span> platform_driver <span style=color:#f92672>*</span>drv); <span style=color:#75715e>//从系统中删除struct driver
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// drivers/base/platform.c中定义
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_driver_register - register a driver for platform-level devices
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @drv: platform driver structure
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_driver_register</span>(<span style=color:#66d9ef>struct</span> platform_driver <span style=color:#f92672>*</span>drv)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 操作方法如下
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#902000>int</span> <span style=color:#06287e>platform_driver_register</span>(<span style=color:#007020;font-weight:700>struct</span> platform_driver <span style=color:#666>*</span>drv); <span style=color:#60a0b0;font-style:italic>//初始化platform_driver结构，并向系统中注册struct driver
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#902000>void</span> <span style=color:#06287e>platform_driver_unregister</span>(<span style=color:#007020;font-weight:700>struct</span> platform_driver <span style=color:#666>*</span>drv); <span style=color:#60a0b0;font-style:italic>//从系统中删除struct driver
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// drivers/base/platform.c中定义
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_driver_register - register a driver for platform-level devices
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @drv: platform driver structure
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>platform_driver_register</span>(<span style=color:#007020;font-weight:700>struct</span> platform_driver <span style=color:#666>*</span>drv)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	drv<span style=color:#f92672>-&gt;</span>driver.bus <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>platform_bus_type;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (drv<span style=color:#f92672>-&gt;</span>probe)
-</span></span><span style=display:flex><span>		drv<span style=color:#f92672>-&gt;</span>driver.probe <span style=color:#f92672>=</span> platform_drv_probe;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (drv<span style=color:#f92672>-&gt;</span>remove)
-</span></span><span style=display:flex><span>		drv<span style=color:#f92672>-&gt;</span>driver.remove <span style=color:#f92672>=</span> platform_drv_remove;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (drv<span style=color:#f92672>-&gt;</span>shutdown)
-</span></span><span style=display:flex><span>		drv<span style=color:#f92672>-&gt;</span>driver.shutdown <span style=color:#f92672>=</span> platform_drv_shutdown;
+</span></span><span style=display:flex><span>	drv<span style=color:#666>-&gt;</span>driver.bus <span style=color:#666>=</span> <span style=color:#666>&amp;</span>platform_bus_type;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (drv<span style=color:#666>-&gt;</span>probe)
+</span></span><span style=display:flex><span>		drv<span style=color:#666>-&gt;</span>driver.probe <span style=color:#666>=</span> platform_drv_probe;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (drv<span style=color:#666>-&gt;</span>remove)
+</span></span><span style=display:flex><span>		drv<span style=color:#666>-&gt;</span>driver.remove <span style=color:#666>=</span> platform_drv_remove;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (drv<span style=color:#666>-&gt;</span>shutdown)
+</span></span><span style=display:flex><span>		drv<span style=color:#666>-&gt;</span>driver.shutdown <span style=color:#666>=</span> platform_drv_shutdown;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>driver_register</span>(<span style=color:#f92672>&amp;</span>drv<span style=color:#f92672>-&gt;</span>driver);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> <span style=color:#06287e>driver_register</span>(<span style=color:#666>&amp;</span>drv<span style=color:#666>-&gt;</span>driver);
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_driver_unregister - unregister a driver for platform-level devices
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @drv: platform driver structure
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>platform_driver_unregister</span>(<span style=color:#66d9ef>struct</span> platform_driver <span style=color:#f92672>*</span>drv)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_driver_unregister - unregister a driver for platform-level devices
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @drv: platform driver structure
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>void</span> <span style=color:#06287e>platform_driver_unregister</span>(<span style=color:#007020;font-weight:700>struct</span> platform_driver <span style=color:#666>*</span>drv)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>driver_unregister</span>(<span style=color:#f92672>&amp;</span>drv<span style=color:#f92672>-&gt;</span>driver);
+</span></span><span style=display:flex><span>	<span style=color:#06287e>driver_unregister</span>(<span style=color:#666>&amp;</span>drv<span style=color:#666>-&gt;</span>driver);
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=platform的bus_type定义>platform的bus_type定义</h2><p>系统为<code>platform</code>总线定义了一个<code>bus_type</code>的实例，在<code>drivers/base/platform.c</code>中描述。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>// drivers/base/platform.c
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>struct</span> device platform_bus <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	.init_name	<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;platform&#34;</span>,
+</span></span></code></pre></td></tr></table></div></div><h2 id=platform的bus_type定义>platform的bus_type定义</h2><p>系统为<code>platform</code>总线定义了一个<code>bus_type</code>的实例，在<code>drivers/base/platform.c</code>中描述。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-37>37</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// drivers/base/platform.c
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>struct</span> device platform_bus <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	.init_name	<span style=color:#666>=</span> <span style=color:#4070a0>&#34;platform&#34;</span>,
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> bus_type platform_bus_type <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	.name		<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;platform&#34;</span>,
-</span></span><span style=display:flex><span>	.dev_attrs	<span style=color:#f92672>=</span> platform_dev_attrs,
-</span></span><span style=display:flex><span>	.match		<span style=color:#f92672>=</span> platform_match,
-</span></span><span style=display:flex><span>	.uevent		<span style=color:#f92672>=</span> platform_uevent,
-</span></span><span style=display:flex><span>	.pm		<span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span>platform_dev_pm_ops,
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> bus_type platform_bus_type <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	.name		<span style=color:#666>=</span> <span style=color:#4070a0>&#34;platform&#34;</span>,
+</span></span><span style=display:flex><span>	.dev_attrs	<span style=color:#666>=</span> platform_dev_attrs,
+</span></span><span style=display:flex><span>	.match		<span style=color:#666>=</span> platform_match,
+</span></span><span style=display:flex><span>	.uevent		<span style=color:#666>=</span> platform_uevent,
+</span></span><span style=display:flex><span>	.pm		<span style=color:#666>=</span> <span style=color:#666>&amp;</span>platform_dev_pm_ops,
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> __init <span style=color:#a6e22e>platform_bus_init</span>(<span style=color:#66d9ef>void</span>)
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> __init <span style=color:#06287e>platform_bus_init</span>(<span style=color:#902000>void</span>)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> error;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> error;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#a6e22e>early_platform_cleanup</span>();
+</span></span><span style=display:flex><span>	<span style=color:#06287e>early_platform_cleanup</span>();
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	error <span style=color:#f92672>=</span> <span style=color:#a6e22e>device_register</span>(<span style=color:#f92672>&amp;</span>platform_bus);
-</span></span><span style=display:flex><span>    	<span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		注册了一个struct device对象作为，其他platform_device的parent
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		比如在platform_device_add(pdev)函数中
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		pdev-&gt;dev.parent = &amp;platform_bus
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    	*/</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (error)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> error;
-</span></span><span style=display:flex><span>	error <span style=color:#f92672>=</span>  <span style=color:#a6e22e>bus_register</span>(<span style=color:#f92672>&amp;</span>platform_bus_type); 
-</span></span><span style=display:flex><span>    	<span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		注册总线
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    		在platform_device_add(pdev)函数中pdev-&gt;dev.bus = &amp;platform_bus_type
-</span></span></span><span style=display:flex><span><span style=color:#75715e>    	*/</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (error)
-</span></span><span style=display:flex><span>		<span style=color:#a6e22e>device_unregister</span>(<span style=color:#f92672>&amp;</span>platform_bus);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> error;
+</span></span><span style=display:flex><span>	error <span style=color:#666>=</span> <span style=color:#06287e>device_register</span>(<span style=color:#666>&amp;</span>platform_bus);
+</span></span><span style=display:flex><span>    	<span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		注册了一个struct device对象作为，其他platform_device的parent
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		比如在platform_device_add(pdev)函数中
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		pdev-&gt;dev.parent = &amp;platform_bus
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    	*/</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (error)
+</span></span><span style=display:flex><span>		<span style=color:#007020;font-weight:700>return</span> error;
+</span></span><span style=display:flex><span>	error <span style=color:#666>=</span>  <span style=color:#06287e>bus_register</span>(<span style=color:#666>&amp;</span>platform_bus_type); 
+</span></span><span style=display:flex><span>    	<span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		注册总线
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    		在platform_device_add(pdev)函数中pdev-&gt;dev.bus = &amp;platform_bus_type
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>    	*/</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (error)
+</span></span><span style=display:flex><span>		<span style=color:#06287e>device_unregister</span>(<span style=color:#666>&amp;</span>platform_bus);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> error;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><p>其中<code>match()</code>方法完成<code>platform_device</code>和<code>platform_driver</code>之间是如何进行匹配的。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_match</span>(<span style=color:#66d9ef>struct</span> device <span style=color:#f92672>*</span>dev, <span style=color:#66d9ef>struct</span> device_driver <span style=color:#f92672>*</span>drv)
+</span></span></code></pre></td></tr></table></div></div><p>其中<code>match()</code>方法完成<code>platform_device</code>和<code>platform_driver</code>之间是如何进行匹配的。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-40>40</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>int</span> <span style=color:#06287e>platform_match</span>(<span style=color:#007020;font-weight:700>struct</span> device <span style=color:#666>*</span>dev, <span style=color:#007020;font-weight:700>struct</span> device_driver <span style=color:#666>*</span>drv)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>pdev <span style=color:#f92672>=</span> <span style=color:#a6e22e>to_platform_device</span>(dev);
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>struct</span> platform_driver <span style=color:#f92672>*</span>pdrv <span style=color:#f92672>=</span> <span style=color:#a6e22e>to_platform_driver</span>(drv);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>pdev <span style=color:#666>=</span> <span style=color:#06287e>to_platform_device</span>(dev);
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>struct</span> platform_driver <span style=color:#666>*</span>pdrv <span style=color:#666>=</span> <span style=color:#06287e>to_platform_driver</span>(drv);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>/* Attempt an OF style match first */</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>of_driver_match_device</span>(dev, drv)) <span style=color:#75715e>//设备树匹配方式
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>		<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* Attempt an OF style match first */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (<span style=color:#06287e>of_driver_match_device</span>(dev, drv)) <span style=color:#60a0b0;font-style:italic>//设备树匹配方式
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>		<span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>1</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>/* Then try to match against the id table */</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> (pdrv<span style=color:#f92672>-&gt;</span>id_table)
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>platform_match_id</span>(pdrv<span style=color:#f92672>-&gt;</span>id_table, pdev) <span style=color:#f92672>!=</span> NULL;
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* Then try to match against the id table */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (pdrv<span style=color:#666>-&gt;</span>id_table)
+</span></span><span style=display:flex><span>		<span style=color:#007020;font-weight:700>return</span> <span style=color:#06287e>platform_match_id</span>(pdrv<span style=color:#666>-&gt;</span>id_table, pdev) <span style=color:#666>!=</span> <span style=color:#007020>NULL</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>	<span style=color:#75715e>/* fall-back to driver name match */</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> (<span style=color:#a6e22e>strcmp</span>(pdev<span style=color:#f92672>-&gt;</span>name, drv<span style=color:#f92672>-&gt;</span>name) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>);
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* fall-back to driver name match */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> (<span style=color:#06287e>strcmp</span>(pdev<span style=color:#666>-&gt;</span>name, drv<span style=color:#666>-&gt;</span>name) <span style=color:#666>==</span> <span style=color:#40a070>0</span>);
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//其中
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#define to_platform_driver(drv)	(container_of((drv), struct platform_driver, driver))
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define to_platform_device(x) container_of((x), struct platform_device, dev)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>struct</span> platform_device_id <span style=color:#f92672>*</span><span style=color:#a6e22e>platform_match_id</span>(
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>struct</span> platform_device_id <span style=color:#f92672>*</span>id,
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>pdev)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//其中
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020>#define to_platform_driver(drv)	(container_of((drv), struct platform_driver, driver))
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define to_platform_device(x) container_of((x), struct platform_device, dev)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>const</span> <span style=color:#007020;font-weight:700>struct</span> platform_device_id <span style=color:#666>*</span><span style=color:#06287e>platform_match_id</span>(
+</span></span><span style=display:flex><span>			<span style=color:#007020;font-weight:700>const</span> <span style=color:#007020;font-weight:700>struct</span> platform_device_id <span style=color:#666>*</span>id,
+</span></span><span style=display:flex><span>			<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>pdev)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span> (id<span style=color:#f92672>-&gt;</span>name[<span style=color:#ae81ff>0</span>]) {
-</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>strcmp</span>(pdev<span style=color:#f92672>-&gt;</span>name, id<span style=color:#f92672>-&gt;</span>name) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>) {
-</span></span><span style=display:flex><span>			pdev<span style=color:#f92672>-&gt;</span>id_entry <span style=color:#f92672>=</span> id;
-</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> id;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>while</span> (id<span style=color:#666>-&gt;</span>name[<span style=color:#40a070>0</span>]) {
+</span></span><span style=display:flex><span>		<span style=color:#007020;font-weight:700>if</span> (<span style=color:#06287e>strcmp</span>(pdev<span style=color:#666>-&gt;</span>name, id<span style=color:#666>-&gt;</span>name) <span style=color:#666>==</span> <span style=color:#40a070>0</span>) {
+</span></span><span style=display:flex><span>			pdev<span style=color:#666>-&gt;</span>id_entry <span style=color:#666>=</span> id;
+</span></span><span style=display:flex><span>			<span style=color:#007020;font-weight:700>return</span> id;
 </span></span><span style=display:flex><span>		}
-</span></span><span style=display:flex><span>		id<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>		id<span style=color:#666>++</span>;
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> NULL;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> <span style=color:#007020>NULL</span>;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> platform_device_id {
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>char</span> name[PLATFORM_NAME_SIZE];
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>kernel_ulong_t</span> driver_data
-</span></span><span style=display:flex><span>			<span style=color:#a6e22e>__attribute__</span>((<span style=color:#a6e22e>aligned</span>(<span style=color:#66d9ef>sizeof</span>(<span style=color:#66d9ef>kernel_ulong_t</span>))));
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> platform_device_id {
+</span></span><span style=display:flex><span>	<span style=color:#902000>char</span> name[PLATFORM_NAME_SIZE];
+</span></span><span style=display:flex><span>	<span style=color:#902000>kernel_ulong_t</span> driver_data
+</span></span><span style=display:flex><span>			<span style=color:#06287e>__attribute__</span>((<span style=color:#06287e>aligned</span>(<span style=color:#007020;font-weight:700>sizeof</span>(<span style=color:#902000>kernel_ulong_t</span>))));
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></div><p>下边是一个<code>platform_device</code>和<code>platform_driver</code>匹配的实例。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>// arch/arm/mach-smdkv210.c
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> resource s3c_i2c_resource[] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.start <span style=color:#f92672>=</span> S3C_PA_IIC,
-</span></span><span style=display:flex><span>		.end   <span style=color:#f92672>=</span> S3C_PA_IIC <span style=color:#f92672>+</span> SZ_4K <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>,
-</span></span><span style=display:flex><span>		.flags <span style=color:#f92672>=</span> IORESOURCE_MEM,
+</span></span></code></pre></td></tr></table></div></div><p>下边是一个<code>platform_device</code>和<code>platform_driver</code>匹配的实例。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-45>45</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// arch/arm/mach-smdkv210.c
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> resource s3c_i2c_resource[] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	[<span style=color:#40a070>0</span>] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.start <span style=color:#666>=</span> S3C_PA_IIC,
+</span></span><span style=display:flex><span>		.end   <span style=color:#666>=</span> S3C_PA_IIC <span style=color:#666>+</span> SZ_4K <span style=color:#666>-</span> <span style=color:#40a070>1</span>,
+</span></span><span style=display:flex><span>		.flags <span style=color:#666>=</span> IORESOURCE_MEM,
 </span></span><span style=display:flex><span>	},
-</span></span><span style=display:flex><span>	[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.start <span style=color:#f92672>=</span> IRQ_IIC,
-</span></span><span style=display:flex><span>		.end   <span style=color:#f92672>=</span> IRQ_IIC,
-</span></span><span style=display:flex><span>		.flags <span style=color:#f92672>=</span> IORESOURCE_IRQ,
+</span></span><span style=display:flex><span>	[<span style=color:#40a070>1</span>] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.start <span style=color:#666>=</span> IRQ_IIC,
+</span></span><span style=display:flex><span>		.end   <span style=color:#666>=</span> IRQ_IIC,
+</span></span><span style=display:flex><span>		.flags <span style=color:#666>=</span> IORESOURCE_IRQ,
 </span></span><span style=display:flex><span>	},
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> platform_device s3c_device_i2c0 <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	.name		  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;s3c2410-i2c&#34;</span>,
-</span></span><span style=display:flex><span>	.id		  <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>,
-</span></span><span style=display:flex><span>	.num_resources	  <span style=color:#f92672>=</span> <span style=color:#a6e22e>ARRAY_SIZE</span>(s3c_i2c_resource),
-</span></span><span style=display:flex><span>	.resource	  <span style=color:#f92672>=</span> s3c_i2c_resource,
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> platform_device s3c_device_i2c0 <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	.name		  <span style=color:#666>=</span> <span style=color:#4070a0>&#34;s3c2410-i2c&#34;</span>,
+</span></span><span style=display:flex><span>	.id		  <span style=color:#666>=</span> <span style=color:#40a070>0</span>,
+</span></span><span style=display:flex><span>	.num_resources	  <span style=color:#666>=</span> <span style=color:#06287e>ARRAY_SIZE</span>(s3c_i2c_resource),
+</span></span><span style=display:flex><span>	.resource	  <span style=color:#666>=</span> s3c_i2c_resource,
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// drivers/i2c/busses/i2c-s3c2410.c中关于platform_driver的定义
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* device driver for platform bus bits */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> platform_device_id s3c24xx_driver_ids[] <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// drivers/i2c/busses/i2c-s3c2410.c中关于platform_driver的定义
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* device driver for platform bus bits */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> platform_device_id s3c24xx_driver_ids[] <span style=color:#666>=</span> {
 </span></span><span style=display:flex><span>	{
-</span></span><span style=display:flex><span>		.name		<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;s3c2410-i2c&#34;</span>,
-</span></span><span style=display:flex><span>		.driver_data	<span style=color:#f92672>=</span> TYPE_S3C2410,
+</span></span><span style=display:flex><span>		.name		<span style=color:#666>=</span> <span style=color:#4070a0>&#34;s3c2410-i2c&#34;</span>,
+</span></span><span style=display:flex><span>		.driver_data	<span style=color:#666>=</span> TYPE_S3C2410,
 </span></span><span style=display:flex><span>	}, {
-</span></span><span style=display:flex><span>		.name		<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;s3c2440-i2c&#34;</span>,
-</span></span><span style=display:flex><span>		.driver_data	<span style=color:#f92672>=</span> TYPE_S3C2440,
-</span></span><span style=display:flex><span>	}, { }, <span style=color:#75715e>// platform_device_id是一个数组,最后以空元素结尾
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
+</span></span><span style=display:flex><span>		.name		<span style=color:#666>=</span> <span style=color:#4070a0>&#34;s3c2440-i2c&#34;</span>,
+</span></span><span style=display:flex><span>		.driver_data	<span style=color:#666>=</span> TYPE_S3C2440,
+</span></span><span style=display:flex><span>	}, { }, <span style=color:#60a0b0;font-style:italic>// platform_device_id是一个数组,最后以空元素结尾
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>MODULE_DEVICE_TABLE</span>(platform, s3c24xx_driver_ids);
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> platform_driver s3c24xx_i2c_driver <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	.probe		<span style=color:#f92672>=</span> s3c24xx_i2c_probe,
-</span></span><span style=display:flex><span>	.remove		<span style=color:#f92672>=</span> s3c24xx_i2c_remove,
-</span></span><span style=display:flex><span>	.id_table	<span style=color:#f92672>=</span> s3c24xx_driver_ids, <span style=color:#75715e>// 用于和platform_device中的name字段匹配
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	.driver		<span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.owner	<span style=color:#f92672>=</span> THIS_MODULE,
-</span></span><span style=display:flex><span>		.name	<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;s3c-i2c&#34;</span>,
-</span></span><span style=display:flex><span>		.pm	<span style=color:#f92672>=</span> S3C24XX_DEV_PM_OPS,
+</span></span><span style=display:flex><span><span style=color:#06287e>MODULE_DEVICE_TABLE</span>(platform, s3c24xx_driver_ids);
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> platform_driver s3c24xx_i2c_driver <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	.probe		<span style=color:#666>=</span> s3c24xx_i2c_probe,
+</span></span><span style=display:flex><span>	.remove		<span style=color:#666>=</span> s3c24xx_i2c_remove,
+</span></span><span style=display:flex><span>	.id_table	<span style=color:#666>=</span> s3c24xx_driver_ids, <span style=color:#60a0b0;font-style:italic>// 用于和platform_device中的name字段匹配
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	.driver		<span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.owner	<span style=color:#666>=</span> THIS_MODULE,
+</span></span><span style=display:flex><span>		.name	<span style=color:#666>=</span> <span style=color:#4070a0>&#34;s3c-i2c&#34;</span>,
+</span></span><span style=display:flex><span>		.pm	<span style=color:#666>=</span> S3C24XX_DEV_PM_OPS,
 </span></span><span style=display:flex><span>	},
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></div><h2 id=关于资源>关于资源</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/ioport.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>struct</span> resource {
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>resource_size_t</span> start;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>resource_size_t</span> end;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>name;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> flags; <span style=color:#75715e>// IORESOURCE_IO  IORESOURCE_MEM IORESOURCE_IRQ等 在include /linux/ioport.h中有描述
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>struct</span> resource <span style=color:#f92672>*</span>parent, <span style=color:#f92672>*</span>sibling, <span style=color:#f92672>*</span>child;
+</span></span></code></pre></td></tr></table></div></div><h2 id=关于资源>关于资源</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-24>24</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/ioport.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#007020;font-weight:700>struct</span> resource {
+</span></span><span style=display:flex><span>	<span style=color:#902000>resource_size_t</span> start;
+</span></span><span style=display:flex><span>	<span style=color:#902000>resource_size_t</span> end;
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>const</span> <span style=color:#902000>char</span> <span style=color:#666>*</span>name;
+</span></span><span style=display:flex><span>	<span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> flags; <span style=color:#60a0b0;font-style:italic>// IORESOURCE_IO  IORESOURCE_MEM IORESOURCE_IRQ等 在include /linux/ioport.h中有描述
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	<span style=color:#007020;font-weight:700>struct</span> resource <span style=color:#666>*</span>parent, <span style=color:#666>*</span>sibling, <span style=color:#666>*</span>child;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/platform_device.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_get_resource - get a resource for a device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @dev: platform device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @type: resource type
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @num: resource index
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> resource <span style=color:#f92672>*</span><span style=color:#a6e22e>platform_get_resource</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span>);
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/platform_device.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_get_resource - get a resource for a device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @dev: platform device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @type: resource type
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @num: resource index
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> resource <span style=color:#666>*</span><span style=color:#06287e>platform_get_resource</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>, <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span>, <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span>);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/**
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * platform_get_irq - get an IRQ for a device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @dev: platform device
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * @num: IRQ number index
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>platform_get_irq</span>(<span style=color:#66d9ef>struct</span> platform_device <span style=color:#f92672>*</span>, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span>);
-</span></span></code></pre></div><p>定义资源以及获取资源的实例</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>// arch/arm/mach-at91/board-sam9261ek.c
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> resource dm9000_resource[] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>	[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.start	<span style=color:#f92672>=</span> AT91_CHIPSELECT_2,
-</span></span><span style=display:flex><span>		.end	<span style=color:#f92672>=</span> AT91_CHIPSELECT_2 <span style=color:#f92672>+</span> <span style=color:#ae81ff>3</span>,
-</span></span><span style=display:flex><span>		.flags	<span style=color:#f92672>=</span> IORESOURCE_MEM
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * platform_get_irq - get an IRQ for a device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @dev: platform device
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @num: IRQ number index
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>platform_get_irq</span>(<span style=color:#007020;font-weight:700>struct</span> platform_device <span style=color:#666>*</span>, <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span>);
+</span></span></code></pre></td></tr></table></div></div><p>定义资源以及获取资源的实例</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-26>26</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// arch/arm/mach-at91/board-sam9261ek.c
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> resource dm9000_resource[] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>	[<span style=color:#40a070>0</span>] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.start	<span style=color:#666>=</span> AT91_CHIPSELECT_2,
+</span></span><span style=display:flex><span>		.end	<span style=color:#666>=</span> AT91_CHIPSELECT_2 <span style=color:#666>+</span> <span style=color:#40a070>3</span>,
+</span></span><span style=display:flex><span>		.flags	<span style=color:#666>=</span> IORESOURCE_MEM
 </span></span><span style=display:flex><span>	},
-</span></span><span style=display:flex><span>	[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.start	<span style=color:#f92672>=</span> AT91_CHIPSELECT_2 <span style=color:#f92672>+</span> <span style=color:#ae81ff>0x44</span>,
-</span></span><span style=display:flex><span>		.end	<span style=color:#f92672>=</span> AT91_CHIPSELECT_2 <span style=color:#f92672>+</span> <span style=color:#ae81ff>0xFF</span>,
-</span></span><span style=display:flex><span>		.flags	<span style=color:#f92672>=</span> IORESOURCE_MEM
+</span></span><span style=display:flex><span>	[<span style=color:#40a070>1</span>] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.start	<span style=color:#666>=</span> AT91_CHIPSELECT_2 <span style=color:#666>+</span> <span style=color:#40a070>0x44</span>,
+</span></span><span style=display:flex><span>		.end	<span style=color:#666>=</span> AT91_CHIPSELECT_2 <span style=color:#666>+</span> <span style=color:#40a070>0xFF</span>,
+</span></span><span style=display:flex><span>		.flags	<span style=color:#666>=</span> IORESOURCE_MEM
 </span></span><span style=display:flex><span>	},
-</span></span><span style=display:flex><span>	[<span style=color:#ae81ff>2</span>] <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>		.start	<span style=color:#f92672>=</span> AT91_PIN_PC11,
-</span></span><span style=display:flex><span>		.end	<span style=color:#f92672>=</span> AT91_PIN_PC11,
-</span></span><span style=display:flex><span>		.flags	<span style=color:#f92672>=</span> IORESOURCE_IRQ
-</span></span><span style=display:flex><span>			<span style=color:#f92672>|</span> IORESOURCE_IRQ_LOWEDGE <span style=color:#f92672>|</span> IORESOURCE_IRQ_HIGHEDGE,
+</span></span><span style=display:flex><span>	[<span style=color:#40a070>2</span>] <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.start	<span style=color:#666>=</span> AT91_PIN_PC11,
+</span></span><span style=display:flex><span>		.end	<span style=color:#666>=</span> AT91_PIN_PC11,
+</span></span><span style=display:flex><span>		.flags	<span style=color:#666>=</span> IORESOURCE_IRQ
+</span></span><span style=display:flex><span>			<span style=color:#666>|</span> IORESOURCE_IRQ_LOWEDGE <span style=color:#666>|</span> IORESOURCE_IRQ_HIGHEDGE,
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// 获取资源实例
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>res_mem <span style=color:#f92672>=</span> <span style=color:#a6e22e>platform_get_resource</span>(pdev, IORESOURCE_MEM, <span style=color:#ae81ff>0</span>);
-</span></span><span style=display:flex><span>port<span style=color:#f92672>-&gt;</span>membase <span style=color:#f92672>=</span> <span style=color:#a6e22e>ioremap</span>(res_mem, ALTERA_JTAGUART_SIZE);
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 获取资源实例
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>res_mem <span style=color:#666>=</span> <span style=color:#06287e>platform_get_resource</span>(pdev, IORESOURCE_MEM, <span style=color:#40a070>0</span>);
+</span></span><span style=display:flex><span>port<span style=color:#666>-&gt;</span>membase <span style=color:#666>=</span> <span style=color:#06287e>ioremap</span>(res_mem, ALTERA_JTAGUART_SIZE);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>res_irq <span style=color:#f92672>=</span> <span style=color:#a6e22e>platform_get_resource</span>(pdev, IORESOURCE_IRQ, <span style=color:#ae81ff>0</span>);
-</span></span><span style=display:flex><span><span style=color:#a6e22e>request_irq</span>(res_irq, ....)    
-</span></span></code></pre></div><h2 id=platform_match什么时候被谁调用>platform_match()什么时候被谁调用？</h2><p>参考文献：<a href=https://www.cnblogs.com/hello2mhb/p/3319131.html>platform_driver_register()&ndash;如何match之后调用probe</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>platform_driver_register
-</span></span><span style=display:flex><span>    <span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>res_irq <span style=color:#666>=</span> <span style=color:#06287e>platform_get_resource</span>(pdev, IORESOURCE_IRQ, <span style=color:#40a070>0</span>);
+</span></span><span style=display:flex><span><span style=color:#06287e>request_irq</span>(res_irq, ....)    
+</span></span></code></pre></td></tr></table></div></div><h2 id=platform_match什么时候被谁调用>platform_match()什么时候被谁调用？</h2><p>参考文献：<a href=https://www.cnblogs.com/hello2mhb/p/3319131.html>platform_driver_register()&ndash;如何match之后调用probe</a></p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-36>36</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>platform_driver_register
+</span></span><span style=display:flex><span>    <span style=color:#666>|</span>
 </span></span><span style=display:flex><span>    driver_register
-</span></span><span style=display:flex><span>    	<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>    	<span style=color:#666>|</span>
 </span></span><span style=display:flex><span>    	bus_add_driver
-</span></span><span style=display:flex><span>    		<span style=color:#f92672>|</span>
-</span></span><span style=display:flex><span>    		<span style=color:#a6e22e>driver_attach</span>(drv)
-</span></span><span style=display:flex><span>    			<span style=color:#66d9ef>int</span> <span style=color:#a6e22e>driver_attach</span>(<span style=color:#66d9ef>struct</span> device_driver <span style=color:#f92672>*</span>drv)
+</span></span><span style=display:flex><span>    		<span style=color:#666>|</span>
+</span></span><span style=display:flex><span>    		<span style=color:#06287e>driver_attach</span>(drv)
+</span></span><span style=display:flex><span>    			<span style=color:#902000>int</span> <span style=color:#06287e>driver_attach</span>(<span style=color:#007020;font-weight:700>struct</span> device_driver <span style=color:#666>*</span>drv)
 </span></span><span style=display:flex><span>                {
-</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>bus_for_each_dev</span>(drv<span style=color:#f92672>-&gt;</span>bus, NULL, drv, __driver_attach);
+</span></span><span style=display:flex><span>                    <span style=color:#007020;font-weight:700>return</span> <span style=color:#06287e>bus_for_each_dev</span>(drv<span style=color:#666>-&gt;</span>bus, <span style=color:#007020>NULL</span>, drv, __driver_attach);
 </span></span><span style=display:flex><span>                }
-</span></span><span style=display:flex><span>				<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>				<span style=color:#666>|</span>
 </span></span><span style=display:flex><span>                __driver_attach
-</span></span><span style=display:flex><span>                    <span style=color:#f92672>|</span>
-</span></span><span style=display:flex><span>                    <span style=color:#a6e22e>driver_match_device</span>(drv, dev)
-</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>inline</span> <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>driver_match_device</span>(<span style=color:#66d9ef>struct</span> device_driver <span style=color:#f92672>*</span>drv,<span style=color:#66d9ef>struct</span> device <span style=color:#f92672>*</span>dev)
+</span></span><span style=display:flex><span>                    <span style=color:#666>|</span>
+</span></span><span style=display:flex><span>                    <span style=color:#06287e>driver_match_device</span>(drv, dev)
+</span></span><span style=display:flex><span>                    <span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>int</span> <span style=color:#06287e>driver_match_device</span>(<span style=color:#007020;font-weight:700>struct</span> device_driver <span style=color:#666>*</span>drv,<span style=color:#007020;font-weight:700>struct</span> device <span style=color:#666>*</span>dev)
 </span></span><span style=display:flex><span>                    {
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>return</span> drv<span style=color:#f92672>-&gt;</span>bus<span style=color:#f92672>-&gt;</span>match <span style=color:#f92672>?</span> drv<span style=color:#f92672>-&gt;</span>bus<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>match</span>(dev, drv) <span style=color:#f92672>:</span> <span style=color:#ae81ff>1</span>;
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>return</span> drv<span style=color:#666>-&gt;</span>bus<span style=color:#666>-&gt;</span>match <span style=color:#666>?</span> drv<span style=color:#666>-&gt;</span>bus<span style=color:#666>-&gt;</span><span style=color:#06287e>match</span>(dev, drv) <span style=color:#666>:</span> <span style=color:#40a070>1</span>;
 </span></span><span style=display:flex><span>                    }
-</span></span><span style=display:flex><span>                    	<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>                    	<span style=color:#666>|</span>
 </span></span><span style=display:flex><span>                   	 	driver_probe_device
-</span></span><span style=display:flex><span>                    		<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>                    		<span style=color:#666>|</span>
 </span></span><span style=display:flex><span>                    		really_probe
-</span></span><span style=display:flex><span>                    			<span style=color:#f92672>|</span>
-</span></span><span style=display:flex><span>                    			<span style=color:#66d9ef>if</span> (dev<span style=color:#f92672>-&gt;</span>bus<span style=color:#f92672>-&gt;</span>probe) {
-</span></span><span style=display:flex><span>                               		ret <span style=color:#f92672>=</span> dev<span style=color:#f92672>-&gt;</span>bus<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>probe</span>(dev);
-</span></span><span style=display:flex><span>                            	} <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (drv<span style=color:#f92672>-&gt;</span>probe) {
-</span></span><span style=display:flex><span>                                	ret <span style=color:#f92672>=</span> drv<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>probe</span>(dev);
+</span></span><span style=display:flex><span>                    			<span style=color:#666>|</span>
+</span></span><span style=display:flex><span>                    			<span style=color:#007020;font-weight:700>if</span> (dev<span style=color:#666>-&gt;</span>bus<span style=color:#666>-&gt;</span>probe) {
+</span></span><span style=display:flex><span>                               		ret <span style=color:#666>=</span> dev<span style=color:#666>-&gt;</span>bus<span style=color:#666>-&gt;</span><span style=color:#06287e>probe</span>(dev);
+</span></span><span style=display:flex><span>                            	} <span style=color:#007020;font-weight:700>else</span> <span style=color:#007020;font-weight:700>if</span> (drv<span style=color:#666>-&gt;</span>probe) {
+</span></span><span style=display:flex><span>                                	ret <span style=color:#666>=</span> drv<span style=color:#666>-&gt;</span><span style=color:#06287e>probe</span>(dev);
 </span></span><span style=display:flex><span>                            	}
-</span></span><span style=display:flex><span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e>	总结：
-</span></span></span><span style=display:flex><span><span style=color:#75715e>		bus_for_each_dev遍历总线drv-&gt;bus上的每个设备，并对每一个设备执行__driver_attach()函数;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>		__driver_attach()函数又调用driver_match_device()函数匹配pdev和pdrv, 而driver_match_device()函数会调用总线的match函数，对于platform总线来说match函数即platform_match();
-</span></span></span><span style=display:flex><span><span style=color:#75715e>		匹配成功后首先看总线有没有probe函数，若有则调用，否则调用驱动自己的probe函数, 而总线没有probe函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e>		
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
-</span></span></code></pre></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	总结：
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>		bus_for_each_dev遍历总线drv-&gt;bus上的每个设备，并对每一个设备执行__driver_attach()函数;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>		__driver_attach()函数又调用driver_match_device()函数匹配pdev和pdrv, 而driver_match_device()函数会调用总线的match函数，对于platform总线来说match函数即platform_match();
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>		匹配成功后首先看总线有没有probe函数，若有则调用，否则调用驱动自己的probe函数, 而总线没有probe函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>		
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>2019-04-15</span></p><p class=copyright-item><span class=item-title>License</span>
 <span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/kernel-driver/>Kernel driver</a>

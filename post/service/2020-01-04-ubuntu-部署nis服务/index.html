@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>buntu 部署NIS服务 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="buntu 部署NIS服务"><meta property="og:description" content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="NIS"><meta itemprop=name content="buntu 部署NIS服务"><meta itemprop=description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="1509"><meta itemprop=keywords content="NIS"><meta name=twitter:card content="summary"><meta name=twitter:title content="buntu 部署NIS服务"><meta name=twitter:description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="buntu 部署NIS服务"><meta property="og:description" content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="NIS"><meta itemprop=name content="buntu 部署NIS服务"><meta itemprop=description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="1588"><meta itemprop=keywords content="NIS"><meta name=twitter:card content="summary"><meta name=twitter:title content="buntu 部署NIS服务"><meta name=twitter:description content="Ubuntu 部署NIS服务 在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -11,86 +11,165 @@
 virtualbox : 6.1 ,网络设置为桥接模式
 master : ubuntu 18.04.03 LTS 192.168.50.79
 slave : ubuntu 18.04.03	LTS 192.168.50.185
-</code></pre><h2 id=服务端设置>服务端设置</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 1. 安装NIS</span>
+</code></pre><h2 id=服务端设置>服务端设置</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-31>31</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 1. 安装NIS</span>
 </span></span><span style=display:flex><span>apt update 
 </span></span><span style=display:flex><span>apt install nis 
-</span></span><span style=display:flex><span><span style=color:#75715e># 安装的时候会让设置域名，可以使用nisdomainname 查看/设置域名</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 2. 配置hosts文件</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 安装的时候会让设置域名，可以使用nisdomainname 查看/设置域名</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 2. 配置hosts文件</span>
 </span></span><span style=display:flex><span>vim /etc/hosts
 </span></span><span style=display:flex><span>192.168.50.185	slave
 </span></span><span style=display:flex><span>192.168.50.79		master
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 3. 修改配置文件</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 3. 修改配置文件</span>
 </span></span><span style=display:flex><span>vim /etc/default/nis
 </span></span><span style=display:flex><span>修改如下
-</span></span><span style=display:flex><span>NISSERVER<span style=color:#f92672>=</span>false <span style=color:#f92672>=</span>&gt; NISSERVER<span style=color:#f92672>=</span>master
+</span></span><span style=display:flex><span><span style=color:#bb60d5>NISSERVER</span><span style=color:#666>=</span><span style=color:#007020>false</span> <span style=color:#666>=</span>&gt; <span style=color:#bb60d5>NISSERVER</span><span style=color:#666>=</span>master
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>vim /etc/ypserv.conf
 </span></span><span style=display:flex><span>最后写入
 </span></span><span style=display:flex><span>127.0.0.1/255.0.0.0	:*	:*	:none
 </span></span><span style=display:flex><span>192.168.50.0/255.255.255.0	:*	:*	:none
 </span></span><span style=display:flex><span>*	:*	:*	:deny
-</span></span><span style=display:flex><span><span style=color:#75715e># 其中各字段的意义如下</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Host		: 需要设置权限的主机或网络	</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Domain	: 允许访问的域</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Map			: 密码数据库</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Security:	权限， none即不设置限制，deny为拒绝，port为只允许小于1024端口连接NIS</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 其中各字段的意义如下</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># Host		: 需要设置权限的主机或网络	</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># Domain	: 允许访问的域</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># Map			: 密码数据库</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># Security:	权限， none即不设置限制，deny为拒绝，port为只允许小于1024端口连接NIS</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 4. 启动ypserv</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 4. 启动ypserv</span>
 </span></span><span style=display:flex><span>service ypserv start
-</span></span><span style=display:flex><span><span style=color:#75715e># 5. 初始化数据库</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 5. 初始化数据库</span>
 </span></span><span style=display:flex><span>/usr/lib/yp/ypinit -m
 </span></span><span style=display:flex><span>确认域名无误后按&lt;Ctrl D&gt;
 </span></span><span style=display:flex><span>然后输入y，之后会初始化数据库，数据库会保存在 /var/yp/&lt;domain&gt; 
-</span></span></code></pre></div><h2 id=客户端设置>客户端设置</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 1. 安装NIS</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=客户端设置>客户端设置</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-25>25</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 1. 安装NIS</span>
 </span></span><span style=display:flex><span>apt update 
 </span></span><span style=display:flex><span>apt install nis
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 2. 修改hosts文件</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 2. 修改hosts文件</span>
 </span></span><span style=display:flex><span>vim /etc/hosts
 </span></span><span style=display:flex><span>192.168.50.185	slave
 </span></span><span style=display:flex><span>192.168.50.79		master
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 3. 修改DNS信息</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 3. 修改DNS信息</span>
 </span></span><span style=display:flex><span>vim /etc/nsswitch.conf
 </span></span><span style=display:flex><span>在以下行后添加nis字段
-</span></span><span style=display:flex><span>passwd:	compat	systemd nis <span style=color:#75715e># 此处的nis都是自己加的</span>
+</span></span><span style=display:flex><span>passwd:	compat	systemd nis <span style=color:#60a0b0;font-style:italic># 此处的nis都是自己加的</span>
 </span></span><span style=display:flex><span>shadow: compat	nis
 </span></span><span style=display:flex><span>group:	compat	systemd	nis
 </span></span><span style=display:flex><span>gshadow:	files nis
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 4. 修改配置文件</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 4. 修改配置文件</span>
 </span></span><span style=display:flex><span>vim /etc/yp.conf
 </span></span><span style=display:flex><span>写入以下内容
-</span></span><span style=display:flex><span><span style=color:#75715e>#domain &lt;此处写自己的域名&gt; server &lt;此处写nis服务器的ip&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>#domain &lt;此处写自己的域名&gt; server &lt;此处写nis服务器的ip&gt;</span>
 </span></span><span style=display:flex><span>domain master server 192.168.50.79
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 5. 启动服务</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 5. 启动服务</span>
 </span></span><span style=display:flex><span>service ypbind start
-</span></span></code></pre></div><h2 id=修改密码>修改密码</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>yppasswd nisuser1
-</span></span><span style=display:flex><span><span style=color:#75715e># 先输入旧密码， 然后输入两次新密码</span>
-</span></span><span style=display:flex><span>/usr/lib/yp/ypinit -m <span style=color:#75715e># 更新数据库</span>
-</span></span></code></pre></div><h2 id=使用autofs自动挂载home目录>使用autofs自动挂载home目录</h2><p>Autofs与Mount/Umount的不同之处在于，它是一种守护程序。如果它检测到用户正试图访问一个尚未挂接的文件系统，它就会自动检测该文件系统，如果存在，那么Autofs会自动将其挂接。另一方面， 如果它检测到某个已挂接的文件系统在一段时间内没有被使用，那么Autofs会自动将其卸载。因此一旦运行了Autofs后，用户就不再需要手动完成文件系统的挂接和卸载。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#75715e># 1. 在所有需要挂载home目录的主机上安装autofs</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=修改密码>修改密码</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-3>3</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>yppasswd nisuser1
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 先输入旧密码， 然后输入两次新密码</span>
+</span></span><span style=display:flex><span>/usr/lib/yp/ypinit -m <span style=color:#60a0b0;font-style:italic># 更新数据库</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=使用autofs自动挂载home目录>使用autofs自动挂载home目录</h2><p>Autofs与Mount/Umount的不同之处在于，它是一种守护程序。如果它检测到用户正试图访问一个尚未挂接的文件系统，它就会自动检测该文件系统，如果存在，那么Autofs会自动将其挂接。另一方面， 如果它检测到某个已挂接的文件系统在一段时间内没有被使用，那么Autofs会自动将其卸载。因此一旦运行了Autofs后，用户就不再需要手动完成文件系统的挂接和卸载。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-20>20</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 1. 在所有需要挂载home目录的主机上安装autofs</span>
 </span></span><span style=display:flex><span>apt update 
 </span></span><span style=display:flex><span>apt install autofs
-</span></span><span style=display:flex><span><span style=color:#75715e># 2. 创建配置文件</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 2. 创建配置文件</span>
 </span></span><span style=display:flex><span>vim /etc/auto.master
 </span></span><span style=display:flex><span>写入以下内容
-</span></span><span style=display:flex><span>/home/nishome	/etc/auto.nishome <span style=color:#75715e># 前边是挂载点，后边是指定挂载时用的配置文件</span>
+</span></span><span style=display:flex><span>/home/nishome	/etc/auto.nishome <span style=color:#60a0b0;font-style:italic># 前边是挂载点，后边是指定挂载时用的配置文件</span>
 </span></span><span style=display:flex><span>vim /etc/auto.nishome
 </span></span><span style=display:flex><span>写入以下内容
-</span></span><span style=display:flex><span><span style=color:#75715e># 挂载目录 挂载文件类型及权限 :设备名称</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 挂载目录 挂载文件类型及权限 :设备名称</span>
 </span></span><span style=display:flex><span>*		-rw		192.168.50.76:/mnt/home/home/&amp;
-</span></span><span style=display:flex><span><span style=color:#75715e># * 代表所有主机都可以挂载此目录</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># rw是权限</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 192.168.50.76是nfs服务器，实验中用FreeNAS分享了一个NFS数据集</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># /mnt/home/home/&amp;是要挂载的目录在NFS服务器上的路径，其中&#39;&amp;&#39;指代用户名</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># * 代表所有主机都可以挂载此目录</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># rw是权限</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 192.168.50.76是nfs服务器，实验中用FreeNAS分享了一个NFS数据集</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># /mnt/home/home/&amp;是要挂载的目录在NFS服务器上的路径，其中&#39;&amp;&#39;指代用户名</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># 3. 启动autofs</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 3. 启动autofs</span>
 </span></span><span style=display:flex><span>service autofs start
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>最后效果就是在登录某台主机时，会自动将NFS服务器上自己用户名的home目录挂载到 /home/nishome/下边去，路径前缀在auto.master文件中给出
-</span></span></code></pre></div><h2 id=添加用户流程>添加用户流程</h2><ol><li>在NIS master上创建用户 <code>useradd -d /home/nishome/&lt;nisusername> &lt;nisusername> /bin/bash</code></li><li>在NIS master上为新创建的用户创建密码 <code>passwd &lt;nisusername></code></li><li>在NIS master上更新数据库 <code>/usr/lib/yp/ypinit -m</code></li><li>在FreeNAS上创建用户家目录<ol><li>目录服务(Directory Serices)->网卡(NIS)->重建目录服务缓存(REBUILD DIRECTORY SERVICE CACHE)</li><li>存储(Storage)->池(Pools)->ADD Dataset， 添加一个数据集 -> Edit Permissions-> User和Group都设置为前边创建的用户，并选中 Apply permissions recursively-> SAVE</li><li>共享(Sharing)->Unix (NFS) Shares -> ADD, 选中前边创建的数据集路径，高级模式，Maproot User和Maproot Group都设置为前边创建的用户-> SAVE</li></ol></li></ol></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=添加用户流程>添加用户流程</h2><ol><li>在NIS master上创建用户 <code>useradd -d /home/nishome/&lt;nisusername> &lt;nisusername> /bin/bash</code></li><li>在NIS master上为新创建的用户创建密码 <code>passwd &lt;nisusername></code></li><li>在NIS master上更新数据库 <code>/usr/lib/yp/ypinit -m</code></li><li>在FreeNAS上创建用户家目录<ol><li>目录服务(Directory Serices)->网卡(NIS)->重建目录服务缓存(REBUILD DIRECTORY SERVICE CACHE)</li><li>存储(Storage)->池(Pools)->ADD Dataset， 添加一个数据集 -> Edit Permissions-> User和Group都设置为前边创建的用户，并选中 Apply permissions recursively-> SAVE</li><li>共享(Sharing)->Unix (NFS) Shares -> ADD, 选中前边创建的数据集路径，高级模式，Maproot User和Maproot Group都设置为前边创建的用户-> SAVE</li></ol></li></ol></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>2019-04-15</span></p><p class=copyright-item><span class=item-title>License</span>
 <span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/nis/>NIS</a></div><nav class=post-nav><a class=prev href=/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>

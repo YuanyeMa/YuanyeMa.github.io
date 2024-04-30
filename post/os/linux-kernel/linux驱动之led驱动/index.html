@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>LED驱动 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="LED驱动"><meta property="og:description" content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="Kernel Driver"><meta property="article:tag" content="LED驱动"><meta itemprop=name content="LED驱动"><meta itemprop=description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="1011"><meta itemprop=keywords content="Kernel Driver,LED驱动"><meta name=twitter:card content="summary"><meta name=twitter:title content="LED驱动"><meta name=twitter:description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="LED驱动"><meta property="og:description" content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="Kernel Driver"><meta property="article:tag" content="LED驱动"><meta itemprop=name content="LED驱动"><meta itemprop=description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="1251"><meta itemprop=keywords content="Kernel Driver,LED驱动"><meta name=twitter:card content="summary"><meta name=twitter:title content="LED驱动"><meta name=twitter:description content="linux驱动之LED驱动 试验平台： NanoPi M1 全志H3 寄存器地址在全志H3的Datasheet 4.23节有介绍。 ![电路图]H3-PL11DAT."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -7,247 +7,487 @@
 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
 </button>
 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>LED驱动</h1><div class=post-meta><div class=post-meta-author>by
-<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/linux-kernel/>Linux Kernel</a></div></div></div></header><div class=post-content><h1 id=linux驱动之led驱动>linux驱动之LED驱动</h1><p>试验平台： NanoPi M1 全志H3</p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-LED.png></p><p>寄存器地址在全志H3的Datasheet 4.23节有介绍。</p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PLR.png></p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PL11CFG.png></p><p>![电路图]H3-PL11DAT.png)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * led.h : 定义ioctl的命令
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#ifndef __LED_H
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define __LED_H
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/fs.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#define LED_NUM_ON  _IOW(&#39;L&#39;,0x3456, int)
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#define LED_NUM_OFF  _IOW(&#39;L&#39;,0x3457, int)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#endif
-</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/* 
-</span></span></span><span style=display:flex><span><span style=color:#75715e> *	led_drv.c ： 实现led的驱动
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/init.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/module.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/fs.h&gt;   // struct file_operations</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/slab.h&gt; // kzalloc</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/device.h&gt;  // class_create和device_create</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;asm/io.h&gt;    // ioremap</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;linux/uaccess.h&gt; // copy_from_user</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&#34;led.h&#34;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 自定义设备结构体，用于存储设备相关的信息 */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>struct</span> led_device {
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> dev_major;
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>struct</span> class <span style=color:#f92672>*</span>cls;
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>struct</span> device <span style=color:#f92672>*</span> dev;
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> value;
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/linux-kernel/>Linux Kernel</a></div></div></div></header><div class=post-content><h1 id=linux驱动之led驱动>linux驱动之LED驱动</h1><p>试验平台： NanoPi M1 全志H3</p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-LED.png></p><p>寄存器地址在全志H3的Datasheet 4.23节有介绍。</p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PLR.png></p><p><img alt=电路图 src=/post/os/linux-kernel/linux%E9%A9%B1%E5%8A%A8%E4%B9%8Bled%E9%A9%B1%E5%8A%A8/H3-PL11CFG.png></p><p>![电路图]H3-PL11DAT.png)</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-12>12</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * led.h : 定义ioctl的命令
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#ifndef __LED_H
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define __LED_H
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/fs.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#define LED_NUM_ON  _IOW(&#39;L&#39;,0x3456, int)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define LED_NUM_OFF  _IOW(&#39;L&#39;,0x3457, int)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1>  1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2>  2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3>  3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4>  4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5>  5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6>  6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7>  7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8>  8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9>  9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10> 10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11> 11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12> 12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13> 13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-14> 14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-15> 15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-16> 16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-17> 17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-18> 18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-19> 19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-20> 20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-21> 21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-22> 22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-23> 23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-24> 24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-25> 25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-26> 26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-27> 27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-28> 28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-29> 29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-30> 30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-31> 31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-32> 32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-33> 33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-34> 34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-35> 35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-36> 36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-37> 37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-38> 38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-39> 39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-40> 40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-41> 41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-42> 42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-43> 43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-44> 44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-45> 45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-46> 46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-47> 47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-48> 48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-49> 49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-50> 50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-51> 51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-52> 52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-53> 53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-54> 54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-55><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-55> 55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-56><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-56> 56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-57><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-57> 57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-58><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-58> 58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-59><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-59> 59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-60><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-60> 60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-61><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-61> 61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-62><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-62> 62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-63><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-63> 63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-64><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-64> 64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-65><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-65> 65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-66><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-66> 66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-67><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-67> 67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-68><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-68> 68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-69><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-69> 69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-70><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-70> 70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-71><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-71> 71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-72><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-72> 72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-73><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-73> 73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-74><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-74> 74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-75><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-75> 75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-76><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-76> 76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-77><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-77> 77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-78><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-78> 78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-79><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-79> 79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-80><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-80> 80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-81><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-81> 81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-82><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-82> 82</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-83><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-83> 83</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-84><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-84> 84</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-85><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-85> 85</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-86><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-86> 86</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-87><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-87> 87</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-88><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-88> 88</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-89><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-89> 89</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-90><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-90> 90</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-91><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-91> 91</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-92><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-92> 92</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-93><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-93> 93</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-94><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-94> 94</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-95><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-95> 95</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-96><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-96> 96</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-97><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-97> 97</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-98><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-98> 98</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-99><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-99> 99</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-100><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-100>100</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-101><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-101>101</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-102><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-102>102</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-103><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-103>103</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-104><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-104>104</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-105><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-105>105</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-106><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-106>106</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-107><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-107>107</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-108><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-108>108</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-109><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-109>109</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-110><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-110>110</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-111><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-111>111</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-112><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-112>112</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-113><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-113>113</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-114><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-114>114</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-115><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-115>115</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-116><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-116>116</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-117><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-117>117</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-118><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-118>118</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-119><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-119>119</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-120><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-120>120</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-121><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-121>121</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-122><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-122>122</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-123><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-123>123</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-124><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-124>124</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-125><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-125>125</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-126><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-126>126</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-127><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-127>127</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-128><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-128>128</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-129><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-129>129</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-130><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-130>130</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-131><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-131>131</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-132><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-132>132</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-133><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-133>133</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-134><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-134>134</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-135><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-135>135</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-136><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-136>136</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-137><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-137>137</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-138><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-138>138</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-139><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-139>139</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-140><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-140>140</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-141><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-141>141</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-142><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-142>142</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-143><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-143>143</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-144><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-144>144</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-145><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-145>145</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-146><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-146>146</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-147><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-147>147</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-148><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-148>148</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-149><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-149>149</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-150><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-150>150</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-151><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-151>151</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-152><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-152>152</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-153><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-153>153</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-154><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-154>154</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-155><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-155>155</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-156><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-156>156</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-157><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-157>157</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-158><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-158>158</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-159><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-159>159</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-160><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-160>160</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-161><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-161>161</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-162><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-162>162</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-163><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-163>163</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-164><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-164>164</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-165><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-165>165</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-166><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-166>166</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-167><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-167>167</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-168><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-168>168</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-169><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-169>169</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-170><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-170>170</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-171><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-171>171</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-172><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-172>172</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-173><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-173>173</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-174><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-174>174</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-175><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-175>175</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-176><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-176>176</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-177><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-177>177</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-178><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-178>178</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-179><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-179>179</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-180><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-180>180</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-181><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-181>181</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-182><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-182>182</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-183><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-183>183</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-184><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-184>184</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *	led_drv.c ： 实现led的驱动
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/init.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/module.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/fs.h&gt;   // struct file_operations</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/slab.h&gt; // kzalloc</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/device.h&gt;  // class_create和device_create</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;asm/io.h&gt;    // ioremap</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/uaccess.h&gt; // copy_from_user</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&#34;led.h&#34;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 自定义设备结构体，用于存储设备相关的信息 */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>struct</span> led_device {
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> dev_major;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>struct</span> class <span style=color:#666>*</span>cls;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>struct</span> device <span style=color:#666>*</span> dev;
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> value;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 全局变量 */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> led_device <span style=color:#f92672>*</span>led_dev;
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 全局变量 */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> led_device <span style=color:#666>*</span>led_dev;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>volatile</span> <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> <span style=color:#f92672>*</span> gpl10_conf;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>volatile</span> <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> <span style=color:#f92672>*</span> gpl10_data;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>volatile</span> <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> <span style=color:#f92672>*</span> gpa10_conf;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>volatile</span> <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> <span style=color:#f92672>*</span> gpa10_data;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>volatile</span> <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> <span style=color:#666>*</span> gpl10_conf;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>volatile</span> <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> <span style=color:#666>*</span> gpl10_data;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>volatile</span> <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> <span style=color:#666>*</span> gpa10_conf;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>volatile</span> <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> <span style=color:#666>*</span> gpa10_data;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 自定义函数 */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>led_drv_open</span>(<span style=color:#66d9ef>struct</span> inode <span style=color:#f92672>*</span>inode, <span style=color:#66d9ef>struct</span> file <span style=color:#f92672>*</span>filp)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 自定义函数 */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>int</span> <span style=color:#06287e>led_drv_open</span>(<span style=color:#007020;font-weight:700>struct</span> inode <span style=color:#666>*</span>inode, <span style=color:#007020;font-weight:700>struct</span> file <span style=color:#666>*</span>filp)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;-------^_^ %s-------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FUNCTION__);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpl10_conf <span style=color:#f92672>&amp;=</span> (<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>8</span>);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpa10_conf <span style=color:#f92672>&amp;=</span> (<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>8</span>);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>|=</span> (<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpa10_data <span style=color:#f92672>|=</span> (<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;-------^_^ %s-------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpl10_conf <span style=color:#666>&amp;=</span> (<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>8</span>);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpa10_conf <span style=color:#666>&amp;=</span> (<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>8</span>);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpl10_data <span style=color:#666>|=</span> (<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpa10_data <span style=color:#666>|=</span> (<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>ssize_t</span>  <span style=color:#a6e22e>led_drv_read</span> (<span style=color:#66d9ef>struct</span> file <span style=color:#f92672>*</span>filp, <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span>buf, <span style=color:#66d9ef>size_t</span> count, <span style=color:#66d9ef>loff_t</span> <span style=color:#f92672>*</span>fpos)
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>ssize_t</span>  <span style=color:#06287e>led_drv_read</span> (<span style=color:#007020;font-weight:700>struct</span> file <span style=color:#666>*</span>filp, <span style=color:#902000>char</span> __user <span style=color:#666>*</span>buf, <span style=color:#902000>size_t</span> count, <span style=color:#902000>loff_t</span> <span style=color:#666>*</span>fpos)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;-------^_^ %s-------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FUNCTION__);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;-------^_^ %s-------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>ssize_t</span> <span style=color:#a6e22e>led_drv_write</span> (<span style=color:#66d9ef>struct</span> file <span style=color:#f92672>*</span>filp, <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span>buf, <span style=color:#66d9ef>size_t</span> count, <span style=color:#66d9ef>loff_t</span> <span style=color:#f92672>*</span>fpos)
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>ssize_t</span> <span style=color:#06287e>led_drv_write</span> (<span style=color:#007020;font-weight:700>struct</span> file <span style=color:#666>*</span>filp, <span style=color:#007020;font-weight:700>const</span> <span style=color:#902000>char</span> __user <span style=color:#666>*</span>buf, <span style=color:#902000>size_t</span> count, <span style=color:#902000>loff_t</span> <span style=color:#666>*</span>fpos)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> ret <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;-------^_^ %s-------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> ret <span style=color:#666>=</span> <span style=color:#40a070>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;-------^_^ %s-------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FUNCTION__);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        ret <span style=color:#f92672>=</span> <span style=color:#a6e22e>copy_from_user</span>(<span style=color:#f92672>&amp;</span>led_dev<span style=color:#f92672>-&gt;</span>value, buf, count);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (led_dev<span style=color:#f92672>-&gt;</span>value)
+</span></span><span style=display:flex><span>        ret <span style=color:#666>=</span> <span style=color:#06287e>copy_from_user</span>(<span style=color:#666>&amp;</span>led_dev<span style=color:#666>-&gt;</span>value, buf, count);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> (led_dev<span style=color:#666>-&gt;</span>value)
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>|=</span> (<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>                <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>(<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
+</span></span><span style=display:flex><span>                <span style=color:#666>*</span>gpl10_data <span style=color:#666>|=</span> (<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>        } <span style=color:#007020;font-weight:700>else</span> {
+</span></span><span style=display:flex><span>                <span style=color:#666>*</span>gpl10_data <span style=color:#666>&amp;=</span> <span style=color:#666>~</span>(<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
 </span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> count;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> count;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>long</span> <span style=color:#a6e22e>led_drv_ioctl</span>(<span style=color:#66d9ef>struct</span> file <span style=color:#f92672>*</span>filp, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> cmd, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>long</span> args)
+</span></span><span style=display:flex><span><span style=color:#902000>long</span> <span style=color:#06287e>led_drv_ioctl</span>(<span style=color:#007020;font-weight:700>struct</span> file <span style=color:#666>*</span>filp, <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> cmd, <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> args)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> num <span style=color:#f92672>=</span> args;
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>switch</span>(cmd)
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> num <span style=color:#666>=</span> args;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>switch</span>(cmd)
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> LED_NUM_ON:
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (num<span style=color:#f92672>!=</span><span style=color:#ae81ff>1</span> <span style=color:#f92672>&amp;&amp;</span> num<span style=color:#f92672>!=</span><span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>case</span> <span style=color:#002070;font-weight:700>LED_NUM_ON</span>:
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>if</span> (num<span style=color:#666>!=</span><span style=color:#40a070>1</span> <span style=color:#666>&amp;&amp;</span> num<span style=color:#666>!=</span><span style=color:#40a070>2</span>)
 </span></span><span style=display:flex><span>                        {
-</span></span><span style=display:flex><span>                                <span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span>EINVAL;
-</span></span><span style=display:flex><span>                        } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (num <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>){
-</span></span><span style=display:flex><span>                                <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>|=</span> (<span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>                        } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>                                <span style=color:#f92672>*</span>gpa10_data <span style=color:#f92672>|=</span> (<span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
+</span></span><span style=display:flex><span>                                <span style=color:#007020;font-weight:700>return</span> <span style=color:#666>-</span>EINVAL;
+</span></span><span style=display:flex><span>                        } <span style=color:#007020;font-weight:700>else</span> <span style=color:#007020;font-weight:700>if</span> (num <span style=color:#666>==</span> <span style=color:#40a070>1</span>){
+</span></span><span style=display:flex><span>                                <span style=color:#666>*</span>gpl10_data <span style=color:#666>|=</span> (<span style=color:#40a070>1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>                        } <span style=color:#007020;font-weight:700>else</span> {
+</span></span><span style=display:flex><span>                                <span style=color:#666>*</span>gpa10_data <span style=color:#666>|=</span> (<span style=color:#40a070>1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>break</span>;
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>case</span> LED_NUM_OFF :
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>if</span> (num<span style=color:#f92672>!=</span><span style=color:#ae81ff>1</span> <span style=color:#f92672>&amp;&amp;</span> num<span style=color:#f92672>!=</span><span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>break</span>;
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>case</span> <span style=color:#002070;font-weight:700>LED_NUM_OFF</span> :
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>if</span> (num<span style=color:#666>!=</span><span style=color:#40a070>1</span> <span style=color:#666>&amp;&amp;</span> num<span style=color:#666>!=</span><span style=color:#40a070>2</span>)
 </span></span><span style=display:flex><span>                        {
-</span></span><span style=display:flex><span>                                <span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span>EINVAL;
-</span></span><span style=display:flex><span>                        } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (num <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>){
-</span></span><span style=display:flex><span>                                <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>(<span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>                        } <span style=color:#66d9ef>else</span> {
-</span></span><span style=display:flex><span>                                <span style=color:#f92672>*</span>gpa10_data <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>(<span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
+</span></span><span style=display:flex><span>                                <span style=color:#007020;font-weight:700>return</span> <span style=color:#666>-</span>EINVAL;
+</span></span><span style=display:flex><span>                        } <span style=color:#007020;font-weight:700>else</span> <span style=color:#007020;font-weight:700>if</span> (num <span style=color:#666>==</span> <span style=color:#40a070>1</span>){
+</span></span><span style=display:flex><span>                                <span style=color:#666>*</span>gpl10_data <span style=color:#666>&amp;=</span> <span style=color:#666>~</span>(<span style=color:#40a070>1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>                        } <span style=color:#007020;font-weight:700>else</span> {
+</span></span><span style=display:flex><span>                                <span style=color:#666>*</span>gpa10_data <span style=color:#666>&amp;=</span> <span style=color:#666>~</span>(<span style=color:#40a070>1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
 </span></span><span style=display:flex><span>                        }
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>break</span>;
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>default</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;unkonw cmd</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>                        <span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span>EINVAL;
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>break</span>;
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>default</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>                        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;unkonw cmd</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>                        <span style=color:#007020;font-weight:700>return</span> <span style=color:#666>-</span>EINVAL;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>led_drv_close</span> (<span style=color:#66d9ef>struct</span> inode <span style=color:#f92672>*</span>inode, <span style=color:#66d9ef>struct</span> file <span style=color:#f92672>*</span>filp)
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>int</span> <span style=color:#06287e>led_drv_close</span> (<span style=color:#007020;font-weight:700>struct</span> inode <span style=color:#666>*</span>inode, <span style=color:#007020;font-weight:700>struct</span> file <span style=color:#666>*</span>filp)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;-------^_^ %s-------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FUNCTION__);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpl10_data <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>(<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span>gpa10_data <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>(<span style=color:#ae81ff>0x1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>10</span>);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;-------^_^ %s-------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpl10_data <span style=color:#666>&amp;=</span> <span style=color:#666>~</span>(<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>        <span style=color:#666>*</span>gpa10_data <span style=color:#666>&amp;=</span> <span style=color:#666>~</span>(<span style=color:#40a070>0x1</span><span style=color:#666>&lt;&lt;</span><span style=color:#40a070>10</span>);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> file_operations led_drv_fops <span style=color:#f92672>=</span> {
-</span></span><span style=display:flex><span>        .open <span style=color:#f92672>=</span> led_drv_open,
-</span></span><span style=display:flex><span>        .read <span style=color:#f92672>=</span> led_drv_read,
-</span></span><span style=display:flex><span>        .write <span style=color:#f92672>=</span> led_drv_write,
-</span></span><span style=display:flex><span>        .release <span style=color:#f92672>=</span> led_drv_close,
-</span></span><span style=display:flex><span>        .unlocked_ioctl <span style=color:#f92672>=</span> led_drv_ioctl,
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>struct</span> file_operations led_drv_fops <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>        .open <span style=color:#666>=</span> led_drv_open,
+</span></span><span style=display:flex><span>        .read <span style=color:#666>=</span> led_drv_read,
+</span></span><span style=display:flex><span>        .write <span style=color:#666>=</span> led_drv_write,
+</span></span><span style=display:flex><span>        .release <span style=color:#666>=</span> led_drv_close,
+</span></span><span style=display:flex><span>        .unlocked_ioctl <span style=color:#666>=</span> led_drv_ioctl,
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* 模块初始化和卸载 */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> __init <span style=color:#a6e22e>led_drv_init</span>(<span style=color:#66d9ef>void</span>)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* 模块初始化和卸载 */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>int</span> __init <span style=color:#06287e>led_drv_init</span>(<span style=color:#902000>void</span>)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> ret <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(KERN_ERR<span style=color:#e6db74>&#34;-----------from led.ko : %s  %s---------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FILE__, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> ret <span style=color:#666>=</span> <span style=color:#40a070>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(KERN_ERR<span style=color:#4070a0>&#34;-----------from led.ko : %s  %s---------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FILE__, __FUNCTION__);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        led_dev <span style=color:#f92672>=</span> <span style=color:#a6e22e>kzalloc</span>(<span style=color:#66d9ef>sizeof</span>(<span style=color:#66d9ef>struct</span> led_device), GFP_KERNEL);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (led_dev <span style=color:#f92672>==</span> NULL)
+</span></span><span style=display:flex><span>        led_dev <span style=color:#666>=</span> <span style=color:#06287e>kzalloc</span>(<span style=color:#007020;font-weight:700>sizeof</span>(<span style=color:#007020;font-weight:700>struct</span> led_device), GFP_KERNEL);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> (led_dev <span style=color:#666>==</span> <span style=color:#007020>NULL</span>)
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>printk</span>(KERN_ERR<span style=color:#e6db74>&#34;kzalloc error</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span>ENOMEM;
+</span></span><span style=display:flex><span>                <span style=color:#06287e>printk</span>(KERN_ERR<span style=color:#4070a0>&#34;kzalloc error</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>return</span> <span style=color:#666>-</span>ENOMEM;
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        led_dev<span style=color:#f92672>-&gt;</span>dev_major <span style=color:#f92672>=</span> <span style=color:#ae81ff>240</span>;
-</span></span><span style=display:flex><span>        ret <span style=color:#f92672>=</span> <span style=color:#a6e22e>register_chrdev</span>(led_dev<span style=color:#f92672>-&gt;</span>dev_major, <span style=color:#e6db74>&#34;led_drv&#34;</span>, <span style=color:#f92672>&amp;</span>led_drv_fops);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (ret <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span> )
+</span></span><span style=display:flex><span>        led_dev<span style=color:#666>-&gt;</span>dev_major <span style=color:#666>=</span> <span style=color:#40a070>240</span>;
+</span></span><span style=display:flex><span>        ret <span style=color:#666>=</span> <span style=color:#06287e>register_chrdev</span>(led_dev<span style=color:#666>-&gt;</span>dev_major, <span style=color:#4070a0>&#34;led_drv&#34;</span>, <span style=color:#666>&amp;</span>led_drv_fops);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> (ret <span style=color:#666>&lt;</span> <span style=color:#40a070>0</span> )
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;register_chrdev error</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>                ret <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>EINVAL;
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>goto</span> err_free;
+</span></span><span style=display:flex><span>                <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;register_chrdev error</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>                ret <span style=color:#666>=</span> <span style=color:#666>-</span>EINVAL;
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>goto</span> err_free;
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        led_dev<span style=color:#f92672>-&gt;</span>cls <span style=color:#f92672>=</span> <span style=color:#a6e22e>class_create</span>(THIS_MODULE,<span style=color:#e6db74>&#34;led_cls&#34;</span>);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>IS_ERR</span>(led_dev<span style=color:#f92672>-&gt;</span>cls))
+</span></span><span style=display:flex><span>        led_dev<span style=color:#666>-&gt;</span>cls <span style=color:#666>=</span> <span style=color:#06287e>class_create</span>(THIS_MODULE,<span style=color:#4070a0>&#34;led_cls&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span>(<span style=color:#06287e>IS_ERR</span>(led_dev<span style=color:#666>-&gt;</span>cls))
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>printk</span>(KERN_ERR<span style=color:#e6db74>&#34;class_create error</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>                ret <span style=color:#f92672>=</span> <span style=color:#a6e22e>PTR_ERR</span>(led_dev<span style=color:#f92672>-&gt;</span>cls);
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>goto</span> err_unregister;
+</span></span><span style=display:flex><span>                <span style=color:#06287e>printk</span>(KERN_ERR<span style=color:#4070a0>&#34;class_create error</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>                ret <span style=color:#666>=</span> <span style=color:#06287e>PTR_ERR</span>(led_dev<span style=color:#666>-&gt;</span>cls);
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>goto</span> err_unregister;
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        led_dev<span style=color:#f92672>-&gt;</span>dev <span style=color:#f92672>=</span> <span style=color:#a6e22e>device_create</span>(led_dev<span style=color:#f92672>-&gt;</span>cls, NULL,<span style=color:#a6e22e>MKDEV</span>(led_dev<span style=color:#f92672>-&gt;</span>dev_major, <span style=color:#ae81ff>0</span>), NULL, <span style=color:#e6db74>&#34;led&#34;</span>);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>IS_ERR</span>(led_dev<span style=color:#f92672>-&gt;</span>dev))
+</span></span><span style=display:flex><span>        led_dev<span style=color:#666>-&gt;</span>dev <span style=color:#666>=</span> <span style=color:#06287e>device_create</span>(led_dev<span style=color:#666>-&gt;</span>cls, <span style=color:#007020>NULL</span>,<span style=color:#06287e>MKDEV</span>(led_dev<span style=color:#666>-&gt;</span>dev_major, <span style=color:#40a070>0</span>), <span style=color:#007020>NULL</span>, <span style=color:#4070a0>&#34;led&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span>(<span style=color:#06287e>IS_ERR</span>(led_dev<span style=color:#666>-&gt;</span>dev))
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;device_create error</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
-</span></span><span style=display:flex><span>                ret <span style=color:#f92672>=</span> <span style=color:#a6e22e>PTR_ERR</span>(led_dev<span style=color:#f92672>-&gt;</span>dev);
-</span></span><span style=display:flex><span>                <span style=color:#66d9ef>goto</span> err_class_destroy;
+</span></span><span style=display:flex><span>                <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;device_create error</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>                ret <span style=color:#666>=</span> <span style=color:#06287e>PTR_ERR</span>(led_dev<span style=color:#666>-&gt;</span>dev);
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>goto</span> err_class_destroy;
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        gpl10_conf <span style=color:#f92672>=</span> <span style=color:#a6e22e>ioremap</span>(<span style=color:#ae81ff>0x01F02C04</span>, <span style=color:#ae81ff>4</span>);
-</span></span><span style=display:flex><span>        gpl10_data <span style=color:#f92672>=</span> <span style=color:#a6e22e>ioremap</span>(<span style=color:#ae81ff>0x01F02C10</span>, <span style=color:#ae81ff>4</span>);
-</span></span><span style=display:flex><span>        gpa10_conf <span style=color:#f92672>=</span> <span style=color:#a6e22e>ioremap</span>(<span style=color:#ae81ff>0x01C20804</span>, <span style=color:#ae81ff>4</span>);
-</span></span><span style=display:flex><span>        gpa10_data <span style=color:#f92672>=</span> <span style=color:#a6e22e>ioremap</span>(<span style=color:#ae81ff>0x01C20810</span>, <span style=color:#ae81ff>4</span>);
+</span></span><span style=display:flex><span>        gpl10_conf <span style=color:#666>=</span> <span style=color:#06287e>ioremap</span>(<span style=color:#40a070>0x01F02C04</span>, <span style=color:#40a070>4</span>);
+</span></span><span style=display:flex><span>        gpl10_data <span style=color:#666>=</span> <span style=color:#06287e>ioremap</span>(<span style=color:#40a070>0x01F02C10</span>, <span style=color:#40a070>4</span>);
+</span></span><span style=display:flex><span>        gpa10_conf <span style=color:#666>=</span> <span style=color:#06287e>ioremap</span>(<span style=color:#40a070>0x01C20804</span>, <span style=color:#40a070>4</span>);
+</span></span><span style=display:flex><span>        gpa10_data <span style=color:#666>=</span> <span style=color:#06287e>ioremap</span>(<span style=color:#40a070>0x01C20810</span>, <span style=color:#40a070>4</span>);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>err_class_destroy:
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>class_destroy</span>(led_dev<span style=color:#f92672>-&gt;</span>cls);
-</span></span><span style=display:flex><span>err_unregister:
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>unregister_chrdev</span>(led_dev<span style=color:#f92672>-&gt;</span>dev_major, <span style=color:#e6db74>&#34;led_drv&#34;</span>);
-</span></span><span style=display:flex><span>err_free:
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>kfree</span>(led_dev);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> ret;
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>err_class_destroy</span>:
+</span></span><span style=display:flex><span>        <span style=color:#06287e>class_destroy</span>(led_dev<span style=color:#666>-&gt;</span>cls);
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>err_unregister</span>:
+</span></span><span style=display:flex><span>        <span style=color:#06287e>unregister_chrdev</span>(led_dev<span style=color:#666>-&gt;</span>dev_major, <span style=color:#4070a0>&#34;led_drv&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>err_free</span>:
+</span></span><span style=display:flex><span>        <span style=color:#06287e>kfree</span>(led_dev);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> ret;
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> __exit <span style=color:#a6e22e>led_drv_exit</span>(<span style=color:#66d9ef>void</span>)
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>void</span> __exit <span style=color:#06287e>led_drv_exit</span>(<span style=color:#902000>void</span>)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>printk</span>(<span style=color:#e6db74>&#34;-----------from led.ko : %s  %s---------</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, __FILE__, __FUNCTION__);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>iounmap</span>(gpl10_conf);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>iounmap</span>(gpl10_data);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>iounmap</span>(gpa10_conf);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>iounmap</span>(gpa10_data);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>device_destroy</span>(led_dev<span style=color:#f92672>-&gt;</span>cls, <span style=color:#a6e22e>MKDEV</span>(led_dev<span style=color:#f92672>-&gt;</span>dev_major, <span style=color:#ae81ff>0</span>));
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>class_destroy</span>(led_dev<span style=color:#f92672>-&gt;</span>cls);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>unregister_chrdev</span>(led_dev<span style=color:#f92672>-&gt;</span>dev_major, <span style=color:#e6db74>&#34;led_drv&#34;</span>);
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>kfree</span>(led_dev);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>printk</span>(<span style=color:#4070a0>&#34;-----------from led.ko : %s  %s---------</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, __FILE__, __FUNCTION__);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>iounmap</span>(gpl10_conf);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>iounmap</span>(gpl10_data);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>iounmap</span>(gpa10_conf);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>iounmap</span>(gpa10_data);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>device_destroy</span>(led_dev<span style=color:#666>-&gt;</span>cls, <span style=color:#06287e>MKDEV</span>(led_dev<span style=color:#666>-&gt;</span>dev_major, <span style=color:#40a070>0</span>));
+</span></span><span style=display:flex><span>        <span style=color:#06287e>class_destroy</span>(led_dev<span style=color:#666>-&gt;</span>cls);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>unregister_chrdev</span>(led_dev<span style=color:#666>-&gt;</span>dev_major, <span style=color:#4070a0>&#34;led_drv&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>kfree</span>(led_dev);
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#a6e22e>module_init</span>(led_drv_init);
-</span></span><span style=display:flex><span><span style=color:#a6e22e>module_exit</span>(led_drv_exit);
+</span></span><span style=display:flex><span><span style=color:#06287e>module_init</span>(led_drv_init);
+</span></span><span style=display:flex><span><span style=color:#06287e>module_exit</span>(led_drv_exit);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>MODULE_LICENSE</span>(<span style=color:#e6db74>&#34;GPL&#34;</span>);
-</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>/*
-</span></span></span><span style=display:flex><span><span style=color:#75715e> * led_app.c ： 测试led驱动的应用程序
-</span></span></span><span style=display:flex><span><span style=color:#75715e> */</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/types.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/stat.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;fcntl.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdlib.h&gt;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&#34;led.h&#34;</span><span style=color:#75715e>
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>void</span>)
+</span></span><span style=display:flex><span><span style=color:#06287e>MODULE_LICENSE</span>(<span style=color:#4070a0>&#34;GPL&#34;</span>);
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-44>44</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * led_app.c ： 测试led驱动的应用程序
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;sys/types.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;sys/stat.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;fcntl.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;stdlib.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&#34;led.h&#34;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>main</span>(<span style=color:#902000>void</span>)
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>int</span> fd <span style=color:#f92672>=</span> <span style=color:#a6e22e>open</span>(<span style=color:#e6db74>&#34;/dev/led&#34;</span>, O_RDWR);
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> (fd <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        <span style=color:#902000>int</span> fd <span style=color:#666>=</span> <span style=color:#06287e>open</span>(<span style=color:#4070a0>&#34;/dev/led&#34;</span>, O_RDWR);
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> (fd <span style=color:#666>&lt;</span> <span style=color:#40a070>0</span>)
 </span></span><span style=display:flex><span>        {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>perror</span>(<span style=color:#e6db74>&#34;open&#34;</span>);
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>exit</span>(<span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>                <span style=color:#06287e>perror</span>(<span style=color:#4070a0>&#34;open&#34;</span>);
+</span></span><span style=display:flex><span>                <span style=color:#06287e>exit</span>(<span style=color:#40a070>1</span>);
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>/* v3
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        int on;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        int count = 10;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        while (count--) {
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                on = 1;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                write(fd, &amp;on, 4);
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                sleep(2);
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                on = 0;
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                write(fd, &amp;on, 4);
-</span></span></span><span style=display:flex><span><span style=color:#75715e>                sleep(2);
-</span></span></span><span style=display:flex><span><span style=color:#75715e>        }
-</span></span></span><span style=display:flex><span><span style=color:#75715e>*/</span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e>// v4
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#66d9ef>int</span> count <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>;
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>while</span>(count<span style=color:#f92672>--</span>) {
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>ioctl</span>(fd, LED_NUM_ON, <span style=color:#ae81ff>1</span>);
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>sleep</span>(<span style=color:#ae81ff>2</span>);
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>ioctl</span>(fd, LED_NUM_OFF, <span style=color:#ae81ff>1</span>);
-</span></span><span style=display:flex><span>                <span style=color:#a6e22e>sleep</span>(<span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/* v3
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        int on;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        int count = 10;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        while (count--) {
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                on = 1;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                write(fd, &amp;on, 4);
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                sleep(2);
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                on = 0;
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                write(fd, &amp;on, 4);
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>                sleep(2);
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        }
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>// v4
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>        <span style=color:#902000>int</span> count <span style=color:#666>=</span> <span style=color:#40a070>10</span>;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>while</span>(count<span style=color:#666>--</span>) {
+</span></span><span style=display:flex><span>                <span style=color:#06287e>ioctl</span>(fd, LED_NUM_ON, <span style=color:#40a070>1</span>);
+</span></span><span style=display:flex><span>                <span style=color:#06287e>sleep</span>(<span style=color:#40a070>2</span>);
+</span></span><span style=display:flex><span>                <span style=color:#06287e>ioctl</span>(fd, LED_NUM_OFF, <span style=color:#40a070>1</span>);
+</span></span><span style=display:flex><span>                <span style=color:#06287e>sleep</span>(<span style=color:#40a070>2</span>);
 </span></span><span style=display:flex><span>        }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>close</span>(fd);
+</span></span><span style=display:flex><span>        <span style=color:#06287e>close</span>(fd);
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><blockquote><p>linux驱动程序开发步骤总结</p><ol><li>实例化全局的设备对象 &ndash; kzalloc</li><li>注册设备号 &ndash; register_chrdev</li><li>创建设备节点 &ndash; class_create, device_create</li><li>映射内存资源 &ndash; ioremap</li><li>实现 file_operations</li></ol></blockquote><pre><code>gpio操作方法:
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>linux驱动程序开发步骤总结</p><ol><li>实例化全局的设备对象 &ndash; kzalloc</li><li>注册设备号 &ndash; register_chrdev</li><li>创建设备节点 &ndash; class_create, device_create</li><li>映射内存资源 &ndash; ioremap</li><li>实现 file_operations</li></ol></blockquote><pre><code>gpio操作方法:
 	1, 直接操作gpio口对应的寄存器地址(看原理图---数据手册---地址--ioremap)
 		*gpc0_conf &amp;= ~(0xff&lt;&lt;12);
 		*gpc0_conf |= (0x11&lt;&lt;12);

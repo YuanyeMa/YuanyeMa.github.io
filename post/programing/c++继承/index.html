@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>C++继承和多态 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="C++继承和多态 继承 语法 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类内部以及"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/programing/c++%E7%BB%A7%E6%89%BF/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/programing/c++%E7%BB%A7%E6%89%BF/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="C++继承和多态"><meta property="og:description" content="C++继承和多态 继承 语法 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类内部以及"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-08-06T16:01:23+08:00"><meta property="article:modified_time" content="2019-08-06T16:01:23+08:00"><meta property="article:tag" content="C++"><meta itemprop=name content="C++继承和多态"><meta itemprop=description content="C++继承和多态 继承 语法 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类内部以及"><meta itemprop=datePublished content="2019-08-06T16:01:23+08:00"><meta itemprop=dateModified content="2019-08-06T16:01:23+08:00"><meta itemprop=wordCount content="2313"><meta itemprop=keywords content="C++"><meta name=twitter:card content="summary"><meta name=twitter:title content="C++继承和多态"><meta name=twitter:description content="C++继承和多态 继承 语法 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类内部以及"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="C++继承和多态 继承 语法 1 2 3 4 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/programing/c++%E7%BB%A7%E6%89%BF/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/programing/c++%E7%BB%A7%E6%89%BF/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="C++继承和多态"><meta property="og:description" content="C++继承和多态 继承 语法 1 2 3 4 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-08-06T16:01:23+08:00"><meta property="article:modified_time" content="2019-08-06T16:01:23+08:00"><meta property="article:tag" content="C++"><meta itemprop=name content="C++继承和多态"><meta itemprop=description content="C++继承和多态 继承 语法 1 2 3 4 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类"><meta itemprop=datePublished content="2019-08-06T16:01:23+08:00"><meta itemprop=dateModified content="2019-08-06T16:01:23+08:00"><meta itemprop=wordCount content="2595"><meta itemprop=keywords content="C++"><meta name=twitter:card content="summary"><meta name=twitter:title content="C++继承和多态"><meta name=twitter:description content="C++继承和多态 继承 语法 1 2 3 4 class 子类名/派生类名 ： 继承方式 父类名/基类名 { }; 继承方式 public : 公共权限，类内/外都可以直接访问； protected : 保护权限，类"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -7,40 +7,73 @@
 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
 </button>
 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>C++继承和多态</h1><div class=post-meta><div class=post-meta-author>by
-<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-08-06>2019-08-06</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/programing/>Programing</a></div></div></div></header><div class=post-content><h1 id=c继承和多态>C++继承和多态</h1><h2 id=继承>继承</h2><h3 id=语法>语法</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#960050;background-color:#1e0010>子类名/派生类名 ： 继承方式 父类名/基类名</span>
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-08-06>2019-08-06</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/programing/>Programing</a></div></div></div></header><div class=post-content><h1 id=c继承和多态>C++继承和多态</h1><h2 id=继承>继承</h2><h3 id=语法>语法</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-3>3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-4>4</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span>子类名/派生类名 ： 继承方式 父类名/基类名</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></div><h3 id=继承方式>继承方式</h3><p><code>public</code> : 公共权限，类内/外都可以直接访问；</p><p><code>protected</code> : 保护权限，类内部以及子类内部可以直接访问，类外不能访问；</p><p><code>private</code> ： 私有权限，只能在类内部访问；</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Base</span> {
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_A;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>protected</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_B;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_C;
+</span></span></code></pre></td></tr></table></div></div><h3 id=继承方式>继承方式</h3><p><code>public</code> : 公共权限，类内/外都可以直接访问；</p><p><code>protected</code> : 保护权限，类内部以及子类内部可以直接访问，类外不能访问；</p><p><code>private</code> ： 私有权限，只能在类内部访问；</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-29>29</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Base</span> {
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_A;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>protected</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_B;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>private</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_C;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//公共继承
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Base {
-</span></span><span style=display:flex><span>  <span style=color:#75715e>// 父类中public修饰的属性，在子类中仍然是public的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// 父类中protected修饰的属性，在子类中仍然是protected的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> 	<span style=color:#75715e>// 父类中private修饰的属性，在子类中不可见
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//公共继承
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span> <span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Base {
+</span></span><span style=display:flex><span>  <span style=color:#60a0b0;font-style:italic>// 父类中public修饰的属性，在子类中仍然是public的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#60a0b0;font-style:italic>// 父类中protected修饰的属性，在子类中仍然是protected的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span> 	<span style=color:#60a0b0;font-style:italic>// 父类中private修饰的属性，在子类中不可见
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//保护继承
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>protected</span> Base {
-</span></span><span style=display:flex><span>  <span style=color:#75715e>// 父类中public修饰的属性，在子类中变为protected的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// 父类中protected修饰的属性，在子类中仍然是protected的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> 	<span style=color:#75715e>// 父类中private修饰的属性，在子类中不可见
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//保护继承
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span> <span style=color:#666>:</span> <span style=color:#007020;font-weight:700>protected</span> Base {
+</span></span><span style=display:flex><span>  <span style=color:#60a0b0;font-style:italic>// 父类中public修饰的属性，在子类中变为protected的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#60a0b0;font-style:italic>// 父类中protected修饰的属性，在子类中仍然是protected的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span> 	<span style=color:#60a0b0;font-style:italic>// 父类中private修饰的属性，在子类中不可见
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//私有继承
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>private</span> Base {
-</span></span><span style=display:flex><span>  <span style=color:#75715e>// 父类中public修饰的属性，在子类中变为private的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// 父类中protected修饰的属性，在子类中变为private的
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> 	<span style=color:#75715e>// 父类中private修饰的属性，在子类中不可见
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
-</span></span></code></pre></div><h3 id=继承中的构造和析构>继承中的构造和析构</h3><pre tabindex=0><code>class Base
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//私有继承
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span> <span style=color:#666>:</span> <span style=color:#007020;font-weight:700>private</span> Base {
+</span></span><span style=display:flex><span>  <span style=color:#60a0b0;font-style:italic>// 父类中public修饰的属性，在子类中变为private的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#60a0b0;font-style:italic>// 父类中protected修饰的属性，在子类中变为private的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span> 	<span style=color:#60a0b0;font-style:italic>// 父类中private修饰的属性，在子类中不可见
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>};
+</span></span></code></pre></td></tr></table></div></div><h3 id=继承中的构造和析构>继承中的构造和析构</h3><pre tabindex=0><code>class Base
 {
 public:
   Base(int a)
@@ -57,256 +90,505 @@ public:
   {
   }
 }
-</code></pre><p>先构造父类对象，然后创建子类对象。析构顺序和构造相反。</p><p>但是子类不会继承父类的构造函数和析构函数。</p><h3 id=多继承>多继承</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Base1</span>
+</code></pre><p>先构造父类对象，然后创建子类对象。析构顺序和构造相反。</p><p>但是子类不会继承父类的构造函数和析构函数。</p><h3 id=多继承>多继承</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-3-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-3-25>25</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Base1</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  Base1()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    m_A <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>;
+</span></span><span style=display:flex><span>    m_A <span style=color:#666>=</span> <span style=color:#40a070>10</span>;
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_A;
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_A;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Base2</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Base2</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  Base2()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    m_B <span style=color:#f92672>=</span> <span style=color:#ae81ff>100</span>; <span style=color:#75715e>// 假如此变量也是m_A 在 Son s; s.m_A=10时会出现二义性。
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  }
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_B;
+</span></span><span style=display:flex><span>    m_B <span style=color:#666>=</span> <span style=color:#40a070>100</span>; <span style=color:#60a0b0;font-style:italic>// 假如此变量也是m_A 在 Son s; s.m_A=10时会出现二义性。
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  }
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_B;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Base1, <span style=color:#66d9ef>public</span> Base2
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Base1, <span style=color:#007020;font-weight:700>public</span> Base2
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> m_C;
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> m_D;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> m_C;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> m_D;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(Son)<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>// 32位机器 输出 16
-</span></span></span></code></pre></div><h3 id=菱形继承>菱形继承</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
+</span></span><span style=display:flex><span>cout<span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(Son)<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>// 32位机器 输出 16
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=菱形继承>菱形继承</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-24>24</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_Age;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_Age;
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Sheep</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Animal
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Tuo</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Animal
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SheepTuo</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Sheep, <span style=color:#66d9ef>public</span> Tuo
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>SheepTuo st;
-</span></span><span style=display:flex><span>st.Sheep<span style=color:#f92672>::</span>m_Age <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>
-</span></span><span style=display:flex><span>st.Tuo<span style=color:#f92672>::</span>m_Age <span style=color:#f92672>=</span> <span style=color:#ae81ff>20</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// 相互不影响，但是会造成冗余甚至二义性
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>cout<span style=color:#f92672>&lt;&lt;</span>st.m_Age
-</span></span></code></pre></div><p>菱形继承的解决方案，利用虚继承</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_Age;
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// 虚基类
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Sheep</span><span style=color:#f92672>:</span>   <span style=color:#66d9ef>public</span> Animal
-</span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#75715e>// 虚基类
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Tuo</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>public</span> Animal
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Sheep</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Animal
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SheepTuo</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Sheep, <span style=color:#66d9ef>public</span> Tuo
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Tuo</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Animal
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>SheepTuo</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Sheep, <span style=color:#007020;font-weight:700>public</span> Tuo
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>SheepTuo st;
-</span></span><span style=display:flex><span>st.Sheep<span style=color:#f92672>::</span>m_Age <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span> 
-</span></span><span style=display:flex><span>st.Tuo<span style=color:#f92672>::</span>m_Age <span style=color:#f92672>=</span> <span style=color:#ae81ff>20</span>
-</span></span><span style=display:flex><span>cout<span style=color:#f92672>&lt;&lt;</span>st.m_Age<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>//输出20，上边两句修改的是同一块内存
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//SheepTuo内部有一个vbptr : virtual base pointer(虚基类指针)
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span> <span style=color:#f92672>+---</span>
-</span></span><span style=display:flex><span> <span style=color:#f92672>|+---</span><span style=color:#960050;background-color:#1e0010>（</span>base <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Sheep</span><span style=color:#960050;background-color:#1e0010>）</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>0</span><span style=color:#f92672>||</span> (vbptr)
-</span></span><span style=display:flex><span> <span style=color:#f92672>|+---</span>
-</span></span><span style=display:flex><span> <span style=color:#f92672>|+---</span><span style=color:#960050;background-color:#1e0010>（</span>base <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Tuo</span><span style=color:#960050;background-color:#1e0010>）</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>4</span><span style=color:#f92672>||</span> (vbptr)
-</span></span><span style=display:flex><span> <span style=color:#f92672>|+---</span>
-</span></span><span style=display:flex><span> <span style=color:#f92672>+---</span>
-</span></span><span style=display:flex><span> <span style=color:#f92672>+---</span><span style=color:#960050;background-color:#1e0010>（</span><span style=color:#66d9ef>virtual</span> base Animal<span style=color:#960050;background-color:#1e0010>）</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>8</span><span style=color:#f92672>|</span> m_Age
-</span></span><span style=display:flex><span> <span style=color:#f92672>+---</span>
+</span></span><span style=display:flex><span>st.Sheep<span style=color:#666>::</span>m_Age <span style=color:#666>=</span> <span style=color:#40a070>10</span>
+</span></span><span style=display:flex><span>st.Tuo<span style=color:#666>::</span>m_Age <span style=color:#666>=</span> <span style=color:#40a070>20</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 相互不影响，但是会造成冗余甚至二义性
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>cout<span style=color:#666>&lt;&lt;</span>st.m_Age
+</span></span></code></pre></td></tr></table></div></div><p>菱形继承的解决方案，利用虚继承</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-45>45</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_Age;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 虚基类
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Sheep</span><span style=color:#666>:</span>   <span style=color:#007020;font-weight:700>public</span> Animal
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 虚基类
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Tuo</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#007020;font-weight:700>public</span> Animal
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>SheepTuo</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Sheep, <span style=color:#007020;font-weight:700>public</span> Tuo
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>SheepTuo st;
+</span></span><span style=display:flex><span>st.Sheep<span style=color:#666>::</span>m_Age <span style=color:#666>=</span> <span style=color:#40a070>10</span> 
+</span></span><span style=display:flex><span>st.Tuo<span style=color:#666>::</span>m_Age <span style=color:#666>=</span> <span style=color:#40a070>20</span>
+</span></span><span style=display:flex><span>cout<span style=color:#666>&lt;&lt;</span>st.m_Age<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>//输出20，上边两句修改的是同一块内存
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//SheepTuo内部有一个vbptr : virtual base pointer(虚基类指针)
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span> <span style=color:#666>+---</span>
+</span></span><span style=display:flex><span> <span style=color:#666>|+---</span><span>（</span>base <span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Sheep</span><span>）</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>0</span><span style=color:#666>||</span> (vbptr)
+</span></span><span style=display:flex><span> <span style=color:#666>|+---</span>
+</span></span><span style=display:flex><span> <span style=color:#666>|+---</span><span>（</span>base <span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Tuo</span><span>）</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>4</span><span style=color:#666>||</span> (vbptr)
+</span></span><span style=display:flex><span> <span style=color:#666>|+---</span>
+</span></span><span style=display:flex><span> <span style=color:#666>+---</span>
+</span></span><span style=display:flex><span> <span style=color:#666>+---</span><span>（</span><span style=color:#007020;font-weight:700>virtual</span> base Animal<span>）</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>8</span><span style=color:#666>|</span> m_Age
+</span></span><span style=display:flex><span> <span style=color:#666>+---</span>
 </span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>SheepTuo<span style=color:#f92672>::</span><span style=color:#960050;background-color:#1e0010>$</span>vbtable<span style=color:#960050;background-color:#1e0010>@</span>Sheep<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>0</span>	<span style=color:#f92672>|</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>1</span>	<span style=color:#f92672>|</span> <span style=color:#ae81ff>8</span> (SheepTuod(Sheep<span style=color:#f92672>+</span><span style=color:#ae81ff>0</span>)Animal)
-</span></span><span style=display:flex><span>SheepTuo<span style=color:#f92672>::</span><span style=color:#960050;background-color:#1e0010>$</span>vbtable<span style=color:#960050;background-color:#1e0010>@</span>Tuo<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>0</span>	<span style=color:#f92672>|</span> <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>1</span>	<span style=color:#f92672>|</span> <span style=color:#ae81ff>4</span> (SheepTuod(Tuo<span style=color:#f92672>+</span><span style=color:#ae81ff>0</span>)Animal)
-</span></span></code></pre></div><h3 id=继承中的对象模型>继承中的对象模型</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Base</span>{
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_A;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>protected</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_B;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_C;
+</span></span><span style=display:flex><span>SheepTuo<span style=color:#666>::</span><span>$</span>vbtable<span>@</span>Sheep<span>@</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>0</span>	<span style=color:#666>|</span> <span style=color:#40a070>0</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>1</span>	<span style=color:#666>|</span> <span style=color:#40a070>8</span> (SheepTuod(Sheep<span style=color:#666>+</span><span style=color:#40a070>0</span>)Animal)
+</span></span><span style=display:flex><span>SheepTuo<span style=color:#666>::</span><span>$</span>vbtable<span>@</span>Tuo<span>@</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>0</span>	<span style=color:#666>|</span> <span style=color:#40a070>0</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>1</span>	<span style=color:#666>|</span> <span style=color:#40a070>4</span> (SheepTuod(Tuo<span style=color:#666>+</span><span style=color:#40a070>0</span>)Animal)
+</span></span></code></pre></td></tr></table></div></div><h3 id=继承中的对象模型>继承中的对象模型</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-21>21</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Base</span>{
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_A;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>protected</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_B;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>private</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_C;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span><span style=color:#f92672>:</span><span style=color:#66d9ef>public</span> Base {
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_D;
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span><span style=color:#666>:</span><span style=color:#007020;font-weight:700>public</span> Base {
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_D;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>test01</span>()
+</span></span><span style=display:flex><span><span style=color:#902000>void</span> <span style=color:#06287e>test01</span>()
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;sizeof(int)&#34;</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(<span style=color:#66d9ef>int</span>)<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>// 在32位机的情况下输出是4
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;sizeof(Son)&#34;</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(Son)<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>// 输出16
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#75715e>// 父类中private的内容，在子类中是访问不到的，但是也被继承下来了，被编译器给隐藏掉了
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  
+</span></span><span style=display:flex><span>  cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;sizeof(int)&#34;</span><span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(<span style=color:#902000>int</span>)<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>// 在32位机的情况下输出是4
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;sizeof(Son)&#34;</span><span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(Son)<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>// 输出16
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#60a0b0;font-style:italic>// 父类中private的内容，在子类中是访问不到的，但是也被继承下来了，被编译器给隐藏掉了
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><blockquote><p>Vs2013 开发人员命令提示工具 可以查看对象模型</p><p>先cd到cpp文件所造的目录</p><p>cl /d1 reportSingleClassLayout类名 cpp文件名</p></blockquote><h3 id=继承中的同名成员处理>继承中的同名成员处理</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Base</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Vs2013 开发人员命令提示工具 可以查看对象模型</p><p>先cd到cpp文件所造的目录</p><p>cl /d1 reportSingleClassLayout类名 cpp文件名</p></blockquote><h3 id=继承中的同名成员处理>继承中的同名成员处理</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-31>31</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Base</span>
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
 </span></span><span style=display:flex><span>  Base()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    m_A <span style=color:#f92672>=</span> <span style=color:#ae81ff>100</span>;
+</span></span><span style=display:flex><span>    m_A <span style=color:#666>=</span> <span style=color:#40a070>100</span>;
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>func</span>()
+</span></span><span style=display:flex><span>  <span style=color:#902000>void</span> <span style=color:#06287e>func</span>()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;Base 中调用了func&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>    cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;Base 中调用了func&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> m_A;
+</span></span><span style=display:flex><span>  <span style=color:#902000>int</span> m_A;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Son</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Base
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Son</span> <span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Base
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
 </span></span><span style=display:flex><span>	Son()
 </span></span><span style=display:flex><span>	{
-</span></span><span style=display:flex><span>		m_A <span style=color:#f92672>=</span> <span style=color:#ae81ff>200</span>;
+</span></span><span style=display:flex><span>		m_A <span style=color:#666>=</span> <span style=color:#40a070>200</span>;
 </span></span><span style=display:flex><span>	}
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>int</span> m_A;
+</span></span><span style=display:flex><span>	<span style=color:#902000>int</span> m_A;
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>Son s;
-</span></span><span style=display:flex><span>cout<span style=color:#f92672>&lt;&lt;</span>s.m_A<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>// 输出 200
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// 从父类中获取m_A
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>cout<span style=color:#f92672>&lt;&lt;</span>s.Base<span style=color:#f92672>::</span>m_A<span style=color:#f92672>&lt;&lt;</span>endl; <span style=color:#75715e>// 输出 100
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>s.func(); <span style=color:#75715e>// 输出 Base 中调用了func
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// 如果在子类中重新定义了和父类中某一函数，那么将会隐藏掉父类中所有的同名成员函数（包括重载函数）
-</span></span></span></code></pre></div><p>防止继承的方式</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>NoDrived</span> <span style=color:#66d9ef>final</span>{...} <span style=color:#75715e>// 类名后加final说明此类不能被继承
-</span></span></span></code></pre></div><h2 id=多态>多态</h2><p>静态联编：程序在编译的时候确定，函数重载就是静态联编形式</p><p>动态联编：程序在执行时确定</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
+</span></span><span style=display:flex><span>cout<span style=color:#666>&lt;&lt;</span>s.m_A<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>// 输出 200
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 从父类中获取m_A
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>cout<span style=color:#666>&lt;&lt;</span>s.Base<span style=color:#666>::</span>m_A<span style=color:#666>&lt;&lt;</span>endl; <span style=color:#60a0b0;font-style:italic>// 输出 100
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>
+</span></span><span style=display:flex><span>s.func(); <span style=color:#60a0b0;font-style:italic>// 输出 Base 中调用了func
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 如果在子类中重新定义了和父类中某一函数，那么将会隐藏掉父类中所有的同名成员函数（包括重载函数）
+</span></span></span></code></pre></td></tr></table></div></div><p>防止继承的方式</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-1>1</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>NoDrived</span> <span style=color:#007020;font-weight:700>final</span>{...} <span style=color:#60a0b0;font-style:italic>// 类名后加final说明此类不能被继承
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=多态>多态</h2><p>静态联编：程序在编译的时候确定，函数重载就是静态联编形式</p><p>动态联编：程序在执行时确定</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-9-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-9-36>36</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  speak()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;动物在说话&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>    cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;动物在说话&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Cat</span><span style=color:#f92672>:</span><span style=color:#66d9ef>public</span> Animal
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Cat</span><span style=color:#666>:</span><span style=color:#007020;font-weight:700>public</span> Animal
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>	speak()
 </span></span><span style=display:flex><span>	{
-</span></span><span style=display:flex><span>		cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;喵喵喵&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>		cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;喵喵喵&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>	}
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>//调用doSpeak，speak函数的地址在编译的时候就已经绑定好了，绑定为Animal::speak()
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>doSpeak</span>(Animal <span style=color:#f92672>&amp;</span> animal)
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>//调用doSpeak，speak函数的地址在编译的时候就已经绑定好了，绑定为Animal::speak()
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#902000>void</span> <span style=color:#06287e>doSpeak</span>(Animal <span style=color:#666>&amp;</span> animal)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  animal.speak();
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>main</span>()
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>		Cat cat;
-</span></span><span style=display:flex><span>  	doSpeak(cat); <span style=color:#75715e>// 输出： ”动物在说话“
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
-</span></span><span style=display:flex><span><span style=color:#75715e>// 如果想输出 &#34;喵喵喵&#34;，就不能静态联编，需要在运行时确定函数地址
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// 动态联编， 将Animal的Speak改写成虚函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
+</span></span><span style=display:flex><span>  	doSpeak(cat); <span style=color:#60a0b0;font-style:italic>// 输出： ”动物在说话“
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>}
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 如果想输出 &#34;喵喵喵&#34;，就不能静态联编，需要在运行时确定函数地址
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>// 动态联编， 将Animal的Speak改写成虚函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#a6e22e>speak</span>()  <span style=color:#75715e>// 父类的引用或者指针指向子类的成员函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  {
-</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;动物在说话&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#06287e>speak</span>()  <span style=color:#60a0b0;font-style:italic>// 父类的引用或者指针指向子类的成员函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  {
+</span></span><span style=display:flex><span>    cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;动物在说话&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>};
-</span></span></code></pre></div><p>虚函数表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
+</span></span></code></pre></td></tr></table></div></div><p>虚函数表</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-10-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-10-23>23</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>  speak()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;动物在说话&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>    cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;动物在说话&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>sizeof</span>(Animal) <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>sizeof</span>(Animal) <span style=color:#666>=</span> <span style=color:#40a070>1</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Animal</span>
+</span></span><span style=display:flex><span> <span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Animal</span>
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#a6e22e>speak</span>()
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#06287e>speak</span>()
 </span></span><span style=display:flex><span>  {
-</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#e6db74>&#34;动物在说话&#34;</span><span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>    cout<span style=color:#666>&lt;&lt;</span><span style=color:#4070a0>&#34;动物在说话&#34;</span><span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>sizeof</span>(Animal) <span style=color:#f92672>=</span> <span style=color:#ae81ff>4</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>sizeof</span>(Animal) <span style=color:#666>=</span> <span style=color:#40a070>4</span>
 </span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>vfptr: <span style=color:#66d9ef>virtual</span> function pointer <span style=color:#960050;background-color:#1e0010>虚函数表指针</span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>vfptr</span>: <span style=color:#007020;font-weight:700>virtual</span> function pointer <span>虚函数表指针</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Animal <span style=color:#f92672>*</span> animal <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Cat;
-</span></span><span style=display:flex><span>animal<span style=color:#f92672>-&gt;</span>speak(); <span style=color:#75715e>//输出 ”喵喵喵“
-</span></span></span></code></pre></div><p>多态原理解析</p><p>当父类中有了虚函数后，内部结构发生了改变</p><p>内部多了一个vfptr,指向虚函数表。</p><p>父类中结构vfptr &amp;Animal::speak</p><p>构造函数中，会将虚函数表指针，指向自己的虚函数表</p><p>如果发生了重写，会替换掉虚函数表中原有的speak 改为&amp;Cat::speak</p><h3 id=虚函数>虚函数</h3><p>non-virtual函数：你不希望derived class重新定义（overrude， 覆写，虚函数被重新定义）它</p><p>virtual函数 : 你希望derived class重新定义（overrude）它，它已经有了一个默认的定义，可以不override。</p><p>pure-virtual函数 ： 你希望derived class重新定义（overrude）它，必须要override， 没有默认定义。</p><p>任何构造函数外的非静态函数都可以是虚函数。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Shape</span> {
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> draw() <span style=color:#66d9ef>const</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#75715e>// 纯虚函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>error</span>(); <span style=color:#75715e>//虚函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>int</span> <span style=color:#a6e22e>objectlD</span>() <span style=color:#66d9ef>const</span>; <span style=color:#75715e>//非虚函数
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Rectabgle</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Shape{...};
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Ellipse</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Shape{...};
-</span></span></code></pre></div><h2 id=一道题>一道题</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#ae81ff>64</span><span style=color:#960050;background-color:#1e0010>位电脑运行以下</span>c<span style=color:#f92672>++</span><span style=color:#960050;background-color:#1e0010>代码结果输出什么？</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>A</span>{
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>char</span> a[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>	<span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> aa(){}
+</span></span><span style=display:flex><span>Animal <span style=color:#666>*</span> animal <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>new</span> Cat;
+</span></span><span style=display:flex><span>animal<span style=color:#666>-&gt;</span>speak(); <span style=color:#60a0b0;font-style:italic>//输出 ”喵喵喵“
+</span></span></span></code></pre></td></tr></table></div></div><p>多态原理解析</p><p>当父类中有了虚函数后，内部结构发生了改变</p><p>内部多了一个vfptr,指向虚函数表。</p><p>父类中结构vfptr &amp;Animal::speak</p><p>构造函数中，会将虚函数表指针，指向自己的虚函数表</p><p>如果发生了重写，会替换掉虚函数表中原有的speak 改为&amp;Cat::speak</p><h3 id=虚函数>虚函数</h3><p>non-virtual函数：你不希望derived class重新定义（overrude， 覆写，虚函数被重新定义）它</p><p>virtual函数 : 你希望derived class重新定义（overrude）它，它已经有了一个默认的定义，可以不override。</p><p>pure-virtual函数 ： 你希望derived class重新定义（overrude）它，必须要override， 没有默认定义。</p><p>任何构造函数外的非静态函数都可以是虚函数。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-2>2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-3>3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-4>4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-5>5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-6>6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-7>7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-8>8</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Shape</span> {
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> draw() <span style=color:#007020;font-weight:700>const</span> <span style=color:#666>=</span> <span style=color:#40a070>0</span>; <span style=color:#60a0b0;font-style:italic>// 纯虚函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> <span style=color:#06287e>error</span>(); <span style=color:#60a0b0;font-style:italic>//虚函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>  <span style=color:#902000>int</span> <span style=color:#06287e>objectlD</span>() <span style=color:#007020;font-weight:700>const</span>; <span style=color:#60a0b0;font-style:italic>//非虚函数
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>};
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Rectabgle</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Shape{...};
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>Ellipse</span><span style=color:#666>:</span> <span style=color:#007020;font-weight:700>public</span> Shape{...};
+</span></span></code></pre></td></tr></table></div></div><h2 id=一道题>一道题</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-35>35</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#40a070>64</span><span>位电脑运行以下</span>c<span style=color:#666>++</span><span>代码结果输出什么？</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>A</span>{
+</span></span><span style=display:flex><span>	<span style=color:#902000>char</span> a[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> aa(){}
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>B</span><span style=color:#f92672>:</span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>virtual</span> A{
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>char</span> b[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>char</span> a[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> bb(){};
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>aa</span>(){};
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>B</span><span style=color:#666>:</span><span style=color:#007020;font-weight:700>public</span> <span style=color:#007020;font-weight:700>virtual</span> A{
+</span></span><span style=display:flex><span>  <span style=color:#902000>char</span> b[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span>  <span style=color:#902000>char</span> a[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> bb(){};
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> <span style=color:#06287e>aa</span>(){};
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>C</span><span style=color:#f92672>:</span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>virtual</span> B{
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>char</span> a[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>char</span> b[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>char</span> c[<span style=color:#ae81ff>2</span>];
-</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> cc(){};
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>aa</span>(){};
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>bb</span>(){};
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>C</span><span style=color:#666>:</span><span style=color:#007020;font-weight:700>public</span> <span style=color:#007020;font-weight:700>virtual</span> B{
+</span></span><span style=display:flex><span>  <span style=color:#902000>char</span> a[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span>  <span style=color:#902000>char</span> b[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span>  <span style=color:#902000>char</span> c[<span style=color:#40a070>2</span>];
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>public</span><span style=color:#666>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> cc(){};
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> <span style=color:#06287e>aa</span>(){};
+</span></span><span style=display:flex><span>  <span style=color:#007020;font-weight:700>virtual</span> <span style=color:#902000>void</span> <span style=color:#06287e>bb</span>(){};
 </span></span><span style=display:flex><span>};
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span><span style=color:#902000>int</span> <span style=color:#06287e>main</span>()
 </span></span><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(A)<span style=color:#f92672>&lt;&lt;</span>endl;
-</span></span><span style=display:flex><span>  cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(B)<span style=color:#f92672>&lt;&lt;</span>endl;
-</span></span><span style=display:flex><span>  cout<span style=color:#f92672>&lt;&lt;</span><span style=color:#66d9ef>sizeof</span>(C)<span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>  cout<span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(A)<span style=color:#666>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>  cout<span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(B)<span style=color:#666>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>  cout<span style=color:#666>&lt;&lt;</span><span style=color:#007020;font-weight:700>sizeof</span>(C)<span style=color:#666>&lt;&lt;</span>endl;
 </span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>此题目应该输出：</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>16</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>32</span>
-</span></span><span style=display:flex><span><span style=color:#ae81ff>48</span>
-</span></span></code></pre></div><p><img src=/post/programing/c++%E7%BB%A7%E6%89%BF/jicheng.png></p><blockquote><p>64位机器所以指针占8个字节的内存。</p><p>对于类A：a占两个字节的内存，八字节内存对齐，后边的虚函数表是个指针因此也占8个字节的内存，因此sizeof(A) = 16B;</p><p>由于B继承自A，因此B内又完全包含一个A，a+b=4个字节仍然不满8个字节，仍然需要填充4个字节来保持内存对齐，因此sizeof(B) = 16+16 = 32B。</p><p>同理sizeof(C) = 48B。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+</span></span><span style=display:flex><span><span>此题目应该输出：</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>16</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>32</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>48</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=/post/programing/c++%E7%BB%A7%E6%89%BF/jicheng.png></p><blockquote><p>64位机器所以指针占8个字节的内存。</p><p>对于类A：a占两个字节的内存，八字节内存对齐，后边的虚函数表是个指针因此也占8个字节的内存，因此sizeof(A) = 16B;</p><p>由于B继承自A，因此B内又完全包含一个A，a+b=4个字节仍然不满8个字节，仍然需要填充4个字节来保持内存对齐，因此sizeof(B) = 16+16 = 32B。</p><p>同理sizeof(C) = 48B。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>2019-08-06</span></p><p class=copyright-item><span class=item-title>License</span>
 <span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/c++/>C++</a></div><nav class=post-nav><a class=prev href=/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
