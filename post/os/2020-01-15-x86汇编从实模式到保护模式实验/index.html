@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>x86汇编从实模式到保护模式实验 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86汇编从实模式到保护模式实验"><meta property="og:description" content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86汇编从实模式到保护模式实验"><meta itemprop=description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="2237"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86汇编从实模式到保护模式实验"><meta name=twitter:description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86汇编从实模式到保护模式实验"><meta property="og:description" content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2020-01-15T16:01:23+08:00"><meta property="article:modified_time" content="2020-01-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86汇编从实模式到保护模式实验"><meta itemprop=description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><meta itemprop=datePublished content="2020-01-15T16:01:23+08:00"><meta itemprop=dateModified content="2020-01-15T16:01:23+08:00"><meta itemprop=wordCount content="2394"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86汇编从实模式到保护模式实验"><meta name=twitter:description content="x86汇编从实模式到保护模式实验 实验一 实验环境：MacOS High Sierra 安装nasm nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -7,7 +7,7 @@
 <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
 </button>
 <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>x86汇编从实模式到保护模式实验</h1><div class=post-meta><div class=post-meta-author>by
-<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2019-04-15>2019-04-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div></div></div></header><div class=post-content><h1 id=x86汇编从实模式到保护模式实验>x86汇编从实模式到保护模式实验</h1><h2 id=实验一>实验一</h2><p>实验环境：MacOS High Sierra</p><h3 id=安装nasm>安装nasm</h3><p>nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台可以执行的二进制代码</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1>1</a>
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2020-01-15>2020-01-15</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div></div></div></header><div class=post-content><h1 id=x86汇编从实模式到保护模式实验>x86汇编从实模式到保护模式实验</h1><h2 id=实验一>实验一</h2><p>实验环境：MacOS High Sierra</p><h3 id=安装nasm>安装nasm</h3><p>nasm是一个开源的汇编语言编译器，可以将汇编代码编程成x86平台可以执行的二进制代码</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-1>1</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-2>2</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-3>3</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-0-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-0-4>4</a>
@@ -93,170 +93,327 @@
 </span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span>            --prefix<span style=color:#666>=</span><span style=color:#bb60d5>$HOME</span>/opt/bochs
 </span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 编译安装</span>
 </span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># 报错 eth_socket.cc:98:10: fatal error: &#39;linux/types.h&#39; file not found</span>
-</span></span></code></pre></td></tr></table></div></div><p><a href=https://blog.nswebfrog.com/2017/02/03/config-bochs/>参考1</a><a href=https://blog.csdn.net/yjk13703623757/article/details/86825542>参考2</a></p><p>bochs在macos上编译的时候遇到<code>fatal error: 'linux/types.h' file not found</code>错误，暂时不知道怎么解决。</p><h3 id=代码解释>代码解释</h3><pre tabindex=0><code class=language-assembly data-lang=assembly>;代码清单5-1
-
-mov ax,0xb800 ;指向文本模式的显示缓冲区
-mov es,ax
-
-;以下显示字符串&#34;Label offset:&#34;
-
-mov byte [es:0x00],&#39;L&#39;
-mov byte [es:0x01],0x07		;黑底白字
-mov byte [es:0x02],&#39;a&#39;
-mov byte [es:0x03],0x07
-mov byte [es:0x04],&#39;b&#39;
-mov byte [es:0x05],0x07
-mov byte [es:0x06],&#39;e&#39;
-mov byte [es:0x07],0x07
-mov byte [es:0x08],&#39;l&#39;
-mov byte [es:0x09],0x07
-mov byte [es:0x0a],&#39; &#39;
-mov byte [es:0x0b],0x07
-mov byte [es:0x0c],&#34;o&#34;
-mov byte [es:0x0d],0x07
-mov byte [es:0x0e],&#39;f&#39;
-mov byte [es:0x0f],0x07
-mov byte [es:0x10],&#39;f&#39;
-mov byte [es:0x11],0x07
-mov byte [es:0x12],&#39;s&#39;
-mov byte [es:0x13],0x07
-mov byte [es:0x14],&#39;e&#39;
-mov byte [es:0x15],0x07
-mov byte [es:0x16],&#39;t&#39;
-mov byte [es:0x17],0x07
-mov byte [es:0x18],&#39;:&#39;
-mov byte [es:0x19],0x07
-
-mov ax,number 			;取得标号number的偏移地址
-mov bx,10 			; 除数
-
-;设置数据段的基地址
-mov cx,cs
-mov ds,cx
-
-;求个位上的数字
-mov dx,0 											; 被除数是DX:AX 32位
-div bx												; 除数是BX 16位， 商在AX，余数在DX
-mov [0x7c00+number+0x00],dl 	; dl中保存的是余数的低8位 ;保存个位上的数字
-
-;求十位上的数字
-xor dx,dx 										; 清空dx寄存器的值
-div bx
-mov [0x7c00+number+0x01],dl 	;保存十位上的数字
-
-;求百位上的数字
-xor dx,dx
-div bx
-mov [0x7c00+number+0x02],dl		;保存百位上的数字
-
-;求千位上的数字
-xor dx,dx
-div bx
-mov [0x7c00+number+0x03],dl		;保存千位上的数字
-
-;求万位上的数字
-xor dx,dx
-div bx
-mov [0x7c00+number+0x04],dl		;保存万位上的数字
-
-;以下用十进制显示标号的偏移地址
-
-mov al,[0x7c00+number+0x04]
-add al,0x30										; 要显示数字的ASCII
-mov [es:0x1a],al
-mov byte [es:0x1b],0x04
-
-mov al,[0x7c00+number+0x03]
-add al,0x30
-mov [es:0x1c],al
-mov byte [es:0x1d],0x04				; 黑底红字，无闪烁，无加亮
-
-mov al,[0x7c00+number+0x02]
-add al,0x30
-mov [es:0x1e],al
-mov byte [es:0x1f],0x04				; 设置显示模式
-
-mov al,[0x7c00+number+0x01]
-add al,0x30
-mov [es:0x20],al
-mov byte [es:0x21],0x04
-
-mov al,[0x7c00+number+0x00]
-add al,0x30
-mov [es:0x22],al
-mov byte [es:0x23],0x04
-
-mov byte [es:0x24],&#39;D&#39;
-mov byte [es:0x25],0x07
-
-;无限循环
-infi:
-jmp near infi
-
-number db 0,0,0,0,0
-times 203 db 0 			; 重复定义203个0
-db 0x55,0xaa
-</code></pre><blockquote><p>div指令：</p><p>被除数是32位时存储在 （DX:AX） 除数是16位的跟在div指令后，商存在AX，余数在DX中</p><p>被除数是16位时存储在 AX中，除数是8位的跟在div指令后，商在AL,余数在AH中</p><p>DB是伪指令，即没有对应的机器码，只是给编译器用的。DB表示声明一个字节数据，此外还有DW(两个字),DD（双字）,DQ（四字）</p></blockquote><pre tabindex=0><code class=language-assembly data-lang=assembly>;代码清单6-1
-
-jmp near start
-mytext db &#39;L&#39;,0x07,&#39;a&#39;,0x07,&#39;b&#39;,0x07,&#39;e&#39;,0x07,&#39;l&#39;,0x07,&#39; &#39;,0x07,&#39;o&#39;,0x07,\
-&#39;f&#39;,0x07,&#39;f&#39;,0x07,&#39;s&#39;,0x07,&#39;e&#39;,0x07,&#39;t&#39;,0x07,&#39;:&#39;,0x07
-number db 0,0,0,0,0
-
-start:
-	mov ax,0x7c0
-	mov ds,ax			;设置数据段基地址
-
-	mov ax,0xb800
-	mov es,ax			;设置附加段基地址
-
-	cld						; 清除DF位，DF=0表示movsw为正方向， std指令设置DF=1 传送方向为从高地址到低地址
-
-	mov si,mytext			; movsw的源（source）
-	mov di,0					; movsw的目的（dist）
-	mov cx,(number-mytext)/2	; (numbner-mytext)/2是需要movsw的次数，cx是计数寄存器cx==0时rep结束 13
-	rep movsw					; 重复movsw，每次mov一个word及两个字节 起始DS:SI 目的ES:DI
-
-
-	mov ax,number			;得到标号所代表的偏移地址
-
-	;计算各个数位
-	mov bx,ax
-	mov cx,5
-	mov si,10				; 除数
-digit:
-	xor dx,dx				; 清空dx寄存器的值
-	div si
-	mov [bx],dl			; 保存数位，保存位置为number
-	inc bx					; bx值增加1
-	loop digit			; cx != 0 就跳转回digit标签处
-
-	;显示各个数位
-	mov bx,number
-	mov si,4				; 显示位数
-show:
-	mov al,[bx+si]
-	add al,0x30
-	mov ah,0x04
-	mov [es:di],ax
-
-	add di,2
-	dec si				; si 自减1
-	jns show			; SF=0则跳转 SF（Sign Flag）如果前边dec执行后最高位为0则SF=0,否则置1
-
-
-	mov word [es:di],0x0744 ; 0x07 表示黑底白字 0x44是字母&#39;D&#39;
-	jmp near $			; 死循环
-
-	times 510-($-$$) db 0 		; 一个块512B，减去55aa还有510个块, $代表行首地址，$$代表当前段的起始地址
-	db 0x55,0xaa			; MBR分区标记
-</code></pre><blockquote><p>movsw指令</p><p>movsw和movsb指令执行时，原始数据串的地址由DS:SI指定，要传送的目的地址为ES:DI，传送次数为CX，movsb每次传送一个字节，movsw每次传送两个字节。</p><p>正向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI加1或者2；</p><p>反向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI减1或者2；</p><p>传送方向由标志寄存器（FLAGS）的DF位指定，0为正，1为负。cls清零DF位，std将DF位置1.</p><p>单纯的movsw或者movsb指令只能执行1此，需要加上rep前缀，只要CX不为0就一直执行movsw或者movsb。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+</span></span></code></pre></td></tr></table></div></div><p><a href=https://blog.nswebfrog.com/2017/02/03/config-bochs/>参考1</a><a href=https://blog.csdn.net/yjk13703623757/article/details/86825542>参考2</a></p><p>bochs在macos上编译的时候遇到<code>fatal error: 'linux/types.h' file not found</code>错误，暂时不知道怎么解决。</p><h3 id=代码解释>代码解释</h3><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-1>  1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-2>  2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-3>  3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-4>  4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-5>  5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-6>  6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-7>  7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-8>  8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-9>  9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-10> 10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-11> 11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-12> 12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-13> 13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-14> 14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-15> 15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-16> 16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-17> 17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-18> 18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-19> 19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-20> 20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-21> 21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-22> 22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-23> 23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-24> 24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-25> 25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-26> 26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-27> 27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-28> 28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-29> 29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-30> 30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-31> 31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-32> 32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-33> 33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-34> 34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-35> 35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-36> 36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-37> 37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-38> 38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-39> 39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-40> 40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-41> 41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-42> 42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-43> 43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-44> 44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-45> 45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-46> 46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-47> 47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-48> 48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-49> 49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-50> 50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-51> 51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-52> 52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-53> 53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-54> 54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-55><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-55> 55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-56><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-56> 56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-57><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-57> 57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-58><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-58> 58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-59><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-59> 59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-60><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-60> 60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-61><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-61> 61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-62><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-62> 62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-63><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-63> 63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-64><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-64> 64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-65><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-65> 65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-66><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-66> 66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-67><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-67> 67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-68><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-68> 68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-69><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-69> 69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-70><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-70> 70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-71><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-71> 71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-72><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-72> 72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-73><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-73> 73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-74><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-74> 74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-75><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-75> 75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-76><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-76> 76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-77><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-77> 77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-78><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-78> 78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-79><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-79> 79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-80><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-80> 80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-81><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-81> 81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-82><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-82> 82</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-83><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-83> 83</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-84><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-84> 84</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-85><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-85> 85</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-86><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-86> 86</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-87><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-87> 87</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-88><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-88> 88</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-89><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-89> 89</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-90><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-90> 90</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-91><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-91> 91</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-92><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-92> 92</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-93><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-93> 93</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-94><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-94> 94</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-95><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-95> 95</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-96><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-96> 96</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-97><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-97> 97</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-98><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-98> 98</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-99><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-99> 99</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-100><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-100>100</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-101><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-101>101</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-102><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-102>102</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-7-103><a style=outline:none;text-decoration:none;color:inherit href=#hl-7-103>103</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>;<span>代码清单</span><span style=color:#40a070>5</span><span style=color:#666>-</span><span style=color:#40a070>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov ax,<span style=color:#40a070>0xb800</span> ;<span>指向文本模式的显示缓冲区</span>
+</span></span><span style=display:flex><span>mov es,ax
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>以下显示字符串</span><span style=color:#4070a0>&#34;Label offset:&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x00</span>],<span style=color:#4070a0>&#39;L&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x01</span>],<span style=color:#40a070>0x07</span>		;<span>黑底白字</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x02</span>],<span style=color:#4070a0>&#39;a&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x03</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x04</span>],<span style=color:#4070a0>&#39;b&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x05</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x06</span>],<span style=color:#4070a0>&#39;e&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x07</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x08</span>],<span style=color:#4070a0>&#39;l&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x09</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0a</span>],<span style=color:#4070a0>&#39; &#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0b</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0c</span>],<span style=color:#4070a0>&#34;o&#34;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0d</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0e</span>],<span style=color:#4070a0>&#39;f&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x0f</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x10</span>],<span style=color:#4070a0>&#39;f&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x11</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x12</span>],<span style=color:#4070a0>&#39;s&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x13</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x14</span>],<span style=color:#4070a0>&#39;e&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x15</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x16</span>],<span style=color:#4070a0>&#39;t&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x17</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x18</span>],<span style=color:#4070a0>&#39;:&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x19</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov ax,number 			;<span>取得标号</span>number的偏移地址
+</span></span><span style=display:flex><span>mov bx,<span style=color:#40a070>10</span> 			; <span>除数</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>设置数据段的基地址</span>
+</span></span><span style=display:flex><span>mov cx,cs
+</span></span><span style=display:flex><span>mov ds,cx
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>求个位上的数字</span>
+</span></span><span style=display:flex><span>mov dx,<span style=color:#40a070>0</span> 											; <span>被除数是</span><span style=color:#002070;font-weight:700>DX</span>:AX <span style=color:#40a070>32</span><span>位</span>
+</span></span><span style=display:flex><span>div bx												; <span>除数是</span>BX <span style=color:#40a070>16</span><span>位，</span> <span>商在</span>AX<span>，余数在</span>DX
+</span></span><span style=display:flex><span>mov [<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x00</span>],dl 	; dl中保存的是余数的低8位 ;<span>保存个位上的数字</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>求十位上的数字</span>
+</span></span><span style=display:flex><span>xor dx,dx 										; <span>清空</span>dx寄存器的值
+</span></span><span style=display:flex><span>div bx
+</span></span><span style=display:flex><span>mov [<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x01</span>],dl 	;<span>保存十位上的数字</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>求百位上的数字</span>
+</span></span><span style=display:flex><span>xor dx,dx
+</span></span><span style=display:flex><span>div bx
+</span></span><span style=display:flex><span>mov [<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x02</span>],dl		;<span>保存百位上的数字</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>求千位上的数字</span>
+</span></span><span style=display:flex><span>xor dx,dx
+</span></span><span style=display:flex><span>div bx
+</span></span><span style=display:flex><span>mov [<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x03</span>],dl		;<span>保存千位上的数字</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>求万位上的数字</span>
+</span></span><span style=display:flex><span>xor dx,dx
+</span></span><span style=display:flex><span>div bx
+</span></span><span style=display:flex><span>mov [<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x04</span>],dl		;<span>保存万位上的数字</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>以下用十进制显示标号的偏移地址</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov al,[<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x04</span>]
+</span></span><span style=display:flex><span>add al,<span style=color:#40a070>0x30</span>										; <span>要显示数字的</span>ASCII
+</span></span><span style=display:flex><span>mov [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1a</span>],al
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1b</span>],<span style=color:#40a070>0x04</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov al,[<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x03</span>]
+</span></span><span style=display:flex><span>add al,<span style=color:#40a070>0x30</span>
+</span></span><span style=display:flex><span>mov [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1c</span>],al
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1d</span>],<span style=color:#40a070>0x04</span>				; <span>黑底红字，无闪烁，无加亮</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov al,[<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x02</span>]
+</span></span><span style=display:flex><span>add al,<span style=color:#40a070>0x30</span>
+</span></span><span style=display:flex><span>mov [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1e</span>],al
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x1f</span>],<span style=color:#40a070>0x04</span>				; <span>设置显示模式</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov al,[<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x01</span>]
+</span></span><span style=display:flex><span>add al,<span style=color:#40a070>0x30</span>
+</span></span><span style=display:flex><span>mov [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x20</span>],al
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x21</span>],<span style=color:#40a070>0x04</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov al,[<span style=color:#40a070>0x7c00</span><span style=color:#666>+</span>number<span style=color:#666>+</span><span style=color:#40a070>0x00</span>]
+</span></span><span style=display:flex><span>add al,<span style=color:#40a070>0x30</span>
+</span></span><span style=display:flex><span>mov [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x22</span>],al
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x23</span>],<span style=color:#40a070>0x04</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x24</span>],<span style=color:#4070a0>&#39;D&#39;</span>
+</span></span><span style=display:flex><span>mov byte [<span style=color:#002070;font-weight:700>es</span>:<span style=color:#40a070>0x25</span>],<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>;<span>无限循环</span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>infi</span>:
+</span></span><span style=display:flex><span>jmp near infi
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>number db <span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>
+</span></span><span style=display:flex><span>times <span style=color:#40a070>203</span> db <span style=color:#40a070>0</span> 			; <span>重复定义</span><span style=color:#40a070>203</span><span>个</span><span style=color:#40a070>0</span>
+</span></span><span style=display:flex><span>db <span style=color:#40a070>0x55</span>,<span style=color:#40a070>0xaa</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>div指令：</p><p>被除数是32位时存储在 （DX:AX） 除数是16位的跟在div指令后，商存在AX，余数在DX中</p><p>被除数是16位时存储在 AX中，除数是8位的跟在div指令后，商在AL,余数在AH中</p><p>DB是伪指令，即没有对应的机器码，只是给编译器用的。DB表示声明一个字节数据，此外还有DW(两个字),DD（双字）,DQ（四字）</p></blockquote><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-45>45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-46>46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-47>47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-48>48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-49>49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-50>50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-51>51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-52>52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-53>53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-8-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-8-54>54</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>;<span>代码清单</span><span style=color:#40a070>6</span><span style=color:#666>-</span><span style=color:#40a070>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>jmp near start
+</span></span><span style=display:flex><span>mytext db <span style=color:#4070a0>&#39;L&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;a&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;b&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;e&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;l&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39; &#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;o&#39;</span>,<span style=color:#40a070>0x07</span>,\
+</span></span><span style=display:flex><span><span style=color:#4070a0>&#39;f&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;f&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;s&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;e&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;t&#39;</span>,<span style=color:#40a070>0x07</span>,<span style=color:#4070a0>&#39;:&#39;</span>,<span style=color:#40a070>0x07</span>
+</span></span><span style=display:flex><span>number db <span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>,<span style=color:#40a070>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>start</span>:
+</span></span><span style=display:flex><span>	mov ax,<span style=color:#40a070>0x7c0</span>
+</span></span><span style=display:flex><span>	mov ds,ax			;<span>设置数据段基地址</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	mov ax,<span style=color:#40a070>0xb800</span>
+</span></span><span style=display:flex><span>	mov es,ax			;<span>设置附加段基地址</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	cld						; <span>清除</span>DF位<span>，</span>DF<span style=color:#666>=</span><span style=color:#40a070>0</span><span>表示</span>movsw为正方向<span>，</span> std指令设置DF<span style=color:#666>=</span><span style=color:#40a070>1</span> <span>传送方向为从高地址到低地址</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	mov si,mytext			; movsw的源<span>（</span>source<span>）</span>
+</span></span><span style=display:flex><span>	mov di,<span style=color:#40a070>0</span>					; movsw的目的<span>（</span>dist<span>）</span>
+</span></span><span style=display:flex><span>	mov cx,(number<span style=color:#666>-</span>mytext)<span style=color:#666>/</span><span style=color:#40a070>2</span>	; (numbner<span style=color:#666>-</span>mytext)<span style=color:#666>/</span><span style=color:#40a070>2</span><span>是需要</span>movsw的次数<span>，</span>cx是计数寄存器cx<span style=color:#666>==</span><span style=color:#40a070>0</span><span>时</span>rep结束 <span style=color:#40a070>13</span>
+</span></span><span style=display:flex><span>	rep movsw					; <span>重复</span>movsw<span>，每次</span>mov一个word及两个字节 <span>起始</span><span style=color:#002070;font-weight:700>DS</span>:SI <span>目的</span><span style=color:#002070;font-weight:700>ES</span>:DI
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	mov ax,number			;<span>得到标号所代表的偏移地址</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	;<span>计算各个数位</span>
+</span></span><span style=display:flex><span>	mov bx,ax
+</span></span><span style=display:flex><span>	mov cx,<span style=color:#40a070>5</span>
+</span></span><span style=display:flex><span>	mov si,<span style=color:#40a070>10</span>				; <span>除数</span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>digit</span>:
+</span></span><span style=display:flex><span>	xor dx,dx				; <span>清空</span>dx寄存器的值
+</span></span><span style=display:flex><span>	div si
+</span></span><span style=display:flex><span>	mov [bx],dl			; <span>保存数位，保存位置为</span>number
+</span></span><span style=display:flex><span>	inc bx					; bx值增加1
+</span></span><span style=display:flex><span>	loop digit			; cx <span style=color:#666>!=</span> <span style=color:#40a070>0</span> <span>就跳转回</span>digit标签处
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	;<span>显示各个数位</span>
+</span></span><span style=display:flex><span>	mov bx,number
+</span></span><span style=display:flex><span>	mov si,<span style=color:#40a070>4</span>				; <span>显示位数</span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>show</span>:
+</span></span><span style=display:flex><span>	mov al,[bx<span style=color:#666>+</span>si]
+</span></span><span style=display:flex><span>	add al,<span style=color:#40a070>0x30</span>
+</span></span><span style=display:flex><span>	mov ah,<span style=color:#40a070>0x04</span>
+</span></span><span style=display:flex><span>	mov [<span style=color:#002070;font-weight:700>es</span>:di],ax
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	add di,<span style=color:#40a070>2</span>
+</span></span><span style=display:flex><span>	dec si				; si <span>自减</span><span style=color:#40a070>1</span>
+</span></span><span style=display:flex><span>	jns show			; SF<span style=color:#666>=</span><span style=color:#40a070>0</span><span>则跳转</span> SF<span>（</span>Sign Flag<span>）如果前边</span>dec执行后最高位为0则SF<span style=color:#666>=</span><span style=color:#40a070>0</span>,<span>否则置</span><span style=color:#40a070>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	mov word [<span style=color:#002070;font-weight:700>es</span>:di],<span style=color:#40a070>0x0744</span> ; <span style=color:#40a070>0x07</span> <span>表示黑底白字</span> <span style=color:#40a070>0x44</span><span>是字母</span><span style=color:#4070a0>&#39;D&#39;</span>
+</span></span><span style=display:flex><span>	jmp near <span>$</span>			; <span>死循环</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	times <span style=color:#40a070>510</span><span style=color:#666>-</span>(<span>$</span><span style=color:#666>-</span><span>$$</span>) db <span style=color:#40a070>0</span> 		; <span>一个块</span><span style=color:#40a070>512</span>B<span>，减去</span><span style=color:#40a070>55</span>aa还有510个块, <span>$代表行首地址，$$代表当前段的起始地址</span>
+</span></span><span style=display:flex><span>	db <span style=color:#40a070>0x55</span>,<span style=color:#40a070>0xaa</span>			; MBR分区标记
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>movsw指令</p><p>movsw和movsb指令执行时，原始数据串的地址由DS:SI指定，要传送的目的地址为ES:DI，传送次数为CX，movsb每次传送一个字节，movsw每次传送两个字节。</p><p>正向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI加1或者2；</p><p>反向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI减1或者2；</p><p>传送方向由标志寄存器（FLAGS）的DF位指定，0为正，1为负。cls清零DF位，std将DF位置1.</p><p>单纯的movsw或者movsb指令只能执行1此，需要加上rep前缀，只要CX不为0就一直执行movsw或者movsb。</p></blockquote></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
-<span class=item-content>2019-04-15</span></p><p class=copyright-item><span class=item-title>License</span>
-<span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div><nav class=post-nav><a class=prev href=/post/os/2019-07-05-x86%E6%B1%87%E7%BC%96/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
-</i><span class="prev-text nav-default">X86汇编</span>
+<span class=item-content>2020-01-15</span></p><p class=copyright-item><span class=item-title>License</span>
+<span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div><nav class=post-nav><a class=prev href=/post/service/novnc/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
+</i><span class="prev-text nav-default">noVNC+frp访问学校的服务器桌面</span>
 <span class="prev-text nav-mobile">Prev</span>
-</a><a class=next href=/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/><span class="next-text nav-default">制作dmg格式的苹果镜像</span>
+</a><a class=next href=/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/><span class="next-text nav-default">2019秋招笔试题</span>
 <span class="prev-text nav-mobile">Next</span>
 <i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697c-11.777231-11.500939-30.216186-10.304694-41.178865 2.712784z"/></svg></i></a></nav></footer></article></div><nav class=toc id=toc><div class=toc-title>Table of Contents</div><div class="toc-content custom-scrollbar"><nav id=TableOfContents><ul><li><a href=#实验一>实验一</a><ul><li><a href=#安装nasm>安装nasm</a></li><li><a href=#写入代码并编译>写入代码，并编译</a></li><li><a href=#创建虚拟机镜像并启动虚拟机查看实验结果>创建虚拟机镜像，并启动虚拟机查看实验结果</a></li><li><a href=#创建一个虚拟硬盘并写入mbr>创建一个虚拟硬盘，并写入MBR</a></li><li><a href=#bochs>Bochs</a></li><li><a href=#代码解释>代码解释</a></li></ul></li></ul></nav></div></nav></div></main><footer id=footer class=footer><div class=icon-links><a href=yuanye.ma@qq.com rel="me noopener" class=iconfont title=email target=_blank><svg class="icon" viewBox="0 0 1451 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36"><path d="M664.781909 681.472759.0 97.881301C0 3.997201 71.046997.0 71.046997.0H474.477909 961.649408h399.992405s71.046998 3.997201 71.046998 97.881301L771.345323 681.472759S764.482731 685.154773 753.594283 688.65053V688.664858C741.602731 693.493018 729.424896 695.068979 718.077952 694.839748 706.731093 695.068979 694.553173 693.493018 682.561621 688.664858V688.65053C671.644501 685.140446 664.781909 681.472759 664.781909 681.472759zm53.281707 130.131124C693.779541 811.016482 658.879232 802.205449 619.10784 767.734955 542.989056 701.759633.0 212.052267.0 212.052267V942.809523S0 1024 83.726336 1024H682.532949 753.579947h595.368192C1432.688811 1024 1432.688811 942.809523 1432.688811 942.809523V212.052267S893.138176 701.759633 817.019477 767.734955c-39.771477 34.470494-74.671786 43.295855-98.955861 43.868928z"/></svg>
 </a><a href=https://github.com/YuanyeMa rel="me noopener" class=iconfont title=github target=_blank><svg class="icon" style="" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36"><path d="M512 12.672c-282.88.0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667.0-12.16-.426667-44.373333-.64-87.04C242.005334 929.664 211.968 830.08 211.968 830.08 188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333.0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333.0.0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667.0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72.0 68.522667-.64 123.562667-.64 140.202666.0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"/></svg>

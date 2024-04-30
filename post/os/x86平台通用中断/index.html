@@ -1,5 +1,5 @@
 <!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>x86平台Linux中断机制 - Yuanye Ma's Blog
-</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86平台Linux中断机制"><meta property="og:description" content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86平台Linux中断机制"><meta itemprop=description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="9782"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86平台Linux中断机制"><meta name=twitter:description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.125.4"><link rel=canonical href=/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.e826e860368147e5a6685e686355e4d7789023c18c9ea2e78b35f6786ce92736.css integrity="sha256-6CboYDaBR+WmaF5oY1Xk13iQI8GMnqLnizX2eGzpJzY=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="x86平台Linux中断机制"><meta property="og:description" content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-04-15T16:01:23+08:00"><meta property="article:modified_time" content="2019-04-15T16:01:23+08:00"><meta property="article:tag" content="操作系统"><meta itemprop=name content="x86平台Linux中断机制"><meta itemprop=description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><meta itemprop=datePublished content="2019-04-15T16:01:23+08:00"><meta itemprop=dateModified content="2019-04-15T16:01:23+08:00"><meta itemprop=wordCount content="9874"><meta itemprop=keywords content="操作系统"><meta name=twitter:card content="summary"><meta name=twitter:title content="x86平台Linux中断机制"><meta name=twitter:description content="x86平台Linux中断机制 [toc] 基础知识 NMI不能被IF禁止，其中断向量号由系统固定分配。 外部中断一般可分为非屏蔽中断和可屏蔽中断。对于非屏蔽"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
 <span></span>
 <span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
@@ -399,45 +399,83 @@
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>			-&gt;init_IQR()
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	被调用	
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
-</span></span></code></pre></td></tr></table></div></div></li><li><p>设置<code>IDTR</code></p><pre tabindex=0><code class=language-assembly data-lang=assembly>is386:  movl $2,%ecx            # set MP
-2:      movl %cr0,%eax
-        andl $0x80000011,%eax   # Save PG,PE,ET
-        orl %ecx,%eax
-        movl %eax,%cr0
-
-        call check_x87
-        lgdt early_gdt_descr
-        lidt idt_descr
-        ljmp $(__KERNEL_CS),$1f
-1:      movl $(__KERNEL_DS),%eax        # reload all the segment registers
-        movl %eax,%ss                   # after changing gdt.
-</code></pre></li><li><p>初始化256个门描述符</p><pre tabindex=0><code class=language-assembly data-lang=assembly>/*
- *  setup_idt
- *
- *  sets up a idt with 256 entries pointing to
- *  ignore_int, interrupt gates. It doesn&#39;t actually load
- *  idt - that can be done only after paging has been enabled
- *  and the kernel moved to PAGE_OFFSET. Interrupts
- *  are enabled elsewhere, when we can be relatively
- *  sure everything is ok.
- *
- *  Warning: %esi is live across this function.
- */
-setup_idt:
-        lea ignore_int,%edx
-        movl $(__KERNEL_CS &lt;&lt; 16),%eax
-        movw %dx,%ax            /* selector = 0x0010 = cs */
-        movw $0x8E00,%dx        /* interrupt gate - dpl=0, present */
-
-        lea idt_table,%edi 
-        mov $256,%ecx
-rp_sidt:
-    movl %eax,(%edi)
-        movl %edx,4(%edi)
-        addl $8,%edi
-        dec %ecx
-        jne rp_sidt
-</code></pre><blockquote><p>lea指令 ： load effective address 功能是取偏移地址。</p><p>mov是将数据从源传到目的</p><p>lea是将源的地址传到目的</p><p>例如：</p><p>​ movl 18(%eax), %ebx #是将内存中（%eax+18）的内容传入%ebx中；</p><p>​ leal 18(%eax), %ebx #是将（18+（%eax中的值））即地址，传入%ebx;</p><p>代码中，lea idt_table, %edi #即将idt_table表的地址传到%edi中。</p></blockquote></li></ol><h3 id=idt最终初始化><code>IDT</code>最终初始化</h3><ul><li>异常：由函数trap_init()实现，被系统初始化入口函数start_kernel()调用；</li><li>中断：由函数init_IRQ()实现，被系统初始化入口函数start_kernel()调用；</li></ul><h3 id=trap_init><code>trap_init()</code></h3><p>此函数在<strong>x86平台linux系统调用</strong>章节已经分析过。</p><h3 id=early_irq_init><code>early_irq_init()</code></h3><p>该函数用于初始化数组irq_desc[]；</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-1> 1</a>
+</span></span></code></pre></td></tr></table></div></div></li><li><p>设置<code>IDTR</code></p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-4-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-4-12>12</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#002070;font-weight:700>is386</span>:  movl <span>$</span><span style=color:#40a070>2</span>,<span style=color:#666>%</span>ecx            <span>#</span> set MP
+</span></span><span style=display:flex><span><span style=color:#40a070>2</span><span style=color:#666>:</span>      movl <span style=color:#666>%</span>cr0,<span style=color:#666>%</span>eax
+</span></span><span style=display:flex><span>        andl <span>$</span><span style=color:#40a070>0x80000011</span>,<span style=color:#666>%</span>eax   <span>#</span> Save PG,PE,ET
+</span></span><span style=display:flex><span>        orl <span style=color:#666>%</span>ecx,<span style=color:#666>%</span>eax
+</span></span><span style=display:flex><span>        movl <span style=color:#666>%</span>eax,<span style=color:#666>%</span>cr0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        call check_x87
+</span></span><span style=display:flex><span>        lgdt early_gdt_descr
+</span></span><span style=display:flex><span>        lidt idt_descr
+</span></span><span style=display:flex><span>        ljmp <span>$</span>(__KERNEL_CS),<span>$</span><span style=color:#40a070>1f</span>
+</span></span><span style=display:flex><span><span style=color:#40a070>1</span><span style=color:#666>:</span>      movl <span>$</span>(__KERNEL_DS),<span style=color:#666>%</span>eax        <span>#</span> reload all the segment registers
+</span></span><span style=display:flex><span>        movl <span style=color:#666>%</span>eax,<span style=color:#666>%</span>ss                   <span>#</span> after changing gdt.
+</span></span></code></pre></td></tr></table></div></div></li><li><p>初始化256个门描述符</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-26>26</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  setup_idt
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  sets up a idt with 256 entries pointing to
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  ignore_int, interrupt gates. It doesn&#39;t actually load
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  idt - that can be done only after paging has been enabled
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  and the kernel moved to PAGE_OFFSET. Interrupts
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  are enabled elsewhere, when we can be relatively
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  sure everything is ok.
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *  Warning: %esi is live across this function.
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>setup_idt</span>:
+</span></span><span style=display:flex><span>        lea ignore_int,<span style=color:#666>%</span>edx
+</span></span><span style=display:flex><span>        movl <span>$</span>(__KERNEL_CS <span style=color:#666>&lt;&lt;</span> <span style=color:#40a070>16</span>),<span style=color:#666>%</span>eax
+</span></span><span style=display:flex><span>        movw <span style=color:#666>%</span>dx,<span style=color:#666>%</span>ax            <span style=color:#60a0b0;font-style:italic>/* selector = 0x0010 = cs */</span>
+</span></span><span style=display:flex><span>        movw <span>$</span><span style=color:#40a070>0x8E00</span>,<span style=color:#666>%</span>dx        <span style=color:#60a0b0;font-style:italic>/* interrupt gate - dpl=0, present */</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        lea idt_table,<span style=color:#666>%</span>edi 
+</span></span><span style=display:flex><span>        mov <span>$</span><span style=color:#40a070>256</span>,<span style=color:#666>%</span>ecx
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>rp_sidt</span>:
+</span></span><span style=display:flex><span>    movl <span style=color:#666>%</span>eax,(<span style=color:#666>%</span>edi)
+</span></span><span style=display:flex><span>        movl <span style=color:#666>%</span>edx,<span style=color:#40a070>4</span>(<span style=color:#666>%</span>edi)
+</span></span><span style=display:flex><span>        addl <span>$</span><span style=color:#40a070>8</span>,<span style=color:#666>%</span>edi
+</span></span><span style=display:flex><span>        dec <span style=color:#666>%</span>ecx
+</span></span><span style=display:flex><span>        jne rp_sidt
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>lea指令 ： load effective address 功能是取偏移地址。</p><p>mov是将数据从源传到目的</p><p>lea是将源的地址传到目的</p><p>例如：</p><p>​ movl 18(%eax), %ebx #是将内存中（%eax+18）的内容传入%ebx中；</p><p>​ leal 18(%eax), %ebx #是将（18+（%eax中的值））即地址，传入%ebx;</p><p>代码中，lea idt_table, %edi #即将idt_table表的地址传到%edi中。</p></blockquote></li></ol><h3 id=idt最终初始化><code>IDT</code>最终初始化</h3><ul><li>异常：由函数trap_init()实现，被系统初始化入口函数start_kernel()调用；</li><li>中断：由函数init_IRQ()实现，被系统初始化入口函数start_kernel()调用；</li></ul><h3 id=trap_init><code>trap_init()</code></h3><p>此函数在<strong>x86平台linux系统调用</strong>章节已经分析过。</p><h3 id=early_irq_init><code>early_irq_init()</code></h3><p>该函数用于初始化数组irq_desc[]；</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-1> 1</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-2> 2</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-3> 3</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-6-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-6-4> 4</a>
@@ -907,46 +945,85 @@ rp_sidt:
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>        GATE_TASK = 0x5,
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>	};
 </span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>*/</span>
-</span></span></code></pre></td></tr></table></div></div><p>简单总结<code>native_init_IRQ</code>函数主要完成两个工作，</p><ul><li>初始化中断控制器；<ul><li>初始化<code>struct desc</code>主要是<code>chip</code>成员和<code>handle_irq</code>成员。</li></ul></li><li>将<code>interrupt[]</code>数组中的中断服务程序地址写进了<code>IDT</code>中。</li></ul><h4 id=interrupt的定义>interrupt[]的定义</h4><p><a href=/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/#参考>参考</a>的第二项：中断之中断向量表IDT的初始化，有对这段代码的注释以及解释。</p><pre tabindex=0><code class=language-assembly data-lang=assembly>/*arch/x86/kernel/entry_32.S*/
-/*
- * Build the entry stubs and pointer table with some assembler magic.
- * We pack 7 stubs into a single 32-byte chunk, which will fit in a
- * single cache line on all modern x86 implementations.
- */
-.section .init.rodata,&#34;a&#34;
-ENTRY(interrupt)
-.text
-        .p2align 5
-        .p2align CONFIG_X86_L1_CACHE_SHIFT
-ENTRY(irq_entries_start)
-        RING0_INT_FRAME
-vector=FIRST_EXTERNAL_VECTOR
-.rept (NR_VECTORS-FIRST_EXTERNAL_VECTOR+6)/7
-        .balign 32
-  .rept 7
-    .if vector &lt; NR_VECTORS
-      .if vector &lt;&gt; FIRST_EXTERNAL_VECTOR
-        CFI_ADJUST_CFA_OFFSET -4
-      .endif
-1:      pushl $(~vector+0x80)   /* Note: always in signed byte range */
-        CFI_ADJUST_CFA_OFFSET 4
-      .if ((vector-FIRST_EXTERNAL_VECTOR)%7) &lt;&gt; 6
-        jmp 2f
-      .endif
-      .previous
-        .long 1b
-      .text
-vector=vector+1
-    .endif
-  .endr
-2:      jmp common_interrupt
-.endr
-END(irq_entries_start)
-
-.previous
-END(interrupt)
-.previous
-</code></pre><p>主要包含两行代码<code>pushl $(~vector+0x80) </code>和<code>jmp common_interrupt</code>,即把中断号减去256的结果保存到栈中，然后调用通用中断处理程序。之所以要减去256，是因为内核用负数表示所有的中断，正数表示系统调用。</p><blockquote><p>.rept语法</p><p>.rept <em>count</em>
+</span></span></code></pre></td></tr></table></div></div><p>简单总结<code>native_init_IRQ</code>函数主要完成两个工作，</p><ul><li>初始化中断控制器；<ul><li>初始化<code>struct desc</code>主要是<code>chip</code>成员和<code>handle_irq</code>成员。</li></ul></li><li>将<code>interrupt[]</code>数组中的中断服务程序地址写进了<code>IDT</code>中。</li></ul><h4 id=interrupt的定义>interrupt[]的定义</h4><p><a href=/post/os/x86%E5%B9%B3%E5%8F%B0%E9%80%9A%E7%94%A8%E4%B8%AD%E6%96%AD/#参考>参考</a>的第二项：中断之中断向量表IDT的初始化，有对这段代码的注释以及解释。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-11-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-11-39>39</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*arch/x86/kernel/entry_32.S*/</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * Build the entry stubs and pointer table with some assembler magic.
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * We pack 7 stubs into a single 32-byte chunk, which will fit in a
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * single cache line on all modern x86 implementations.
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span>.section .init.rodata,<span style=color:#4070a0>&#34;a&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#06287e>ENTRY</span>(interrupt)
+</span></span><span style=display:flex><span>.text
+</span></span><span style=display:flex><span>        .p2align <span style=color:#40a070>5</span>
+</span></span><span style=display:flex><span>        .p2align CONFIG_X86_L1_CACHE_SHIFT
+</span></span><span style=display:flex><span><span style=color:#06287e>ENTRY</span>(irq_entries_start)
+</span></span><span style=display:flex><span>        RING0_INT_FRAME
+</span></span><span style=display:flex><span>vector<span style=color:#666>=</span>FIRST_EXTERNAL_VECTOR
+</span></span><span style=display:flex><span>.<span style=color:#06287e>rept</span> (NR_VECTORS<span style=color:#666>-</span>FIRST_EXTERNAL_VECTOR<span style=color:#666>+</span><span style=color:#40a070>6</span>)<span style=color:#666>/</span><span style=color:#40a070>7</span>
+</span></span><span style=display:flex><span>        .balign <span style=color:#40a070>32</span>
+</span></span><span style=display:flex><span>  .rept <span style=color:#40a070>7</span>
+</span></span><span style=display:flex><span>    .<span style=color:#007020;font-weight:700>if</span> vector <span style=color:#666>&lt;</span> NR_VECTORS
+</span></span><span style=display:flex><span>      .<span style=color:#007020;font-weight:700>if</span> vector <span style=color:#666>&lt;&gt;</span> FIRST_EXTERNAL_VECTOR
+</span></span><span style=display:flex><span>        CFI_ADJUST_CFA_OFFSET <span style=color:#666>-</span><span style=color:#40a070>4</span>
+</span></span><span style=display:flex><span>      .endif
+</span></span><span style=display:flex><span><span style=color:#40a070>1</span><span style=color:#666>:</span>      pushl <span>$</span>(<span style=color:#666>~</span>vector<span style=color:#666>+</span><span style=color:#40a070>0x80</span>)   <span style=color:#60a0b0;font-style:italic>/* Note: always in signed byte range */</span>
+</span></span><span style=display:flex><span>        CFI_ADJUST_CFA_OFFSET <span style=color:#40a070>4</span>
+</span></span><span style=display:flex><span>      .<span style=color:#007020;font-weight:700>if</span> ((vector<span style=color:#666>-</span>FIRST_EXTERNAL_VECTOR)<span style=color:#666>%</span><span style=color:#40a070>7</span>) <span style=color:#666>&lt;&gt;</span> <span style=color:#40a070>6</span>
+</span></span><span style=display:flex><span>        jmp <span style=color:#40a070>2f</span>
+</span></span><span style=display:flex><span>      .endif
+</span></span><span style=display:flex><span>      .previous
+</span></span><span style=display:flex><span>        .<span style=color:#902000>long</span> <span style=color:#40a070>1</span>b
+</span></span><span style=display:flex><span>      .text
+</span></span><span style=display:flex><span>vector<span style=color:#666>=</span>vector<span style=color:#666>+</span><span style=color:#40a070>1</span>
+</span></span><span style=display:flex><span>    .endif
+</span></span><span style=display:flex><span>  .endr
+</span></span><span style=display:flex><span><span style=color:#40a070>2</span><span style=color:#666>:</span>      jmp common_interrupt
+</span></span><span style=display:flex><span>.endr
+</span></span><span style=display:flex><span><span style=color:#06287e>END</span>(irq_entries_start)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>.previous
+</span></span><span style=display:flex><span><span style=color:#06287e>END</span>(interrupt)
+</span></span><span style=display:flex><span>.previous
+</span></span></code></pre></td></tr></table></div></div><p>主要包含两行代码<code>pushl $(~vector+0x80) </code>和<code>jmp common_interrupt</code>,即把中断号减去256的结果保存到栈中，然后调用通用中断处理程序。之所以要减去256，是因为内核用负数表示所有的中断，正数表示系统调用。</p><blockquote><p>.rept语法</p><p>.rept <em>count</em>
 Repeat the sequence of lines between the .rept directive and the next .endr directive count times.
 For example, assembling
 <strong>.rept 3
@@ -961,22 +1038,37 @@ statements
 statements ]
 [.ELSE
 statements ]
-.ENDIF</p><p>方括号表示 .ELSEIF 和 .ELSE 是可选的，而 .IF 和 .ENDIF 则是必需的。condition（条件）是布尔表达式，</p><p><a href=http://c.biancheng.net/view/3585.html>参考</a></p></blockquote><p>数组中每个元素的初始值是标号1的地址。因此访问数组中的元素时，都会跳到标号1处，执行相应的指令。也就是，在除了0~19号和0x80号中断外，其余的所有中断在进入其自己的中断服务程序之前，必须是先条转执行common_interrupt的.</p><h4 id=common_interrupt的定义>common_interrupt的定义</h4><pre tabindex=0><code class=language-assembly data-lang=assembly>
-/*
- * the CPU automatically disables interrupts when executing an IRQ vector,
- * so IRQ-flags tracing has to follow that:
- */
-        .p2align CONFIG_X86_L1_CACHE_SHIFT
-common_interrupt:
-        addl $-0x80,(%esp)      /* Adjust vector into the [-256,-1] range */
-        SAVE_ALL
-        TRACE_IRQS_OFF
-        movl %esp,%eax
-        call do_IRQ
-        jmp ret_from_intr
-ENDPROC(common_interrupt)
-        CFI_ENDPROC
-</code></pre><p>保存寄存器的值以后，栈顶的地址被存放到<code>eax</code>寄存器，然后中断处理程序调用<code>do_IRQ()</code>函数，执行<code>do_IRQ()</code>的<code>ret</code>指令时，控制跳转到<code>ret_from_intr()</code>。</p><h4 id=do_irq函数>do_IRQ函数</h4><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-13-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-13-1> 1</a>
+.ENDIF</p><p>方括号表示 .ELSEIF 和 .ELSE 是可选的，而 .IF 和 .ENDIF 则是必需的。condition（条件）是布尔表达式，</p><p><a href=http://c.biancheng.net/view/3585.html>参考</a></p></blockquote><p>数组中每个元素的初始值是标号1的地址。因此访问数组中的元素时，都会跳到标号1处，执行相应的指令。也就是，在除了0~19号和0x80号中断外，其余的所有中断在进入其自己的中断服务程序之前，必须是先条转执行common_interrupt的.</p><h4 id=common_interrupt的定义>common_interrupt的定义</h4><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-12-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-12-15>15</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * the CPU automatically disables interrupts when executing an IRQ vector,
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * so IRQ-flags tracing has to follow that:
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span>        .p2align CONFIG_X86_L1_CACHE_SHIFT
+</span></span><span style=display:flex><span><span style=color:#002070;font-weight:700>common_interrupt</span>:
+</span></span><span style=display:flex><span>        addl <span>$</span><span style=color:#666>-</span><span style=color:#40a070>0x80</span>,(<span style=color:#666>%</span>esp)      <span style=color:#60a0b0;font-style:italic>/* Adjust vector into the [-256,-1] range */</span>
+</span></span><span style=display:flex><span>        SAVE_ALL
+</span></span><span style=display:flex><span>        TRACE_IRQS_OFF
+</span></span><span style=display:flex><span>        movl <span style=color:#666>%</span>esp,<span style=color:#666>%</span>eax
+</span></span><span style=display:flex><span>        call do_IRQ
+</span></span><span style=display:flex><span>        jmp ret_from_intr
+</span></span><span style=display:flex><span><span style=color:#06287e>ENDPROC</span>(common_interrupt)
+</span></span><span style=display:flex><span>        CFI_ENDPROC
+</span></span></code></pre></td></tr></table></div></div><p>保存寄存器的值以后，栈顶的地址被存放到<code>eax</code>寄存器，然后中断处理程序调用<code>do_IRQ()</code>函数，执行<code>do_IRQ()</code>的<code>ret</code>指令时，控制跳转到<code>ret_from_intr()</code>。</p><h4 id=do_irq函数>do_IRQ函数</h4><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-13-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-13-1> 1</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-13-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-13-2> 2</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-13-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-13-3> 3</a>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-13-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-13-4> 4</a>
@@ -1349,8 +1441,8 @@ ENDPROC(common_interrupt)
 </span></span></code></pre></td></tr></table></div></div><p>首先从<code>irq</code>拿到<code>struct desc</code>，然后初始化了<code>struct desc</code>结构的<code>action</code>结构，最后调用了<code>__setup_irq()</code>函数。</p><p><code>__setup_irq()</code>函数还调用了内核线程的创建<code>kthread_create()</code>等等，暂时不做分析。</p><h2 id=中断处理流程>中断处理流程</h2><p>注册流程：</p><ul><li>系统初始化时 : 调用<code>init_IRQ()</code>， 此函数间接调用<code>init_ISA_irq()</code>函数，初始化<code>PIC</code>以及<code>struct irq_desc</code>数组，填充了<code>struct irq_desc</code>元素的<code>handler_irq</code>和<code>chip</code>结构。之后调用<code>set_intr_gate()</code>将<code>interrupts</code>数组设置到系统的<code>IDT</code>中。</li><li>在内核代码中调用<code>request_irq()</code>函数，将中断服务程序注册到<code>irqaction</code>结构中，调用<code>__setup_irq()</code>函数。</li></ul><p>中断发生时：先去IDT表中找到相应的中断门描述符，根据中断门描述符找到GDTR中相应的代码段，再根据中断门描述符中代码偏移，到相应代码段中找到中断服务程序入口，即<code>common_interrupt</code>，此函数先保存现场，然后将中断号压入栈，调用<code>do_IRQ()</code>函数，此函数调用<code>desc->handle_irq</code>即<code>handle_level_irq</code>，又调用了<code>handle_IRQ_event()</code>，此函数中循环调用<code>action->handler()</code>，间接调用到<code>request_irq()</code>函数注册的回调函数。</p><h2 id=小结>小结</h2><p>本文主要基于x86平台对应<code>linux 2.6.30.4</code>版本的内核源码，对<code>linux</code>中断的初始化过程进行简单分析。还有一些东西没有弄懂，留待以后分析。</p><ul><li><code>__setup_irq()</code>函数；</li><li>中断发生时代码执行到<code>action->handler()</code>的过程；</li><li><code>free_irq()</code>的执行流程；</li><li>从中断中返回；</li><li>软中断及<code>tasklet</code>；</li><li>一些其他细节；</li></ul><h2 id=a-id参考参考a><a id=参考>参考</a></h2><p><a href=http://home.ustc.edu.cn/~hchunhui/linux_intr.html>x86体系结构下Linux-2.6.26的中断处理</a></p><p><a href=https://blog.csdn.net/farmwang/article/details/52318573>中断之中断向量表IDT的初始化</a></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
 <span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
 <span class=item-content>2019-04-15</span></p><p class=copyright-item><span class=item-title>License</span>
-<span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div><nav class=post-nav><a class=prev href=/post/os/linux-kernel/2020-10-08-vim-ctags-cscope/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
-</i><span class="prev-text nav-default">vim ctags cscope</span>
+<span class=item-content><a href=https://github.com/gohugoio/hugoBasicExample rel=noopener target=_blank>See origin</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a></div><nav class=post-nav><a class=prev href=/post/service/2020-02-05-breakwall-2-v2ray/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
+</i><span class="prev-text nav-default">V2ray</span>
 <span class="prev-text nav-mobile">Prev</span>
 </a><a class=next href=/post/os/x86%E5%B9%B3%E5%8F%B0linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/><span class="next-text nav-default">x86平台linux系统调用分析</span>
 <span class="prev-text nav-mobile">Next</span>
