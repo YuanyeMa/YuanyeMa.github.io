@@ -5160,18 +5160,19 @@ movl eax,bar
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h1 id="总结">总结&lt;/h1>
+&lt;ol>
+&lt;li>mach-smdkv210.c中的smdkv210_machine_init() 会在内核初始化时调用&lt;/li>
+&lt;li>smdkv210_machine_init()中&lt;br>
+a. 调用i2c_register_board_info()函数，初始化了一个保存有从设备名字和地址的链表__i2c_board_list；&lt;br>
+b. 调用platform_add_devices()函数，将SOC的I2C控制器抽象为的 包含寄存器以及中断等硬件资源的platform_device 注册进了platform总线;&lt;/li>
+&lt;li>i2c-core.c中调用i2c_init()函数，注册了I2C总线的实现（包括总线上设备和驱动的匹配方法match()等）(即bus_register(&amp;amp;i2c_bus_type))&lt;/li>
+&lt;li>i2c-s3c2410.c 中i2c_adap_s3c_init()函数调用platform_driver_register(&amp;amp;s3c24xx_i2c_driver)函数向platform总线注册了一个platform_driver对象；&lt;/li>
+&lt;li>4中注册platform_driver的操作会调用platform的match()方法，此方法按照所注册的platform_driver(即s3c24xx_i2c_driver)的id_table字段和platform_device(比如mach-smdkv210.c中的s3c_device_i2c0)的name字段进行匹配，如果匹配就调用相应platform_driver的probe()方法。&lt;/li>
+&lt;li>i2c-s3c2410.c 中s3c24xx_i2c_probe()方法&lt;br>
+a. 分配并初始化了对象struct s3c24xx_i2c， 此对象包含一个 struct i2c_adapter对象，以及I2C控制器需要的硬件资源；&lt;br>
+b. 然后调用i2c-core.c中的i2c_register_adapter()函数，主要根据__i2c_board_list中的从设备信息创建client并和adapter相关联。&lt;/li>
+&lt;/ol>
 &lt;blockquote>
-&lt;p>总结：&lt;/p>
-&lt;p>1. mach-smdkv210.c中的smdkv210_machine_init() 会在内核初始化时调用
-2. smdkv210_machine_init()中
-1. 调用i2c_register_board_info()函数，初始化了一个保存有从设备名字和地址的链表__i2c_board_list；
-2. 调用platform_add_devices()函数，将SOC的I2C控制器抽象为的 包含寄存器以及中断等硬件资源的platform_device 注册进了platform总线;
-3. i2c-core.c中调用i2c_init()函数，注册了I2C总线的实现（包括总线上设备和驱动的匹配方法match()等）(即bus_register(&amp;amp;i2c_bus_type))
-4. i2c-s3c2410.c 中i2c_adap_s3c_init()函数调用platform_driver_register(&amp;amp;s3c24xx_i2c_driver)函数向platform总线注册了一个platform_driver对象；
-5. 4中注册platform_driver的操作会调用platform的match()方法，此方法按照所注册的platform_driver(即s3c24xx_i2c_driver)的id_table字段和platform_device(比如mach-smdkv210.c中的s3c_device_i2c0)的name字段进行匹配，如果匹配就调用相应platform_driver的probe()方法。
-6. i2c-s3c2410.c 中s3c24xx_i2c_probe()方法
-1. 分配并初始化了对象struct s3c24xx_i2c， 此对象包含一个 struct i2c_adapter对象，以及I2C控制器需要的硬件资源；
-2. 然后调用i2c-core.c中的i2c_register_adapter()函数，主要根据__i2c_board_list中的从设备信息创建client并和adapter相关联。&lt;/p>
 &lt;p>驱动编写&lt;/p>
 &lt;p>​ at24_drv.c中是自己写的驱动代码，按照一般内核模块写法，自己构造i2c_driver对象，该对象包含probe()方法，该方法在总结3 i2c_init()函数中定义的i2c_bus_type对象的match()方法中匹配i2c_device和i2c_driver成功时被调用。&lt;/p>
 &lt;p>​ probe()方法完成设备号注册，fops对象定义，以及硬件初始化操作。&lt;/p>
