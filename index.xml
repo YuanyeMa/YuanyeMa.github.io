@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuanye Ma's Blog</title><link>/</link><description>Recent content on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 25 Aug 2024 16:01:23 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>hugo 部署</title><link>/post/service/hugo%E9%83%A8%E7%BD%B2/</link><pubDate>Sun, 25 Aug 2024 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/hugo%E9%83%A8%E7%BD%B2/</guid><description>&lt;h1 id="创建一个hugo博客">创建一个hugo博客&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yuanye Ma's Blog</title><link>/</link><description>Recent content on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 25 Aug 2024 16:01:23 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml"/><item><title>hugo 部署</title><link>/post/service/hugo/</link><pubDate>Sun, 25 Aug 2024 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/hugo/</guid><description>&lt;h1 id="创建一个hugo博客">创建一个hugo博客&lt;/h1>
 &lt;p>三个&lt;code>repository&lt;/code>&lt;/p>
 &lt;ol>
 &lt;li>用于存储原数据的仓库，可以设置为&lt;code>private&lt;/code>，部署&lt;code>Github Actions &lt;/code>文章内容发生变动时自动构建，并部署到展示&lt;code>username.github.io&lt;/code>展示仓。&lt;/li>
@@ -295,7 +295,35 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>touch index.md
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h1 id="参考资源">参考资源&lt;/h1>
+&lt;/div>&lt;h1 id="使用utterance作为评论系统">使用utterance作为评论系统&lt;/h1>
+&lt;p>官网：https://utteranc.es&lt;/p>
+&lt;p>我打算直接使用github.io仓库的issues作为评论的位置。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6">6&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">## 配置 utteranc评论,教程参考 https://utteranc.es/&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">&lt;/span>[params.utteranc]&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>enable = true&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>repo = &amp;#34;yunxd/hugoblogtalks&amp;#34;&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#60a0b0;font-style:italic">##换成自己得&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>issueTerm = &amp;#34;pathname&amp;#34;&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>theme = &amp;#34;github-light&amp;#34;&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="github上安装utterance">Github上安装utterance&lt;/h2>
+&lt;p>&lt;a href="https://github.com/apps/utterances">https://github.com/apps/utterances&lt;/a>&lt;/p>
+&lt;p>&lt;img alt="image-20240825163617676" src="/post/service/hugo/image-20240825163617676.png">&lt;/p>
+&lt;p>点击&lt;code>Install&lt;/code>&lt;/p>
+&lt;p>&lt;img alt="image-20240825163800447" src="/post/service/hugo/image-20240825163800447.png">&lt;/p>
+&lt;p>再次访问https://github.com/apps/utterances 点击&lt;code>Configure&lt;/code>&lt;/p>
+&lt;p>&lt;img alt="image-20240825164020589" src="/post/service/hugo/image-20240825164020589.png">&lt;/p>
+&lt;h1 id="参考资源">参考资源&lt;/h1>
 &lt;p>&lt;a href="https://www.gopherloveapple.com/tutorial/hugo/hugo-page-bundle/">index.md和_index.md的区别&lt;/a>&lt;/p></description></item><item><title>Linux 内核内存管理</title><link>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link><pubDate>Fri, 30 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid><description>&lt;h1 id="linux-内核内存管理">Linux 内核内存管理&lt;/h1>
 &lt;p>[toc]&lt;/p>
 &lt;p>越整理发现知识越多，分页机制、伙伴算法、slab等任何一块单独拿出来都有很多东西，因此本文先粗略的统揽全貌，有时间再针对每个部分，逐个深入，单独分析梳理成文章。&lt;/p>
