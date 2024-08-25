@@ -6878,213 +6878,7 @@ sudo systemctl set-default graphical.target
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>安装完成后需要切换出&lt;code>pytorch&lt;/code>的源码目录，再执行&lt;code>python&lt;/code>然后&lt;code>import torch&lt;/code>才有效，不然会报错&lt;code>ModuleNotFoundError: No module named 'torch._C'&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png">&lt;/p></description></item><item><title>buntu 部署NIS服务</title><link>/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-01-04-ubuntu-%E9%83%A8%E7%BD%B2nis%E6%9C%8D%E5%8A%A1/</guid><description>&lt;h1 id="ubuntu-部署nis服务">Ubuntu 部署NIS服务&lt;/h1>
-&lt;p>在一个大型的网域当中，如果有多部 Linux 主机，万一要每部主机都需要设定相同的账号与密码时，你该怎么办？复制 /etc/passwd ？应该没有这么呆吧？如果能够有一部账号主控服务器来管理网域中所有主机的账号， 当其他的主机有用户登入的需求时，才到这部主控服务器上面要求相关的账号、密码等用户信息， 如此一来，如果想要增加、修改、删除用户数据，只要到这部主控服务器上面处理即可， 这样就能够降低重复设定使用者账号的步骤了。&lt;/p>
-&lt;p>&lt;a href="http://cn.linux.vbird.org/linux_server/0430nis.php">CentOS的配置方法在这里&lt;/a>&lt;/p>
-&lt;pre tabindex="0">&lt;code>实验环境
-virtualbox : 6.1 ,网络设置为桥接模式
-master : ubuntu 18.04.03 LTS 192.168.50.79
-slave : ubuntu 18.04.03 LTS 192.168.50.185
-&lt;/code>&lt;/pre>&lt;h2 id="服务端设置">服务端设置&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-29">29&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-30">30&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-31">31&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 1. 安装NIS&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装的时候会让设置域名，可以使用nisdomainname 查看/设置域名&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 2. 配置hosts文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/hosts
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>192.168.50.185 slave
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>192.168.50.79 master
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 3. 修改配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/default/nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>修改如下
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">NISSERVER&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#007020">false&lt;/span> &lt;span style="color:#666">=&lt;/span>&amp;gt; &lt;span style="color:#bb60d5">NISSERVER&lt;/span>&lt;span style="color:#666">=&lt;/span>master
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/ypserv.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>最后写入
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>127.0.0.1/255.0.0.0 :* :* :none
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>192.168.50.0/255.255.255.0 :* :* :none
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* :* :* :deny
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 其中各字段的意义如下&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># Host : 需要设置权限的主机或网络 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># Domain : 允许访问的域&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># Map : 密码数据库&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># Security: 权限， none即不设置限制，deny为拒绝，port为只允许小于1024端口连接NIS&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 4. 启动ypserv&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service ypserv start
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 5. 初始化数据库&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/lib/yp/ypinit -m
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>确认域名无误后按&amp;lt;Ctrl D&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>然后输入y，之后会初始化数据库，数据库会保存在 /var/yp/&amp;lt;domain&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="客户端设置">客户端设置&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-25">25&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 1. 安装NIS&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 2. 修改hosts文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/hosts
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>192.168.50.185 slave
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>192.168.50.79 master
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 3. 修改DNS信息&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/nsswitch.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>在以下行后添加nis字段
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>passwd: compat systemd nis &lt;span style="color:#60a0b0;font-style:italic"># 此处的nis都是自己加的&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>shadow: compat nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>group: compat systemd nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gshadow: files nis
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 4. 修改配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/yp.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>写入以下内容
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#domain &amp;lt;此处写自己的域名&amp;gt; server &amp;lt;此处写nis服务器的ip&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>domain master server 192.168.50.79
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 5. 启动服务&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service ypbind start
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="修改密码">修改密码&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>yppasswd nisuser1
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 先输入旧密码， 然后输入两次新密码&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/lib/yp/ypinit -m &lt;span style="color:#60a0b0;font-style:italic"># 更新数据库&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="使用autofs自动挂载home目录">使用autofs自动挂载home目录&lt;/h2>
-&lt;p>Autofs与Mount/Umount的不同之处在于，它是一种守护程序。如果它检测到用户正试图访问一个尚未挂接的文件系统，它就会自动检测该文件系统，如果存在，那么Autofs会自动将其挂接。另一方面， 如果它检测到某个已挂接的文件系统在一段时间内没有被使用，那么Autofs会自动将其卸载。因此一旦运行了Autofs后，用户就不再需要手动完成文件系统的挂接和卸载。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-20">20&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 1. 在所有需要挂载home目录的主机上安装autofs&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install autofs
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 2. 创建配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/auto.master
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>写入以下内容
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/home/nishome /etc/auto.nishome &lt;span style="color:#60a0b0;font-style:italic"># 前边是挂载点，后边是指定挂载时用的配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/auto.nishome
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>写入以下内容
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 挂载目录 挂载文件类型及权限 :设备名称&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>* -rw 192.168.50.76:/mnt/home/home/&amp;amp;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># * 代表所有主机都可以挂载此目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># rw是权限&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 192.168.50.76是nfs服务器，实验中用FreeNAS分享了一个NFS数据集&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># /mnt/home/home/&amp;amp;是要挂载的目录在NFS服务器上的路径，其中&amp;#39;&amp;amp;&amp;#39;指代用户名&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 3. 启动autofs&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>service autofs start
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>最后效果就是在登录某台主机时，会自动将NFS服务器上自己用户名的home目录挂载到 /home/nishome/下边去，路径前缀在auto.master文件中给出
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="添加用户流程">添加用户流程&lt;/h2>
-&lt;ol>
-&lt;li>在NIS master上创建用户 &lt;code>useradd -d /home/nishome/&amp;lt;nisusername&amp;gt; &amp;lt;nisusername&amp;gt; /bin/bash&lt;/code>&lt;/li>
-&lt;li>在NIS master上为新创建的用户创建密码 &lt;code>passwd &amp;lt;nisusername&amp;gt;&lt;/code>&lt;/li>
-&lt;li>在NIS master上更新数据库 &lt;code>/usr/lib/yp/ypinit -m&lt;/code>&lt;/li>
-&lt;li>在FreeNAS上创建用户家目录
-&lt;ol>
-&lt;li>目录服务(Directory Serices)-&amp;gt;网卡(NIS)-&amp;gt;重建目录服务缓存(REBUILD DIRECTORY SERVICE CACHE)&lt;/li>
-&lt;li>存储(Storage)-&amp;gt;池(Pools)-&amp;gt;ADD Dataset， 添加一个数据集 -&amp;gt; Edit Permissions-&amp;gt; User和Group都设置为前边创建的用户，并选中 Apply permissions recursively-&amp;gt; SAVE&lt;/li>
-&lt;li>共享(Sharing)-&amp;gt;Unix (NFS) Shares -&amp;gt; ADD, 选中前边创建的数据集路径，高级模式，Maproot User和Maproot Group都设置为前边创建的用户-&amp;gt; SAVE&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;/ol></description></item><item><title>C++ Primer Plus笔记</title><link>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png">&lt;/p></description></item><item><title>C++ Primer Plus笔记</title><link>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
 &lt;h2 id="第十章对象和类">第十章：对象和类&lt;/h2>
 &lt;p>类和结构(class和struct)的区别：结构的默认访问类型是public，而类的默认访问类型是private。&lt;/p>
 &lt;p>所创建的每个新对象都有自己的存储空间，用于存储其内部变量和类成员；但同一个类的所有对象共享同一组类方法，即每种方法只有一个副本。&lt;/p>
@@ -10073,4 +9867,123 @@ lsmod | grep bbr
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;/ol></description></item><item><title>shell中fork、exec和source的区别</title><link>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</guid><description>&lt;h1 id="shell中forkexec和source的区别">shell中fork、exec和source的区别&lt;/h1>
+&lt;h2 id="前言">前言&lt;/h2>
+&lt;p>在脚本中引用其他脚本有多种方式，直接执行./xx.sh，source xx.sh或者exec xx.sh,但是三种方式的本质是不通的。学过linux高级编程 或者对linux进程创建方式比较熟悉的理解起来可能比较容易一些。&lt;/p>
+&lt;h2 id="简介">简介&lt;/h2>
+&lt;h3 id="xxsh">./xx.sh&lt;/h3>
+&lt;p>fork 创建一个子进程（sub-shell），然后在子进程中运行调用的脚本，子进程继承父进程的资源（环境变量等等），在子进程中修改父进程的环境变量后，子进程退出后，并不影响父进程。写脚本的时候直接./xx.sh就是采用这种方式。&lt;/p>
+&lt;h3 id="-xxsh-或者-source-xxsh">. ./xx.sh 或者 source xx.sh&lt;/h3>
+&lt;p>source 让 script 在当前 shell 内执行、 而不是产生一个 sub-shell 来执行。因此source执行的脚本中可以更改父进程的环境变量。&lt;/p>
+&lt;h3 id="exec-xxsh">exec ./xx.sh&lt;/h3>
+&lt;p>exec 也是在原有进程中执行，但是，原有进程被终止。exec是用子进程替换父进程进行运行，所有父进程中exec后边的程序得不到运行。&lt;/p>
+&lt;h2 id="注意">注意&lt;/h2>
+&lt;p>source和exec区别在于，原有进程是否被终止&lt;/p>
+&lt;h2 id="实例分析">实例分析&lt;/h2>
+&lt;p>&lt;code>vim 1.sh&lt;/code> 写入以下内容&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-17">17&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-18">18&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-19">19&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>1#!/bin/bash
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">2&lt;/span> &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>B
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">3&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 1.sh before exec/source/fork:&lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">4&lt;/span> &lt;span style="color:#007020">export&lt;/span> A
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">5&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;1.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span> &lt;span style="color:#007020;font-weight:bold">case&lt;/span> &lt;span style="color:#bb60d5">$1&lt;/span> in
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">7&lt;/span> &lt;span style="color:#007020">exec&lt;/span>&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">8&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using exec...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">9&lt;/span> &lt;span style="color:#007020">exec&lt;/span> ./2.sh ;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">10&lt;/span> &lt;span style="color:#007020">source&lt;/span>&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">11&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using source...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">12&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#. ./2.sh ;;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">13&lt;/span> &lt;span style="color:#007020">source&lt;/span> ./2.sh;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">14&lt;/span> *&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">15&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using fork by default...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">16&lt;/span> ./2.sh ;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">17&lt;/span> &lt;span style="color:#007020;font-weight:bold">esac&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">18&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 1.sh after exec/source/fork:&lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">19&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;1.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>vim 2.sh&lt;/code> 写入以下内容&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6">6&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">1&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#!/bin/bash &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">2&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 2.sh: &lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">3&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;2.sh get \$A=&lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0"> from 1.sh&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">4&lt;/span> &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>C
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">5&lt;/span> &lt;span style="color:#007020">export&lt;/span> A
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;2.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>分别运行&lt;br>
+&lt;code>./1.sh fork&lt;/code>&lt;br>
+&lt;code>./1.sh source&lt;/code>&lt;br>
+&lt;code>./1.sh exec&lt;/code>&lt;br>
+运行结果&lt;/p>
+&lt;blockquote>
+&lt;p>* ~/dep/selfcode *&lt;br>
+root→ # ./1.sh fork &lt;br>
+PID for 1.sh before exec/source/fork:31099&lt;br>
+1.sh: $A is B&lt;br>
+using fork by default&amp;hellip;&lt;br>
+PID for 2.sh: 31100&lt;br>
+2.sh get $A=B from 1.sh&lt;br>
+2.sh: $A is C&lt;br>
+PID for 1.sh after exec/source/fork:31099&lt;br>
+1.sh: $A is B&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>* ~/dep/selfcode *&lt;br>
+root→ # ./1.sh source&lt;br>
+PID for 1.sh before exec/source/fork:31105&lt;br>
+1.sh: $A is B&lt;br>
+using source&amp;hellip;&lt;br>
+PID for 2.sh: 31105&lt;br>
+2.sh get $A=B from 1.sh&lt;br>
+2.sh: $A is C&lt;br>
+PID for 1.sh after exec/source/fork:31105&lt;br>
+1.sh: $A is C&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>* ~/dep/selfcode *&lt;br>
+root→ # ./1.sh exec&lt;br>
+PID for 1.sh before exec/source/fork:31110&lt;br>
+1.sh: $A is B&lt;br>
+using exec&amp;hellip;&lt;br>
+PID for 2.sh: 31110&lt;br>
+2.sh get $A=B from 1.sh&lt;br>
+2.sh: $A is C &lt;br>
+注意：父进程后边的代码没有运行&lt;/p>
+&lt;/blockquote>
+&lt;p>以上除了fork，父进程和子进程的PID不同外，source和exec父进程和子进程的PID相同，&lt;br>
+但是，source相当于在父进程执行过程中插入了一段子进程的代码运行，&lt;br>
+而exec是用子进程的代码替换掉了父进程的空间。&lt;/p></description></item></channel></rss>
