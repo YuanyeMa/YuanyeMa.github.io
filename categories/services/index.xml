@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Services on Yuanye Ma's Blog</title><link>/categories/services/</link><description>Recent content in Services on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 25 Aug 2024 16:01:23 +0800</lastBuildDate><atom:link href="/categories/services/index.xml" rel="self" type="application/rss+xml"/><item><title>hugo 部署</title><link>/post/service/hugo/</link><pubDate>Sun, 25 Aug 2024 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/hugo/</guid><description>&lt;h1 id="创建一个hugo博客">创建一个hugo博客&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Services on Yuanye Ma's Blog</title><link>/categories/services/</link><description>Recent content in Services on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 15 Jun 2025 16:16:11 +0800</lastBuildDate><atom:link href="/categories/services/index.xml" rel="self" type="application/rss+xml"/><item><title>hugo 部署</title><link>/post/service/hugo/</link><pubDate>Sun, 25 Aug 2024 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/hugo/</guid><description>&lt;h1 id="创建一个hugo博客">创建一个hugo博客&lt;/h1>
 &lt;p>三个&lt;code>repository&lt;/code>&lt;/p>
 &lt;ol>
 &lt;li>用于存储原数据的仓库，可以设置为&lt;code>private&lt;/code>，部署&lt;code>Github Actions &lt;/code>文章内容发生变动时自动构建，并部署到展示&lt;code>username.github.io&lt;/code>展示仓。&lt;/li>
@@ -2309,4 +2309,111 @@ slave : ubuntu 18.04.03 LTS 192.168.50.185
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">$jupyter&lt;/span> kernelspec remove 环境名称
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>安装完成后可以通过命令&lt;code>jupyter notebook&lt;/code>启动服务，然后在工作的电脑的浏览器中输入&lt;code>ip:port&lt;/code>输入密码就可以登录使用了。&lt;/p></description></item></channel></rss>
+&lt;/div>&lt;p>安装完成后可以通过命令&lt;code>jupyter notebook&lt;/code>启动服务，然后在工作的电脑的浏览器中输入&lt;code>ip:port&lt;/code>输入密码就可以登录使用了。&lt;/p></description></item><item><title>扩大hugo Jane主题正文部分的行宽</title><link>/post/service/expand-the-line-width-of-the-body-text-for-jane/</link><pubDate>Sun, 15 Jun 2025 16:16:11 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/expand-the-line-width-of-the-body-text-for-jane/</guid><description>&lt;h1 id="hugo-jane主题调整正文部分的宽度">hugo-jane主题调整正文部分的宽度&lt;/h1>
+&lt;p>&lt;img src="/post/service/expand-the-line-width-of-the-body-text-for-jane/image.png" alt="image.png">&lt;/p>
+&lt;p>以前的blog正文页面左右空白太多了，正文部分显示内容太少，一行内显示不了多少内容，需要频繁换行很不方便，因此想着自己修改一下主题的样式布局，本文记录折腾过程。&lt;/p>
+&lt;h2 id="safari浏览器开启开发者模式">Safari浏览器开启“开发者模式”&lt;/h2>
+&lt;p>Chrome浏览器可以直接按&lt;code>F12&lt;/code>快速进入开发者模式，然后可以方便的找到需要修改的样式是哪一个。Safari浏览器需要单独开启。&lt;/p>
+&lt;p>&lt;strong>Step 1&lt;/strong> : 点击屏幕左上角的 &lt;code>Safari浏览器&lt;/code> → &lt;code>设置&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/service/expand-the-line-width-of-the-body-text-for-jane/image%201.png" alt="image.png">&lt;/p>
+&lt;p>&lt;strong>Step 2&lt;/strong> : &lt;code>高级&lt;/code> → 勾选最下方的&lt;code>显示网页开发者功能&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/service/expand-the-line-width-of-the-body-text-for-jane/image%202.png" alt="image.png">&lt;/p>
+&lt;p>&lt;strong>Step 3&lt;/strong>: &lt;code>Command + Option + i&lt;/code>&lt;/p>
+&lt;h2 id="定位class">定位class&lt;/h2>
+&lt;p>点击开发者模式左上角的&lt;code>准星&lt;/code>图标，鼠标点击对应区域，如下图：正文的class是 &lt;code>post-content&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/service/expand-the-line-width-of-the-body-text-for-jane/image%203.png" alt="image.png">&lt;/p>
+&lt;p>在主题文件中搜索发现其定义在&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./assets/sass/_partial/_post/_content.scss:5:.post-content &lt;span style="color:#666">{&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>查看&lt;code>_content.scss&lt;/code>文件发现其并没有定义宽度相关的内容，继续找其父容器：&lt;code>post&lt;/code>, 查看&lt;code>assets/sass/&lt;/code>的目录结构，很容易的发现规律，&lt;code>post&lt;/code>的&lt;code>class&lt;/code>定义在&lt;code>assets/sass/_partial/_post.scss&lt;/code>&lt;/p>
+&lt;p>发现其定义了&lt;code>width:38em&lt;/code>，可以直接将其改一下试试。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11">11&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span> .post &lt;span style="color:#666">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> // optimal line length &lt;span style="color:#007020;font-weight:bold">for&lt;/span> body text is 50–60 characters per line
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> // &lt;span style="color:#666">[&lt;/span>Readability: The Optimal Line Length – Articles – Baymard Institute&lt;span style="color:#666">](&lt;/span>https://baymard.com/blog/line-length-readability&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> width: 38em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max-width: 38em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> padding: 3em 5em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> margin: &lt;span style="color:#40a070">0&lt;/span> auto;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> margin-bottom: 3em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> background-color: &lt;span style="color:#60a0b0;font-style:italic">#fff;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> // ......
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;aside>
+💡
+&lt;p>38em 中的 em 是一种 &lt;strong>相对单位&lt;/strong>，用于 CSS 中表示长度。它的含义依赖于元素的 &lt;strong>字体大小（font-size）&lt;/strong>，1em 表示 &lt;strong>当前元素的字体大小&lt;/strong>。如果元素的 font-size 是 16px，则 1em = 16px。&lt;/p>
+&lt;/aside>
+&lt;p>比如将其改成&lt;code>68em&lt;/code>&lt;/p>
+&lt;p>然后&lt;code>hugo server -D&lt;/code> 并刷新页面试试看有没有效果，确实生效了。&lt;/p>
+&lt;h2 id="修改正文宽度">修改正文宽度&lt;/h2>
+&lt;p>为了不破坏原有的文件，通过&lt;code>customCSS&lt;/code>的方式&lt;code>override&lt;/code>原有配置。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6">6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7">7&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>vim themes/jane/assets/sass/_custom/_custom.scss
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入以下内容&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .post &lt;span style="color:#666">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> width : 50em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> max-width: 50em;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后修改&lt;code>themes/jane/assets/sass/jane.scss&lt;/code> 将&lt;code>_custom&lt;/code>放到最后，防止被覆盖掉&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-diff" data-lang="diff">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a00000">-@import &amp;#34;_custom/custom&amp;#34;;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a00000">&lt;/span> @import &amp;#34;_variables&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @import &amp;#34;_common/normalize&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">@@ -19,3 +18,5 @@
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#800080;font-weight:bold">&lt;/span> @import &amp;#34;_partial/404&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @import &amp;#34;_partial/author_info&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @import &amp;#34;_partial/search&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#00a000">+@import &amp;#34;_custom/custom&amp;#34;;
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>之后将修改&lt;code>push&lt;/code>到&lt;code>github&lt;/code>就可以自动部署了。&lt;/p></description></item></channel></rss>
