@@ -1,1 +1,677 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Embeeding on Yuanye Ma's Blog</title><link>/tags/embeeding/</link><description>Recent content in Embeeding on Yuanye Ma's Blog</description><generator>Hugo</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Wed, 07 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/tags/embeeding/index.xml" rel="self" type="application/rss+xml"/><item><title>基于Ubuntu进行STM32程序开发</title><link>/post/embeeding/%E5%9F%BA%E4%BA%8Eubuntu%E8%BF%9B%E8%A1%8Cstm32%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/embeeding/%E5%9F%BA%E4%BA%8Eubuntu%E8%BF%9B%E8%A1%8Cstm32%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/</guid><description>基于Ubuntu进行STM32程序开发 platform info Ubuntu version : Ubuntu 20.04.1 LTS 正点原子 STM32f767 阿波罗开发板 st-link version : v1.6.1-201-g4bfaab0 openocd version : 0.10.0 Cross Compiler : gcc-arm-none-eabi (9.2.1 20191025 release) install stlink driver 1 2 3 4 5 6 7 8 9 10 11 12 13 14</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Embeeding on Yuanye Ma's Blog</title><link>/tags/embeeding/</link><description>Recent content in Embeeding on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/tags/embeeding/index.xml" rel="self" type="application/rss+xml"/><item><title>基于Ubuntu进行STM32程序开发</title><link>/post/embeeding/%E5%9F%BA%E4%BA%8Eubuntu%E8%BF%9B%E8%A1%8Cstm32%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/embeeding/%E5%9F%BA%E4%BA%8Eubuntu%E8%BF%9B%E8%A1%8Cstm32%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/</guid><description>&lt;h1 id="基于ubuntu进行stm32程序开发">基于Ubuntu进行STM32程序开发&lt;/h1>
+&lt;h2 id="platform-info">platform info&lt;/h2>
+&lt;blockquote>
+&lt;p>Ubuntu version : Ubuntu 20.04.1 LTS&lt;br>
+正点原子 STM32f767 阿波罗开发板&lt;br>
+st-link version : v1.6.1-201-g4bfaab0&lt;br>
+openocd version : 0.10.0&lt;br>
+Cross Compiler : gcc-arm-none-eabi (9.2.1 20191025 release)&lt;/p>&lt;/blockquote>
+&lt;h2 id="install-stlink-driver">install stlink driver&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16">16&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install libusb-1.0-0-dev gcc build-essential cmake libusb-1.0-0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/texane/stlink.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> stlink
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make clean
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make release
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make debug
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo cp -a config/udev/rules.d/* /etc/udev/rules.d/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo udevadm control --reload-rules
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo udevadm trigger
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> build/Release/bin/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;export PATH=\$PATH:`pwd` &amp;#34;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">source&lt;/span> ~/.bashrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="test">test&lt;/h3>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6">6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7">7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8">8&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ st-info --probe
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Found &lt;span style="color:#40a070">1&lt;/span> stlink programmers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> serial: 323f68064248323848522157
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> hla-serial: &lt;span style="color:#4070a0">&amp;#34;\x32\x3f\x68\x06\x42\x48\x32\x38\x48\x52\x21\x57&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> flash: &lt;span style="color:#40a070">2097152&lt;/span> &lt;span style="color:#666">(&lt;/span>pagesize: 2048&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sram: &lt;span style="color:#40a070">524288&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> chipid: 0x0451
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> descr: F76xxx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="openocd">openocd&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#git clone https://github.com/ntfreak/openocd.git&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install openocd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="test-1">test&lt;/h3>
+&lt;p>将st-link和开发板相连，并给板子上电。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17">17&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f7x.cfg
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Open On-Chip Debugger 0.10.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Licensed under GNU GPL v2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>For bug reports, &lt;span style="color:#007020">read&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> http://openocd.org/doc/doxygen/bugs.html
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : auto-selecting first available session transport &lt;span style="color:#4070a0">&amp;#34;hla_swd&amp;#34;&lt;/span>. To override use &lt;span style="color:#4070a0">&amp;#39;transport select &amp;lt;transport&amp;gt;&amp;#39;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adapter speed: &lt;span style="color:#40a070">2000&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adapter_nsrst_delay: &lt;span style="color:#40a070">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>srst_only separate srst_nogate srst_open_drain connect_deassert_srst
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Unable to match requested speed &lt;span style="color:#40a070">2000&lt;/span> kHz, using &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Unable to match requested speed &lt;span style="color:#40a070">2000&lt;/span> kHz, using &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : clock speed &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : STLINK v2 JTAG v35 API v2 SWIM v7 VID 0x0483 PID 0x3748
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : using stlink api v2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Target voltage: 3.230647
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : stm32f7x.cpu: hardware has &lt;span style="color:#40a070">8&lt;/span> breakpoints, &lt;span style="color:#40a070">4&lt;/span> watchpoints
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="创建工程">创建工程&lt;/h2>
+&lt;p>可以直接使用 &lt;code>stm32CubeMX&lt;/code> 生成 &lt;code>Makefile&lt;/code> 工程 。&lt;/p>
+&lt;pre tabindex="0">&lt;code>.
+├── Core
+│   ├── Inc
+│   │   ├── gpio.h
+│   │   ├── main.h
+│   │   ├── stm32f7xx_hal_conf.h
+│   │   └── stm32f7xx_it.h
+│   └── Src
+│   ├── gpio.c
+│   ├── main.c
+│   ├── stm32f7xx_hal_msp.c
+│   ├── stm32f7xx_it.c
+│   └── system_stm32f7xx.c
+├── Drivers
+│   ├── CMSIS
+│   │   ├── Device
+│   │   └── Include
+│   └── STM32F7xx_HAL_Driver
+│   ├── Inc
+│   └── Src
+├── led.ioc
+├── Makefile
+├── startup_stm32f767xx.s
+└── STM32F767IGTx_FLASH.ld
+其中 STM32F7xx_HAL_Driver 存储的是HAL的代码，此处不再展开。
+CMSIS的内容如下
+./Drivers/CMSIS/
+├── Device
+│   └── ST
+│   └── STM32F7xx
+│   └── Include
+│   ├── stm32f767xx.h
+│   ├── stm32f7xx.h
+│   └── system_stm32f7xx.h
+└── Include
+├── cmsis_compiler.h
+├── cmsis_gcc.h
+├── cmsis_version.h
+├── core_cm7.h
+└── mpu_armv7.h
+&lt;/code>&lt;/pre>&lt;p>中最重要的也是和Keil中不一样的地方，就是以下三个部分&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>Makefile&lt;/code>&lt;/li>
+&lt;li>链接器脚本 &lt;code>STM32F767IGTx_FLASH.ld&lt;/code>&lt;/li>
+&lt;li>启动文件 &lt;code>startup_stm32f767xx.s&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>内容都比较简单，此处不列出来了。&lt;/p>
+&lt;h2 id="编译代码">编译代码&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4">4&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo apt install gcc-arm-none-eabi
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">cd&lt;/span> led &lt;span style="color:#60a0b0;font-style:italic"># 进入到工程目录&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ make
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="烧写代码">烧写代码&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>打开openocd服务&lt;/p>
+&lt;p>打开一个Terminal窗口输入以下命令后回车&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1">1&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f7x.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行过程如下&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-17">17&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-18">18&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-19">19&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-20">20&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-21">21&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-22">22&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-23">23&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-24">24&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-25">25&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-26">26&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-27">27&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-28">28&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-29">29&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-30">30&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-31">31&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-32">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-32">32&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-33">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-33">33&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-34">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-34">34&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-35">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-35">35&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-36">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-36">36&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-37">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-37">37&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-38">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-38">38&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-39">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-39">39&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg -f /usr/share/openocd/scripts/target/stm32f7x.cfg
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Open On-Chip Debugger 0.10.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Licensed under GNU GPL v2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>For bug reports, &lt;span style="color:#007020">read&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> http://openocd.org/doc/doxygen/bugs.html
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : auto-selecting first available session transport &lt;span style="color:#4070a0">&amp;#34;hla_swd&amp;#34;&lt;/span>. To override use &lt;span style="color:#4070a0">&amp;#39;transport select &amp;lt;transport&amp;gt;&amp;#39;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adapter speed: &lt;span style="color:#40a070">2000&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adapter_nsrst_delay: &lt;span style="color:#40a070">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>srst_only separate srst_nogate srst_open_drain connect_deassert_srst
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Unable to match requested speed &lt;span style="color:#40a070">2000&lt;/span> kHz, using &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Unable to match requested speed &lt;span style="color:#40a070">2000&lt;/span> kHz, using &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : clock speed &lt;span style="color:#40a070">1800&lt;/span> kHz
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : STLINK v2 JTAG v35 API v2 SWIM v7 VID 0x0483 PID 0x3748
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : using stlink api v2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Target voltage: 3.239128
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : stm32f7x.cpu: hardware has &lt;span style="color:#40a070">8&lt;/span> breakpoints, &lt;span style="color:#40a070">4&lt;/span> watchpoints
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -------------------------------------- 下边的内容是执行客户端指令时的输出&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : accepting &lt;span style="color:#4070a0">&amp;#39;telnet&amp;#39;&lt;/span> connection on tcp/4444
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to debug-request, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x81000000 pc: 0x08001142 msp: 0x2007ffe8
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to debug-request, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x01000000 pc: 0x0800116c msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Programming Started **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>auto erase enabled
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : device &lt;span style="color:#bb60d5">id&lt;/span> &lt;span style="color:#666">=&lt;/span> 0x10016451
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : flash &lt;span style="color:#bb60d5">size&lt;/span> &lt;span style="color:#666">=&lt;/span> 1024kbytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : Single Bank &lt;span style="color:#40a070">1024&lt;/span> kiB STM32F76x/77x found
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to breakpoint, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x61000000 pc: 0x20000046 msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wrote &lt;span style="color:#40a070">32768&lt;/span> bytes from file build/led.bin in 2.035821s &lt;span style="color:#666">(&lt;/span>15.718 KiB/s&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Programming Finished **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Verify Started **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to breakpoint, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x61000000 pc: 0x2000002e msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>verified &lt;span style="color:#40a070">4612&lt;/span> bytes in 0.716718s &lt;span style="color:#666">(&lt;/span>6.284 KiB/s&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Verified OK **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>shutdown &lt;span style="color:#007020">command&lt;/span> invoked
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Info : dropped &lt;span style="color:#4070a0">&amp;#39;telnet&amp;#39;&lt;/span> connection
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>telnet 到 openocd 服务&lt;/p>
+&lt;p>再打开一个Terminal窗口，输入 &lt;code>telnet localhost 4444&lt;/code> , 之后在提示符后输入下边指令&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&amp;gt; halt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; program build/led.bin 0x8000000 verify
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; shutdown
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行过程如下：&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-17">17&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-18">18&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-19">19&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-20">20&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-21">21&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-22">22&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-23">23&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-24">24&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-25">25&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-26">26&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-27">27&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-28">28&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ telnet localhost &lt;span style="color:#40a070">4444&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Trying 127.0.0.1...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Connected to localhost.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Escape character is &lt;span style="color:#4070a0">&amp;#39;^]&amp;#39;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Open On-Chip Debugger
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; halt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to debug-request, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x81000000 pc: 0x08001142 msp: 0x2007ffe8
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; program build/led.bin 0x8000000 verify
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to debug-request, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x01000000 pc: 0x0800116c msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Programming Started **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>auto erase enabled
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>device &lt;span style="color:#bb60d5">id&lt;/span> &lt;span style="color:#666">=&lt;/span> 0x10016451
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>flash &lt;span style="color:#bb60d5">size&lt;/span> &lt;span style="color:#666">=&lt;/span> 1024kbytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Single Bank &lt;span style="color:#40a070">1024&lt;/span> kiB STM32F76x/77x found
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to breakpoint, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x61000000 pc: 0x20000046 msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wrote &lt;span style="color:#40a070">32768&lt;/span> bytes from file build/led.bin in 2.035821s &lt;span style="color:#666">(&lt;/span>15.718 KiB/s&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Programming Finished **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Verify Started **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to breakpoint, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x61000000 pc: 0x2000002e msp: 0x20080000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>verified &lt;span style="color:#40a070">4612&lt;/span> bytes in 0.716718s &lt;span style="color:#666">(&lt;/span>6.284 KiB/s&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>** Verified OK **
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;gt; shutdown
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>shutdown &lt;span style="color:#007020">command&lt;/span> invoked
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Connection closed by foreign host.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>按开发板上的 &lt;code>RESET&lt;/code> 键后代码自动运行&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+&lt;p>以上3个步骤可以简写为一个步骤&lt;br>
+openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg \&lt;br>
+-f /usr/share/openocd/scripts/target/stm32f7x.cfg \&lt;br>
+-c &amp;ldquo;program build/led.bin 0x8000000 verify&amp;rdquo; \&lt;br>
+-c &amp;ldquo;shutdown&amp;rdquo;&lt;/p>&lt;/blockquote>
+&lt;h2 id="openocd-烧写程序的命令格式">openocd 烧写程序的命令格式&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1">1&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>program &amp;lt;filename&amp;gt; &lt;span style="color:#666">[&lt;/span>preverify&lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">[&lt;/span>verify&lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">[&lt;/span>reset&lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">[&lt;/span>exit&lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">[&lt;/span>offset&lt;span style="color:#666">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="gdb-调试代码">gdb 调试代码&lt;/h2>
+&lt;p>由于 Ubuntu 20.04 不能通过&lt;code>apt install&lt;/code> 的方式安装 &lt;code>gdb-arm-none-eabi&lt;/code> , 具体安装方式可以参照&lt;a href="https://askubuntu.com/questions/1243252/how-to-install-arm-none-eabi-gdb-on-ubuntu-20-04-lts-focal-fossa">这个链接&lt;/a>&lt;/p>
+&lt;p>&lt;code>arm-none-eabi-gdb&lt;/code>的使用方式可以参照&lt;a href="https://news.eeworld.com.cn">这篇文章&lt;/a>&lt;/p>
+&lt;h3 id="安装">安装&lt;/h3>
+&lt;p>按照&lt;a href="https://askubuntu.com/questions/1243252/how-to-install-arm-none-eabi-gdb-on-ubuntu-20-04-lts-focal-fossa">这个链接&lt;/a>下载安装后。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ arm-none-eabi-gdb ./build/led.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>arm-none-eabi-gdb: error &lt;span style="color:#007020;font-weight:bold">while&lt;/span> loading shared libraries: libncurses.so.5: cannot open shared object file: No such file or directory
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo apt install libncurses5
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="启动-openocd">启动 openocd&lt;/h3>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-2">2&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ openocd -f /usr/share/openocd/scripts/interface/stlink-v2.cfg &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span> -f /usr/share/openocd/scripts/target/stm32f7x.cfg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="启动-arm-none-eabi-gdb">启动 arm-none-eabi-gdb&lt;/h3>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-17">17&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-18">18&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-19">19&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-20">20&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-21">21&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-22">22&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-23">23&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-24">24&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-25">25&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-26">26&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-27">27&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-28">28&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-29">29&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-30">30&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-31">31&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-32">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-32">32&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-33">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-33">33&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-34">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-34">34&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-35">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-35">35&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-36">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-36">36&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-37">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-37">37&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-38">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-38">38&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-39">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-39">39&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-40">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-40">40&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-41">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-41">41&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-42">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-42">42&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-43">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-43">43&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-44">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-44">44&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-45">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-45">45&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-46">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-46">46&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-47">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-47">47&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-48">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-48">48&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-49">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-49">49&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-50">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-50">50&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-51">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-51">51&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-52">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-52">52&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-53">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-53">53&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-54">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-54">54&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-55">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-55">55&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-56">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-56">56&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-57">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-57">57&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-58">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-58">58&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-59">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-59">59&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-60">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-60">60&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-61">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-61">61&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-62">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-62">62&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-63">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-63">63&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-64">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-64">64&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-65">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-65">65&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-66">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-66">66&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-67">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-67">67&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-68">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-68">68&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-69">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-69">69&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-70">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-70">70&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-71">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-71">71&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-72">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-72">72&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-73">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-73">73&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-74">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-74">74&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-75">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-75">75&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-76">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-76">76&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-77">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-77">77&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-78">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-78">78&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-79">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-79">79&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-80">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-80">80&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-81">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-81">81&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-82">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-82">82&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-83">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-83">83&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-84">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-84">84&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-85">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-85">85&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-86">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-86">86&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-87">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-87">87&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-88">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-88">88&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-89">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-89">89&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-90">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-90">90&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-91">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-91">91&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-92">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-92">92&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-93">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-93">93&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-94">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-94">94&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-95">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-95">95&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-96">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-96">96&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-97">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-97">97&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-98">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-98">98&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-99">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-99">99&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ arm-none-eabi-gdb ./build/led.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>GNU gdb &lt;span style="color:#666">(&lt;/span>GNU Arm Embedded Toolchain 10-2020-q4-major&lt;span style="color:#666">)&lt;/span> 10.1.90.20201028-git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Copyright &lt;span style="color:#666">(&lt;/span>C&lt;span style="color:#666">)&lt;/span> &lt;span style="color:#40a070">2020&lt;/span> Free Software Foundation, Inc.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>License GPLv3+: GNU GPL version &lt;span style="color:#40a070">3&lt;/span> or later &amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>This is free software: you are free to change and redistribute it.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>There is NO WARRANTY, to the extent permitted by law.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Type &lt;span style="color:#4070a0">&amp;#34;show copying&amp;#34;&lt;/span> and &lt;span style="color:#4070a0">&amp;#34;show warranty&amp;#34;&lt;/span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> details.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>This GDB was configured as &lt;span style="color:#4070a0">&amp;#34;--host=x86_64-linux-gnu --target=arm-none-eabi&amp;#34;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Type &lt;span style="color:#4070a0">&amp;#34;show configuration&amp;#34;&lt;/span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> configuration details.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>For bug reporting instructions, please see:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;https://www.gnu.org/software/gdb/bugs/&amp;gt;.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Find the GDB manual and other documentation resources online at:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;http://www.gnu.org/software/gdb/documentation/&amp;gt;.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>For help, &lt;span style="color:#007020">type&lt;/span> &lt;span style="color:#4070a0">&amp;#34;help&amp;#34;&lt;/span>.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Type &lt;span style="color:#4070a0">&amp;#34;apropos word&amp;#34;&lt;/span> to search &lt;span style="color:#007020;font-weight:bold">for&lt;/span> commands related to &lt;span style="color:#4070a0">&amp;#34;word&amp;#34;&lt;/span>...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Reading symbols from ./build/led.elf...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> target remote localhost:3333 &lt;span style="color:#60a0b0;font-style:italic"># 链接openocd&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Remote debugging using localhost:3333
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>0x00000000 in ?? &lt;span style="color:#666">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> monitor reset &lt;span style="color:#60a0b0;font-style:italic"># reset板子&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> monitor halt &lt;span style="color:#60a0b0;font-style:italic"># 挂起CPU &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target halted due to debug-request, current mode: Thread
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xPSR: 0x21000000 pc: 0x080005c6 msp: 0x2007fff8
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> load &lt;span style="color:#60a0b0;font-style:italic"># 加载程序文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .isr_vector, size 0x1f8 lma 0x8000000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .text, size 0xed4 lma 0x80001f8
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .rodata, size 0x10 lma 0x80010cc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .ARM, size 0x8 lma 0x80010dc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .init_array, size 0x4 lma 0x80010e4
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .fini_array, size 0x4 lma 0x80010e8
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Loading section .data, size 0xc lma 0x80010ec
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Start address 0x08001008, load size &lt;span style="color:#40a070">4344&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Transfer rate: &lt;span style="color:#40a070">1&lt;/span> KB/sec, &lt;span style="color:#40a070">620&lt;/span> bytes/write.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> list &lt;span style="color:#60a0b0;font-style:italic"># 查看代码&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>59
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>60 /**
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>61 * @brief The application entry point.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>62 * @retval int
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>63 */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>64 int main&lt;span style="color:#666">(&lt;/span>void&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>65 &lt;span style="color:#666">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>66 /* USER CODE BEGIN &lt;span style="color:#40a070">1&lt;/span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>67
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>68 /* USER CODE END &lt;span style="color:#40a070">1&lt;/span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> b main &lt;span style="color:#60a0b0;font-style:italic"># 设置断点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Breakpoint &lt;span style="color:#40a070">1&lt;/span> at 0x80005ba: file Core/Src/main.c, line 73.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Note: automatically using hardware breakpoints &lt;span style="color:#007020;font-weight:bold">for&lt;/span> read-only addresses.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> info &lt;span style="color:#007020">break&lt;/span> &lt;span style="color:#60a0b0;font-style:italic"># 查看断点&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Num Type Disp Enb Address What
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">1&lt;/span> breakpoint keep y 0x080005ba in main at Core/Src/main.c:73
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>65 movs r1, &lt;span style="color:#60a0b0;font-style:italic">#0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Continuing.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Breakpoint 1, main &lt;span style="color:#666">()&lt;/span> at Core/Src/main.c:73
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>73 HAL_Init&lt;span style="color:#666">()&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>The &lt;span style="color:#007020">history&lt;/span> is empty.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> bt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#0 main () at Core/Src/main.c:73&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>HAL_Init &lt;span style="color:#666">()&lt;/span> at Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c:151
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>151 HAL_NVIC_SetPriorityGrouping&lt;span style="color:#666">(&lt;/span>NVIC_PRIORITYGROUP_4&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> list
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>146 &lt;span style="color:#60a0b0;font-style:italic">#if (PREFETCH_ENABLE != 0U)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>147 __HAL_FLASH_PREFETCH_BUFFER_ENABLE&lt;span style="color:#666">()&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>148 &lt;span style="color:#60a0b0;font-style:italic">#endif /* PREFETCH_ENABLE */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>149
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>150 /* Set Interrupt Group Priority */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>151 HAL_NVIC_SetPriorityGrouping&lt;span style="color:#666">(&lt;/span>NVIC_PRIORITYGROUP_4&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>152
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>153 /* Use systick as &lt;span style="color:#007020">time&lt;/span> base &lt;span style="color:#007020">source&lt;/span> and configure 1ms tick &lt;span style="color:#666">(&lt;/span>default clock after Reset is HSI&lt;span style="color:#666">)&lt;/span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>154 HAL_InitTick&lt;span style="color:#666">(&lt;/span>TICK_INT_PRIORITY&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>155
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> f
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#0 HAL_Init () at Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c:151&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>151 HAL_NVIC_SetPriorityGrouping&lt;span style="color:#666">(&lt;/span>NVIC_PRIORITYGROUP_4&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> list
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>146 &lt;span style="color:#60a0b0;font-style:italic">#if (PREFETCH_ENABLE != 0U)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>147 __HAL_FLASH_PREFETCH_BUFFER_ENABLE&lt;span style="color:#666">()&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>148 &lt;span style="color:#60a0b0;font-style:italic">#endif /* PREFETCH_ENABLE */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>149
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>150 /* Set Interrupt Group Priority */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>151 HAL_NVIC_SetPriorityGrouping&lt;span style="color:#666">(&lt;/span>NVIC_PRIORITYGROUP_4&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>152
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>153 /* Use systick as &lt;span style="color:#007020">time&lt;/span> base &lt;span style="color:#007020">source&lt;/span> and configure 1ms tick &lt;span style="color:#666">(&lt;/span>default clock after Reset is HSI&lt;span style="color:#666">)&lt;/span> */
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>154 HAL_InitTick&lt;span style="color:#666">(&lt;/span>TICK_INT_PRIORITY&lt;span style="color:#666">)&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>155
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">(&lt;/span>gdb&lt;span style="color:#666">)&lt;/span> quit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>A debugging session is active.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Inferior &lt;span style="color:#40a070">1&lt;/span> &lt;span style="color:#666">[&lt;/span>Remote target&lt;span style="color:#666">]&lt;/span> will be detached.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Quit anyway? &lt;span style="color:#666">(&lt;/span>y or n&lt;span style="color:#666">)&lt;/span> y
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Detaching from program: /home/myye/stm32f767_led/led/build/led.elf, Remote target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Ending remote debugging.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>Inferior &lt;span style="color:#40a070">1&lt;/span> &lt;span style="color:#666">(&lt;/span>Remote target&lt;span style="color:#666">)&lt;/span> detached&lt;span style="color:#666">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="gdb-常用的命令">GDB 常用的命令&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>命令&lt;/th>
+&lt;th>作用/举例&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>list&lt;/td>
+&lt;td>列出附近代码&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>break main (b 16)&lt;/td>
+&lt;td>在符号main处设置断点（在第16行设置断点）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>break info&lt;/td>
+&lt;td>查看断点&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>delet break [n]&lt;/td>
+&lt;td>删除编号为n的断点，不加n的话删除所有断点&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>step&lt;/td>
+&lt;td>进入子函数单步运行&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>next&lt;/td>
+&lt;td>跳过子函数单步运行&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>until&lt;/td>
+&lt;td>u 16 运行到16行停下&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>continue&lt;/td>
+&lt;td>运行代码到断点处停下&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>print&lt;/td>
+&lt;td>print a 显示变量a的值&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>display&lt;/td>
+&lt;td>display tmp 跟踪tmp，在每次停下时会自动显示变量的数值&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>bt&lt;/td>
+&lt;td>查看栈&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>quit&lt;/td>
+&lt;td>退出调试&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>以上命令还需要在实践中进一步熟悉。&lt;/p></description></item></channel></rss>

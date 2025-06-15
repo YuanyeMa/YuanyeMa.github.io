@@ -274,8 +274,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;blockquote>
-&lt;p>kind在不同的主题上可能不一样 参考&lt;a href="https://www.gohugo.org/doc/content/types/">官方文档&lt;/a>。themes/jane/archetypes/目录中看有哪几种，选一种合适的使用。&lt;/p>
-&lt;/blockquote>
+&lt;p>kind在不同的主题上可能不一样 参考&lt;a href="https://www.gohugo.org/doc/content/types/">官方文档&lt;/a>。themes/jane/archetypes/目录中看有哪几种，选一种合适的使用。&lt;/p>&lt;/blockquote>
 &lt;p>也可以手动创建，以下方式可以单独控制在指定位置创建blog，还可以单独创建目录以存储blog相关资源。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -300,11 +299,11 @@
 &lt;p>我打算直接使用github.io仓库的issues作为评论的位置。&lt;/p>
 &lt;h2 id="github安装utterance">Github安装utterance&lt;/h2>
 &lt;p>&lt;a href="https://github.com/apps/utterances">https://github.com/apps/utterances&lt;/a>&lt;/p>
-&lt;p>&lt;img alt="image-20240825163617676" src="/post/service/hugo/image-20240825163617676.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/hugo/image-20240825163617676.png" alt="image-20240825163617676">&lt;/p>
 &lt;p>点击&lt;code>Install&lt;/code>&lt;/p>
-&lt;p>&lt;img alt="image-20240825163800447" src="/post/service/hugo/image-20240825163800447.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/hugo/image-20240825163800447.png" alt="image-20240825163800447">&lt;/p>
 &lt;p>再次访问https://github.com/apps/utterances 点击&lt;code>Configure&lt;/code>&lt;/p>
-&lt;p>&lt;img alt="image-20240825164020589" src="/post/service/hugo/image-20240825164020589.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/hugo/image-20240825164020589.png" alt="image-20240825164020589">&lt;/p>
 &lt;h2 id="jane中启动utterances评论系统">jane中启动utterances评论系统&lt;/h2>
 &lt;p>Jane主题中已经集成了&lt;code>utterances&lt;/code>评论系统的布局，完成以上配置后，&lt;/p>
 &lt;ol>
@@ -338,15 +337,15 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>文章翻到底部就可以看到评论框，提示要登录GitHub，点击后转到授权页面，授权后就可以评论了。&lt;/p>
-&lt;p>&lt;img alt="image-20240825171004087" src="/post/service/hugo/image-20240825171004087.png">&lt;/p>
-&lt;p>&lt;img alt="image-20240825171024366" src="/post/service/hugo/image-20240825171024366.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/hugo/image-20240825171004087.png" alt="image-20240825171004087">&lt;/p>
+&lt;p>&lt;img src="/post/service/hugo/image-20240825171024366.png" alt="image-20240825171024366">&lt;/p>
 &lt;h1 id="参考资源">参考资源&lt;/h1>
 &lt;p>&lt;a href="https://www.gopherloveapple.com/tutorial/hugo/hugo-page-bundle/">index.md和_index.md的区别&lt;/a>&lt;/p></description></item><item><title>Linux 内核内存管理</title><link>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link><pubDate>Fri, 30 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid><description>&lt;h1 id="linux-内核内存管理">Linux 内核内存管理&lt;/h1>
 &lt;p>[toc]&lt;/p>
 &lt;p>越整理发现知识越多，分页机制、伙伴算法、slab等任何一块单独拿出来都有很多东西，因此本文先粗略的统揽全貌，有时间再针对每个部分，逐个深入，单独分析梳理成文章。&lt;/p>
 &lt;h2 id="内存寻址的基本框架">内存寻址的基本框架&lt;/h2>
 &lt;p>​ Linux内核的映射机制分三层：页面目录：&lt;code>PGD&lt;/code>, 中间目录：&lt;code>PMD&lt;/code>， 页表&lt;code>PT&lt;/code>。&lt;code>PT&lt;/code>的表项称为&lt;code>PTE (Page Table Entry)&lt;/code>. &lt;code>PGD&lt;/code> &lt;code>PMD&lt;/code>以及&lt;code>PT&lt;/code>三者都是数组。三者的关系如图所示。&lt;/p>
-&lt;p>&lt;img alt="image-20201209084314672" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209084314672.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209084314672.png" alt="image-20201209084314672">&lt;/p>
 &lt;p>CPU给出的线性地址在逻辑上可以分为4个位段，各占若干位。分别用作在页面目录表&lt;code>PGD&lt;/code>中的下标志，页中间目录表&lt;code>PMD&lt;/code>中的下标，页表&lt;code>PT&lt;/code>中的下标，以及物理页内的地址偏移。线性地址映射为物理地址的大致过程如下。&lt;/p>
 &lt;ol>
 &lt;li>CPU发出线性地址；&lt;/li>
@@ -505,7 +504,7 @@
 &lt;p>假设hello-world程序编译链接加载完的程序入口地址是&lt;code>0x08048568&lt;/code>，CPU要执行此程序，首先此地址经过&lt;code>MMU&lt;/code>得到对应的物理地址，将&lt;code>CS:EIP&lt;/code>的地址指向该物理地址，之后CPU就可以运行此程序的代码。&lt;/p>
 &lt;p>首先看一下段式映射机制，即得到物理地址后CPU怎么执行。&lt;/p>
 &lt;h3 id="段式映射机制">段式映射机制&lt;/h3>
-&lt;p>&lt;img alt="image-20201209091927275" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209091927275.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209091927275.png" alt="image-20201209091927275">&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"> 1&lt;/a>
@@ -803,7 +802,7 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020"> __typeof__(type) per_cpu__##name
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img alt="image-20201209100428575" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209100428575.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209100428575.png" alt="image-20201209100428575">&lt;/p>
 &lt;p>参照&lt;code>gdt&lt;/code>表项定义可以得出以下结论&lt;/p>
 &lt;table>
 &lt;thead>
@@ -1470,7 +1469,7 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} ____cacheline_internodealigned_in_smp;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="pg_data_t-或者-struct-pglist_data-">&lt;code>pg_data_t&lt;/code> 或者 &lt;code>struct pglist_data &lt;/code>&lt;/h3>
+&lt;/div>&lt;h3 id="pg_data_t-或者-struct-pglist_data">&lt;code>pg_data_t&lt;/code> 或者 &lt;code>struct pglist_data &lt;/code>&lt;/h3>
 &lt;p>此结构表示每个&lt;code>NUMA&lt;/code>节点的存储信息。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -1646,7 +1645,7 @@
 &lt;/div>&lt;hr>
 &lt;p>之前的几个结构都是用于物理空间管理的，下面是虚拟空间管理的。&lt;/p>
 &lt;p>虚拟空间的管理是以进程为基础的，每个进程都有各自的虚拟内存空间，所有进程的内核空间是共享的。&lt;/p>
-&lt;p>&lt;img alt="image-20201209182949066" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209182949066.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201209182949066.png" alt="image-20201209182949066">&lt;/p>
 &lt;h3 id="struct-vm_area_struct">&lt;code>struct vm_area_struct&lt;/code>&lt;/h3>
 &lt;p>一个进程所需要使用的虚拟空间中的各个部位未必连续，通常形成若干离散的虚存&lt;strong>区间&lt;/strong>，对虚存区间的抽象就是数据结构&lt;code>struct vm_area_struct&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -2084,17 +2083,16 @@
 &lt;li>&lt;code>start_code, end_code, start_data, end_data&lt;/code> : 进程的代码段、数据段，此外还有堆栈段等的起点和终点。&lt;/li>
 &lt;/ul>
 &lt;h2 id="内存管理基本框架">内存管理基本框架&lt;/h2>
-&lt;p>&lt;img alt="image-20201216171309001" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216171309001.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216171309001.png" alt="image-20201216171309001">&lt;/p>
 &lt;p>&lt;strong>管理区分配器&lt;/strong>接收动态内存分配与释放的请求，在请求分配的情况下，该部分搜索一个能满足所请求的一组连续的页框的内存管理区。在每个&lt;strong>管理区&lt;/strong>内，页框被&lt;strong>伙伴算法系统&lt;/strong>处理。每CPU页框高速缓存包含一些预先分配，它们被用于满足本地CPU发出的单一内存请求。&lt;/p>
 &lt;h2 id="伙伴系统">伙伴系统&lt;/h2>
 &lt;p>网上超了一段算法的简单描述如下。&lt;/p>
 &lt;blockquote>
 &lt;p>为了便于页面的维护，将多个页面组成内存块，每个内存块都有 2 的方幂个页，方幂的指数被称为阶 order。order相同的内存块被组织到一个空闲链表中。伙伴系统基于2的方幂来申请释放内存页。
 当申请内存页时，伙伴系统首先检查与申请大小相同的内存块链表中，检看是否有空闲页，如果有就将其分配出去，并将其从链表中删除，否则就检查上一级，即大小为申请大小的2倍的内存块空闲链表，如果该链表有空闲内存，就将其分配出去，同时将剩余的一部分（即未分配出去的一半）加入到下一级空闲链表中；如果这一级仍没有空闲内存；就检查它的上一级，依次类推，直到分配成功或者彻底失败，在成功时还要按照伙伴系统的要求，将未分配的内存块进行划分并加入到相应的空闲内存块链表
-在释放内存页时，会检查其伙伴是否也是空闲的，如果是就将它和它的伙伴合并为更大的空闲内存块，该检查会递归进行，直到发现伙伴正在被使用或者已经合并成了最大的内存块。&lt;/p>
-&lt;/blockquote>
+在释放内存页时，会检查其伙伴是否也是空闲的，如果是就将它和它的伙伴合并为更大的空闲内存块，该检查会递归进行，直到发现伙伴正在被使用或者已经合并成了最大的内存块。&lt;/p>&lt;/blockquote>
 &lt;p>在linux中可以通过命令&lt;code>cat /proc/buddyinfo&lt;/code>查看系统中伙伴系统使用情况。&lt;/p>
-&lt;p>&lt;img alt="image-20201216191346937" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216191346937.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216191346937.png" alt="image-20201216191346937">&lt;/p>
 &lt;p>此处以DMA区域进行分析，第二列值为4，表示当前系统中DMA区域，可用的连续两页的内存大小为4*2*PAGE_SIZE；第三列值为21，表示当前系统中DMA区域，可用的连续四页的内存大小为21*2^2*PAGE_SIZE。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -2175,16 +2173,16 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img alt="Memery_Layout_21" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/Memery_Layout_21.jpg">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/Memery_Layout_21.jpg" alt="Memery_Layout_21">&lt;/p>
 &lt;p>参考&lt;/p>
 &lt;p>&lt;a href="https://blog.csdn.net/lickylin/article/details/50726847">Linux /proc/buddyinfo理解&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.phpfans.net/ask/MTIyMDc1MQ.html">linux 2.6.36的free_area结构&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://blog.csdn.net/jus3ve/article/details/79736898">linux内核对伙伴系统的改进&amp;ndash;migrate_type&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://blog.csdn.net/goodluckwhh/article/details/9989695?utm_medium=distribute.pc_relevant_t0.none-task-blog-searchFromBaidu-1.control&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-searchFromBaidu-1.control">linux内核内存管理学习之二（物理内存管理&amp;ndash;伙伴系统）&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://blog.csdn.net/goodluckwhh/article/details/9989695?utm_medium=distribute.pc_relevant_t0.none-task-blog-searchFromBaidu-1.control&amp;amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-searchFromBaidu-1.control">linux内核内存管理学习之二（物理内存管理&amp;ndash;伙伴系统）&lt;/a>&lt;/p>
 &lt;h2 id="slab系统">slab系统&lt;/h2>
 &lt;p>伙伴算法系统采用页框作为基本内存区，这适合于对大块内存的请求，但是如何处理小内存的请求，比如说几十或者几百个字节？linux kernel采用&lt;code>slab&lt;/code>系统进行高效的小内存管理。&lt;/p>
 &lt;p>&lt;code>make menuconfig&lt;/code>后输入&lt;code>/&lt;/code>搜索&lt;code>slab&lt;/code>后回车，会看到下图的路径。&lt;/p>
-&lt;p>&lt;img alt="image-20201216141235787" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216141235787.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216141235787.png" alt="image-20201216141235787">&lt;/p>
 &lt;p>此外还有&lt;/p>
 &lt;ul>
 &lt;li>SLAB是基础，是最早从Sun OS那引进的；&lt;/li>
@@ -2200,9 +2198,9 @@
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cat /proc/slabinfo &lt;span style="color:#60a0b0;font-style:italic">#查看系统中slab使用情况&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img alt="image-20201217165809700" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201217165809700.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201217165809700.png" alt="image-20201217165809700">&lt;/p>
 &lt;p>也可以使用&lt;code>slabtop&lt;/code>命令查看&lt;code>slab&lt;/code>系统使用情况。&lt;/p>
-&lt;p>&lt;img alt="image-20201217165714560" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201217165714560.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201217165714560.png" alt="image-20201217165714560">&lt;/p>
 &lt;ul>
 &lt;li>OBJS — The total number of objects (memory blocks), including those in use (allocated), and some spares not in use.&lt;/li>
 &lt;li>ACTIVE — The number of objects (memory blocks) that are in use (allocated).&lt;/li>
@@ -2214,7 +2212,7 @@
 &lt;li>NAME — The name of the slab.&lt;/li>
 &lt;/ul>
 &lt;p>包含高速缓存的主内存区域被划分为多个&lt;code>slab&lt;/code>，每个&lt;code>slab&lt;/code>由一个或多个连续的页框组成，这些页框中既包含已经分配的对象，也包含空闲的对象。&lt;/p>
-&lt;p>&lt;img alt="slab" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/Slab_Cache.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/Slab_Cache.png" alt="slab">&lt;/p>
 &lt;p>每个高速缓存都是由&lt;code>struct kmem_cache&lt;/code>类型的数据结构来描述的。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -2493,8 +2491,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img alt="slab对象关系" src="http://chenweixiang.github.io/assets/Memery_Layout_14.jpg">&lt;/p>
-&lt;p>&lt;img alt="image-20201216150001694" src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216150001694.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="http://chenweixiang.github.io/assets/Memery_Layout_14.jpg" alt="slab对象关系">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/image-20201216150001694.png" alt="image-20201216150001694">&lt;/p>
 &lt;h3 id="slab分配器的接口">slab分配器的接口&lt;/h3>
 &lt;ul>
 &lt;li>新建一个高速缓存&lt;/li>
@@ -3063,8 +3061,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;blockquote>
-&lt;p>可以手动设置vnc桌面的分辨率 ：&lt;code>vncserver -geometry 1280x1024 :2&lt;/code>&lt;/p>
-&lt;/blockquote>
+&lt;p>可以手动设置vnc桌面的分辨率 ：&lt;code>vncserver -geometry 1280x1024 :2&lt;/code>&lt;/p>&lt;/blockquote>
 &lt;h2 id="4-配置novnc">4. 配置noVnc&lt;/h2>
 &lt;p>&lt;a href="https://github.com/novnc/noVNC/releases">这里下载源码&lt;/a>&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -3089,12 +3086,12 @@
 &lt;/div>
 &lt;/div>&lt;h2 id="5-测试">5. 测试&lt;/h2>
 &lt;p>在本地打开浏览器，地址栏输入&lt;code>http://vps_ip:8806/vnc.html&lt;/code>点击&lt;code>链接&lt;/code>，输入前边配置&lt;code>vncserver&lt;/code>时设置的密码。刚进入桌面的时候会让选择面板，我点了默认。&lt;/p>
-&lt;p>&lt;img alt="image-20200329232232358" src="/post/service/novnc/image-20200329232232358.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/novnc/image-20200329232232358.png" alt="image-20200329232232358">&lt;/p>
 &lt;h2 id="6-bug">6. bug&lt;/h2>
 &lt;p>刚进入桌面发现点&lt;code>Terminal模拟器&lt;/code>没有相应，参照&lt;a href="https://forum.ubuntu.com.cn/viewtopic.php?t=473914">这篇文章&lt;/a>设置后就可以用了。&lt;/p>
-&lt;p>&lt;img alt="image-20200329232454210" src="/post/service/novnc/image-20200329232454210.png">&lt;/p>
-&lt;p>&lt;img alt="image-20200329232521576" src="/post/service/novnc/image-20200329232521576.png">&lt;/p>
-&lt;p>&lt;img alt="image-20200329232550112" src="/post/service/novnc/image-20200329232550112.png">&lt;/p></description></item><item><title>x86汇编从实模式到保护模式实验</title><link>/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/</link><pubDate>Wed, 15 Jan 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/</guid><description>&lt;h1 id="x86汇编从实模式到保护模式实验">x86汇编从实模式到保护模式实验&lt;/h1>
+&lt;p>&lt;img src="/post/service/novnc/image-20200329232454210.png" alt="image-20200329232454210">&lt;/p>
+&lt;p>&lt;img src="/post/service/novnc/image-20200329232521576.png" alt="image-20200329232521576">&lt;/p>
+&lt;p>&lt;img src="/post/service/novnc/image-20200329232550112.png" alt="image-20200329232550112">&lt;/p></description></item><item><title>x86汇编从实模式到保护模式实验</title><link>/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/</link><pubDate>Wed, 15 Jan 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/2020-01-15-x86%E6%B1%87%E7%BC%96%E4%BB%8E%E5%AE%9E%E6%A8%A1%E5%BC%8F%E5%88%B0%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%BC%8F%E5%AE%9E%E9%AA%8C/</guid><description>&lt;h1 id="x86汇编从实模式到保护模式实验">x86汇编从实模式到保护模式实验&lt;/h1>
 &lt;h2 id="实验一">实验一&lt;/h2>
 &lt;p>实验环境：MacOS High Sierra&lt;/p>
 &lt;h3 id="安装nasm">安装nasm&lt;/h3>
@@ -3458,8 +3455,7 @@
 &lt;p>div指令：&lt;/p>
 &lt;p>被除数是32位时存储在 （DX:AX） 除数是16位的跟在div指令后，商存在AX，余数在DX中&lt;/p>
 &lt;p>被除数是16位时存储在 AX中，除数是8位的跟在div指令后，商在AL,余数在AH中&lt;/p>
-&lt;p>DB是伪指令，即没有对应的机器码，只是给编译器用的。DB表示声明一个字节数据，此外还有DW(两个字),DD（双字）,DQ（四字）&lt;/p>
-&lt;/blockquote>
+&lt;p>DB是伪指令，即没有对应的机器码，只是给编译器用的。DB表示声明一个字节数据，此外还有DW(两个字),DD（双字）,DQ（四字）&lt;/p>&lt;/blockquote>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"> 1&lt;/a>
@@ -3580,8 +3576,7 @@
 &lt;p>正向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI加1或者2；&lt;/p>
 &lt;p>反向传送时，没传送一个字节（movsb）或者一个字（movsw）SI和DI减1或者2；&lt;/p>
 &lt;p>传送方向由标志寄存器（FLAGS）的DF位指定，0为正，1为负。cls清零DF位，std将DF位置1.&lt;/p>
-&lt;p>单纯的movsw或者movsb指令只能执行1此，需要加上rep前缀，只要CX不为0就一直执行movsw或者movsb。&lt;/p>
-&lt;/blockquote></description></item><item><title>2019秋招笔试题</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</link><pubDate>Thu, 15 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="2019贝壳找房四道笔试题">2019贝壳找房四道笔试题&lt;/h1>
+&lt;p>单纯的movsw或者movsb指令只能执行1此，需要加上rep前缀，只要CX不为0就一直执行movsw或者movsb。&lt;/p>&lt;/blockquote></description></item><item><title>2019秋招笔试题</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</link><pubDate>Thu, 15 Aug 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/</guid><description>&lt;h1 id="2019贝壳找房四道笔试题">2019贝壳找房四道笔试题&lt;/h1>
 &lt;h2 id="1-计算绝对值">1. 计算绝对值&lt;/h2>
 &lt;p>题目描述：&lt;/p>
 &lt;p>给出n个正整数，要求将找出相邻两个数字中差的绝对值最小的一对数字，如果有差的绝对值相同的，则输出最前面的一对数。&lt;/p>
@@ -3960,8 +3955,8 @@
 &lt;/div>
 &lt;/div>&lt;h1 id="图森笔试题">图森笔试题&lt;/h1>
 &lt;h2 id="1-求卷积">1. 求卷积&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/01.png">&lt;/p>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/02.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/02.png" alt="">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -4054,8 +4049,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="2-迷宫求最短路径">2. 迷宫求最短路径&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/03.png">&lt;/p>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/04.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/03.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/04.png" alt="">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -4222,8 +4217,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="3-我也不知道是什么题">3. 我也不知道是什么题&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/05.png">&lt;/p>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/06.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/05.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/06.png" alt="">&lt;/p>
 &lt;p>code&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -4443,7 +4438,7 @@
 &lt;/div>
 &lt;/div>&lt;h1 id="华为">华为&lt;/h1>
 &lt;h2 id="1-计算数轴上关系匹配的点">1. 计算数轴上关系匹配的点&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-01.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-01.jpg" alt="">&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-1"> 1&lt;/a>
@@ -4643,8 +4638,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="2-翻转字符串">2. 翻转字符串&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-02.jpg">&lt;/p>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-03.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-02.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-03.jpg" alt="">&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-16-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-16-1"> 1&lt;/a>
@@ -4827,8 +4822,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="3-修改机票信息">3. 修改机票信息&lt;/h2>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-04.jpg">&lt;/p>
-&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-05.jpg">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-04.jpg" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019%E7%AC%94%E8%AF%95%E9%A2%98%E7%9B%AE/hw-05.jpg" alt="">&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-1"> 1&lt;/a>
@@ -5498,8 +5493,7 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/div>&lt;blockquote>
 &lt;p>Vs2013 开发人员命令提示工具 可以查看对象模型&lt;/p>
 &lt;p>先cd到cpp文件所造的目录&lt;/p>
-&lt;p>cl /d1 reportSingleClassLayout类名 cpp文件名&lt;/p>
-&lt;/blockquote>
+&lt;p>cl /d1 reportSingleClassLayout类名 cpp文件名&lt;/p>&lt;/blockquote>
 &lt;h3 id="继承中的同名成员处理">继承中的同名成员处理&lt;/h3>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -5822,13 +5816,12 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">48&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img src="/post/programing/c++%E7%BB%A7%E6%89%BF/jicheng.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/programing/c&amp;#43;&amp;#43;%E7%BB%A7%E6%89%BF/jicheng.png" alt="">&lt;/p>
 &lt;blockquote>
 &lt;p>64位机器所以指针占8个字节的内存。&lt;/p>
 &lt;p>对于类A：a占两个字节的内存，八字节内存对齐，后边的虚函数表是个指针因此也占8个字节的内存，因此sizeof(A) = 16B;&lt;/p>
 &lt;p>由于B继承自A，因此B内又完全包含一个A，a+b=4个字节仍然不满8个字节，仍然需要填充4个字节来保持内存对齐，因此sizeof(B) = 16+16 = 32B。&lt;/p>
-&lt;p>同理sizeof(C) = 48B。&lt;/p>
-&lt;/blockquote></description></item><item><title>tensorboardX的用法</title><link>/post/programing/tensorboard/</link><pubDate>Sat, 20 Jul 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/tensorboard/</guid><description>&lt;h1 id="pytorchtensorboardx">pytorch+tensorboardX&lt;/h1>
+&lt;p>同理sizeof(C) = 48B。&lt;/p>&lt;/blockquote></description></item><item><title>tensorboardX的用法</title><link>/post/programing/tensorboard/</link><pubDate>Sat, 20 Jul 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/tensorboard/</guid><description>&lt;h1 id="pytorchtensorboardx">pytorch+tensorboardX&lt;/h1>
 &lt;p>简单总结一下tensorboardX的用法。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -5857,11 +5850,11 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>在终端中运行上边代码:&lt;code>python ./tensorboard_scales.py&lt;/code>，查看代码目录下多了一个&lt;code>runs&lt;/code>的目录，里边保存的就是代码运行时的数据。&lt;/p>
-&lt;p>&lt;img alt="01" src="/post/programing/tensorboard/01.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/tensorboard/01.png" alt="01">&lt;/p>
 &lt;p>再使用&lt;code>tensorboard --logdir runs&lt;/code>,在浏览器地址栏输入&lt;code>ip_address:6006&lt;/code>就能看到图像。&lt;/p>
-&lt;p>&lt;img alt="04" src="/post/programing/tensorboard/04.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/tensorboard/04.png" alt="04">&lt;/p>
 &lt;p>此时再次运行代码，再查看目录结构，会发现又多了一些目录，这是因为tensorboard会保存几个历史版本。这个功能很好用，可以通过点击左下角的复选框勾选要对比的曲线，进而对比模型的性能。&lt;/p>
-&lt;p>&lt;img alt="02" src="/post/programing/tensorboard/02.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/tensorboard/02.png" alt="02">&lt;/p>
 &lt;p>试试&lt;code>graph&lt;/code>&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -5908,24 +5901,24 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">class&lt;/span> &lt;span style="color:#0e84b5;font-weight:bold">Net1&lt;/span>(nn&lt;span style="color:#666">.&lt;/span>Module):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">def&lt;/span> __init__(self):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">super&lt;/span>(Net1, self)&lt;span style="color:#666">.&lt;/span>__init__()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>conv1 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Conv2d(&lt;span style="color:#40a070">1&lt;/span>, &lt;span style="color:#40a070">10&lt;/span>, kernel_size&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">5&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>conv2 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Conv2d(&lt;span style="color:#40a070">10&lt;/span>, &lt;span style="color:#40a070">20&lt;/span>, kernel_size&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">5&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>conv2_drop &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Dropout2d()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>fc1 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Linear(&lt;span style="color:#40a070">320&lt;/span>, &lt;span style="color:#40a070">50&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>fc2 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Linear(&lt;span style="color:#40a070">50&lt;/span>, &lt;span style="color:#40a070">10&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> self&lt;span style="color:#666">.&lt;/span>bn &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>BatchNorm2d(&lt;span style="color:#40a070">20&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">def&lt;/span> &lt;span style="color:#06287e">__init__&lt;/span>(&lt;span style="color:#007020">self&lt;/span>):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">super&lt;/span>(Net1, &lt;span style="color:#007020">self&lt;/span>)&lt;span style="color:#666">.&lt;/span>&lt;span style="color:#06287e">__init__&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv1 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Conv2d(&lt;span style="color:#40a070">1&lt;/span>, &lt;span style="color:#40a070">10&lt;/span>, kernel_size&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">5&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv2 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Conv2d(&lt;span style="color:#40a070">10&lt;/span>, &lt;span style="color:#40a070">20&lt;/span>, kernel_size&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">5&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv2_drop &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Dropout2d()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>fc1 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Linear(&lt;span style="color:#40a070">320&lt;/span>, &lt;span style="color:#40a070">50&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>fc2 &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>Linear(&lt;span style="color:#40a070">50&lt;/span>, &lt;span style="color:#40a070">10&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>bn &lt;span style="color:#666">=&lt;/span> nn&lt;span style="color:#666">.&lt;/span>BatchNorm2d(&lt;span style="color:#40a070">20&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">def&lt;/span> &lt;span style="color:#06287e">forward&lt;/span>(self, x):
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>max_pool2d(self&lt;span style="color:#666">.&lt;/span>conv1(x), &lt;span style="color:#40a070">2&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">def&lt;/span> &lt;span style="color:#06287e">forward&lt;/span>(&lt;span style="color:#007020">self&lt;/span>, x):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>max_pool2d(&lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv1(x), &lt;span style="color:#40a070">2&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(x) &lt;span style="color:#666">+&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(&lt;span style="color:#666">-&lt;/span>x)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(F&lt;span style="color:#666">.&lt;/span>max_pool2d(self&lt;span style="color:#666">.&lt;/span>conv2_drop(self&lt;span style="color:#666">.&lt;/span>conv2(x)), &lt;span style="color:#40a070">2&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> self&lt;span style="color:#666">.&lt;/span>bn(x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(F&lt;span style="color:#666">.&lt;/span>max_pool2d(&lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv2_drop(&lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>conv2(x)), &lt;span style="color:#40a070">2&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>bn(x)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> x&lt;span style="color:#666">.&lt;/span>view(&lt;span style="color:#666">-&lt;/span>&lt;span style="color:#40a070">1&lt;/span>, &lt;span style="color:#40a070">320&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(self&lt;span style="color:#666">.&lt;/span>fc1(x))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>dropout(x, training&lt;span style="color:#666">=&lt;/span>self&lt;span style="color:#666">.&lt;/span>training)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> self&lt;span style="color:#666">.&lt;/span>fc2(x)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>relu(&lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>fc1(x))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>dropout(x, training&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>training)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#007020">self&lt;/span>&lt;span style="color:#666">.&lt;/span>fc2(x)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> x &lt;span style="color:#666">=&lt;/span> F&lt;span style="color:#666">.&lt;/span>softmax(x, dim&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">return&lt;/span> x
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -5938,7 +5931,7 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>在运行的时候报错了。&lt;/p>
-&lt;p>&lt;img alt="error" src="/post/programing/tensorboard/error.png">&lt;/p>
+&lt;p>&lt;img src="/post/programing/tensorboard/error.png" alt="error">&lt;/p>
 &lt;p>上网搜索了一番说是&lt;code>pytorch&lt;/code>版本的问题，为了跑写好的强化学习的代码，我用的是比较老的&lt;code>0.4.0&lt;/code>版本的，回头有机会测一下&lt;code>pytorch 1.0+&lt;/code>的看可不可以用。&lt;/p>
 &lt;h2 id="总结一下tensorboardx的用法">总结一下TensorboardX的用法&lt;/h2>
 &lt;ul>
@@ -6303,51 +6296,51 @@ Son(int a):Base(a) //在初始化列表中调用父类的构造函数
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align:center">32位&lt;/th>
-&lt;th style="text-align:center">16位&lt;/th>
-&lt;th style="text-align:center">8位&lt;/th>
+&lt;th style="text-align: center">32位&lt;/th>
+&lt;th style="text-align: center">16位&lt;/th>
+&lt;th style="text-align: center">8位&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align:center">EAX&lt;/td>
-&lt;td style="text-align:center">AX&lt;/td>
-&lt;td style="text-align:center">AL&lt;/td>
+&lt;td style="text-align: center">EAX&lt;/td>
+&lt;td style="text-align: center">AX&lt;/td>
+&lt;td style="text-align: center">AL&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">EBX&lt;/td>
-&lt;td style="text-align:center">BX&lt;/td>
-&lt;td style="text-align:center">BL&lt;/td>
+&lt;td style="text-align: center">EBX&lt;/td>
+&lt;td style="text-align: center">BX&lt;/td>
+&lt;td style="text-align: center">BL&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">ECX&lt;/td>
-&lt;td style="text-align:center">CX&lt;/td>
-&lt;td style="text-align:center">CL&lt;/td>
+&lt;td style="text-align: center">ECX&lt;/td>
+&lt;td style="text-align: center">CX&lt;/td>
+&lt;td style="text-align: center">CL&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">EDX&lt;/td>
-&lt;td style="text-align:center">DX&lt;/td>
-&lt;td style="text-align:center">DL&lt;/td>
+&lt;td style="text-align: center">EDX&lt;/td>
+&lt;td style="text-align: center">DX&lt;/td>
+&lt;td style="text-align: center">DL&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">ESP&lt;/td>
-&lt;td style="text-align:center">SP&lt;/td>
-&lt;td style="text-align:center">AH&lt;/td>
+&lt;td style="text-align: center">ESP&lt;/td>
+&lt;td style="text-align: center">SP&lt;/td>
+&lt;td style="text-align: center">AH&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">EBP&lt;/td>
-&lt;td style="text-align:center">BP&lt;/td>
-&lt;td style="text-align:center">CH&lt;/td>
+&lt;td style="text-align: center">EBP&lt;/td>
+&lt;td style="text-align: center">BP&lt;/td>
+&lt;td style="text-align: center">CH&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">ESI&lt;/td>
-&lt;td style="text-align:center">SI&lt;/td>
-&lt;td style="text-align:center">DH&lt;/td>
+&lt;td style="text-align: center">ESI&lt;/td>
+&lt;td style="text-align: center">SI&lt;/td>
+&lt;td style="text-align: center">DH&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align:center">EDI&lt;/td>
-&lt;td style="text-align:center">DI&lt;/td>
-&lt;td style="text-align:center">BH&lt;/td>
+&lt;td style="text-align: center">EDI&lt;/td>
+&lt;td style="text-align: center">DI&lt;/td>
+&lt;td style="text-align: center">BH&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -6880,8 +6873,7 @@ REP MOVS DWORD PTR ES:[EDI], DWORD PTR DS:[ESI] #或者 REP MOVSD
 &lt;blockquote>
 &lt;p>AT&amp;amp;T风格的汇编&lt;/p>
 &lt;p>movl source, dist&lt;/p>
-&lt;p>其中mov后边的l表示操作的字长， AT&amp;amp;T先原地址后目标地址&lt;/p>
-&lt;/blockquote>
+&lt;p>其中mov后边的l表示操作的字长， AT&amp;amp;T先原地址后目标地址&lt;/p>&lt;/blockquote>
 &lt;h3 id="80x86计算机组成与保护模式">80x86计算机组成与保护模式&lt;/h3>
 &lt;p>​ 80386有三种工作模式：&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -6916,7 +6908,7 @@ REP MOVS DWORD PTR ES:[EDI], DWORD PTR DS:[ESI] #或者 REP MOVSD
 &lt;li>间接寻址的一般格式：Intel格式：&lt;code>SECTION:[BASE + INDEX*SCALE+DISP]&lt;/code>;AT&amp;amp;T格式：&lt;code>section:disp(base, index, scale)&lt;/code>&lt;/li>
 &lt;li>远程的转移指令和子程序调用指令的操作码名称，在AT&amp;amp;T中为&amp;quot;ljmp&amp;quot;和&amp;quot;lcall&amp;rdquo;，而在Intel格式中为“JMP FAR”和&amp;quot;CALL FAR&amp;quot;。&lt;/li>
 &lt;/ul>
-&lt;h1 id="linux内核中的汇编语言规则httpsblogcsdnnetarmlinuxwwarticledetails13168075">&lt;a href="https://blog.csdn.net/armlinuxww/article/details/13168075">linux内核中的汇编语言规则&lt;/a>&lt;/h1>
+&lt;h1 id="linux内核中的汇编语言规则">&lt;a href="https://blog.csdn.net/armlinuxww/article/details/13168075">linux内核中的汇编语言规则&lt;/a>&lt;/h1>
 &lt;h1 id="哈工大李治军操作系统">哈工大李治军操作系统&lt;/h1>
 &lt;h2 id="linux内核中使用了三种汇编">linux内核中使用了三种汇编&lt;/h2>
 &lt;ul>
@@ -6976,8 +6968,7 @@ REP MOVS DWORD PTR ES:[EDI], DWORD PTR DS:[ESI] #或者 REP MOVSD
 &lt;/div>&lt;p>可以在&lt;code>~/.vnc/xxx.log&lt;/code>中查看&lt;code>vncserver&lt;/code>的运行信息。&lt;/p>
 &lt;blockquote>
 &lt;p>我当时先是连接上后无法打开terminal后，查看log显示下边的报错信息。然后参照&lt;a href="https://blog.csdn.net/ztguang/article/details/70572872">这篇blog&lt;/a>输入了上边那条命令 ： dbus-launch gnome-terminal &amp;amp;&lt;/p>
-&lt;p>Error constructing proxy for org.gnome.Terminal:/org/gnome/Terminal/Factory0: 为 org.gnome.Terminal 调用 StartServiceByName 出错：已到超时限制&lt;/p>
-&lt;/blockquote>
+&lt;p>Error constructing proxy for org.gnome.Terminal:/org/gnome/Terminal/Factory0: 为 org.gnome.Terminal 调用 StartServiceByName 出错：已到超时限制&lt;/p>&lt;/blockquote>
 &lt;p>完整的&lt;code>xstartup&lt;/code>文件内容如下&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7031,7 +7022,7 @@ sudo systemctl start lightdm
 默认以图形界面方式启动：
 sudo systemctl set-default graphical.target
 &lt;/code>&lt;/pre>&lt;h3 id="最终效果">最终效果&lt;/h3>
-&lt;p>&lt;img src="/post/service/vnc/final.png">&lt;/p>
+&lt;p>&lt;img src="/post/service/vnc/final.png" alt="">&lt;/p>
 &lt;p>启动训练代码，然后关闭窗口，随时重新连接查看运行结果。美滋滋。。。。&lt;/p></description></item><item><title>在黑苹果上部署开发环境</title><link>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 13 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="在黑苹果上部署开发环境">在黑苹果上部署开发环境&lt;/h1>
 &lt;h1 id="使用ubuntu的nfs">使用ubuntu的nfs&lt;/h1>
 &lt;p>首先在ubuntu上安装nfs服务&lt;/p>
@@ -7085,21 +7076,21 @@ sudo systemctl set-default graphical.target
 &lt;/div>
 &lt;/div>&lt;p>然后在&lt;code>Finder&lt;/code>中链接nfs服务&lt;/p>
 &lt;p>在&lt;code>Finder&lt;/code>图标上右键选择&lt;code>连接服务器&lt;/code>，填入共享目录，如下图点击&lt;code>connect&lt;/code>。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder-nfs.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder-nfs.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder.png" alt="">&lt;/p>
 &lt;h1 id="深度学习环境搭建">深度学习环境搭建&lt;/h1>
 &lt;p>参照&lt;a href="https://blog.csdn.net/wz22881916/article/details/78807993/">此教程&lt;/a>安装CUDA&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/0.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/0.png" alt="">&lt;/p>
 &lt;h2 id="nvidia-driver">Nvidia driver&lt;/h2>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png" alt="">&lt;/p>
 &lt;h2 id="cuda-driver">CUDA driver&lt;/h2>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png" alt="">&lt;/p>
 &lt;h2 id="cuda-toolkits">CUDA Toolkits&lt;/h2>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png" alt="">&lt;/p>
 &lt;p>添加环境变量&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7122,7 +7113,7 @@ sudo systemctl set-default graphical.target
 &lt;/div>&lt;hr>
 &lt;p>以下为尝试，未能解决问题。&lt;/p>
 &lt;p>首先需要安装&lt;code>Xcode&lt;/code>，登录&lt;a href="https://developer.apple.com/download/more/">苹果开发者&lt;/a>&lt;/p>
-&lt;p>&lt;img alt="1557821485474" src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1557821485474.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1557821485474.png" alt="1557821485474">&lt;/p>
 &lt;p>下载完成后得到一个&lt;code>.xip&lt;/code>压缩文件，双击进行校验，校验完成后会自动解压。解压完成得到&lt;code>Xcode.app&lt;/code>拖进&lt;code>/Applications&lt;/code>中完成安装。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7163,9 +7154,9 @@ sudo systemctl set-default graphical.target
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo xcode-select --switch /Library/Developer/CommandLineTools
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/00.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/00.png" alt="">&lt;/p>
 &lt;p>如图，编译成功，执行编译完的程序，发现能够正常识别显卡。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png" alt="">&lt;/p>
 &lt;h2 id="cudnn">cudnn&lt;/h2>
 &lt;p>参照教程我也下载了&lt;code>cudnn v7.2.1&lt;/code>下载完成双击解压，然后按照下边过程安装。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -7198,12 +7189,12 @@ sudo systemctl set-default graphical.target
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>-L /usr/local/cuda/lib -lcudnn
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png">&lt;/p>
+&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png" alt="">&lt;/p>
 &lt;h2 id="测试">测试&lt;/h2>
 &lt;h3 id="cuda">cuda&lt;/h3>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png" alt="">&lt;/p>
 &lt;h3 id="cudnn-1">cudnn&lt;/h3>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png" alt="">&lt;/p>
 &lt;h2 id="pytorch">pytorch&lt;/h2>
 &lt;p>&lt;code>cuda&lt;/code>和&lt;code>cudnn&lt;/code>都安装完了后，安装pytorch。&lt;/p>
 &lt;p>首先按照这篇&lt;a href="http://richard.blog.nctu.edu.tw/pytorch/">&lt;code>blog&lt;/code>&lt;/a>尝试安装&lt;code>pytorch 0.4.0&lt;/code>但是切换到&lt;code>v0.4.0&lt;/code>执行&lt;code>git submodule update init&lt;/code>的时候一直报 错，说找不到仓库。&lt;/p>
@@ -7221,7 +7212,7 @@ sudo systemctl set-default graphical.target
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>安装完成后需要切换出&lt;code>pytorch&lt;/code>的源码目录，再执行&lt;code>python&lt;/code>然后&lt;code>import torch&lt;/code>才有效，不然会报错&lt;code>ModuleNotFoundError: No module named 'torch._C'&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png">&lt;/p></description></item><item><title>C++ Primer Plus笔记</title><link>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png" alt="">&lt;/p></description></item><item><title>C++ Primer Plus笔记</title><link>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-06-04-c++-primer-plus%E7%AC%94%E8%AE%B0/</guid><description>&lt;h1 id="c-primer-plus笔记">C++ Primer Plus笔记&lt;/h1>
 &lt;h2 id="第十章对象和类">第十章：对象和类&lt;/h2>
 &lt;p>类和结构(class和struct)的区别：结构的默认访问类型是public，而类的默认访问类型是private。&lt;/p>
 &lt;p>所创建的每个新对象都有自己的存储空间，用于存储其内部变量和类成员；但同一个类的所有对象共享同一组类方法，即每种方法只有一个副本。&lt;/p>
@@ -7318,8 +7309,7 @@ sudo systemctl set-default graphical.target
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;blockquote>
-&lt;p>当且仅当没有定义任何构造函数的时候，编译器才会提供默认构造函数；为类定义了构造函数后就必须为它提供默认构造函数。如果定义了非默认参数的构造函数，而没用定义默认构造函数则上边的声明会报错。&lt;/p>
-&lt;/blockquote>
+&lt;p>当且仅当没有定义任何构造函数的时候，编译器才会提供默认构造函数；为类定义了构造函数后就必须为它提供默认构造函数。如果定义了非默认参数的构造函数，而没用定义默认构造函数则上边的声明会报错。&lt;/p>&lt;/blockquote>
 &lt;p>默认构造函数可以通过两种方式定义：直接定义一个不接收参数的构造函数；定义提供默认参数的构造函数。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7415,8 +7405,7 @@ sudo systemctl set-default graphical.target
 &lt;p>语法格式：&lt;code>operatorp(argument-list)&lt;/code>其中最后一个&lt;code>p&lt;/code>表示要重载的运算符，比如&lt;code>operator+(Time)&lt;/code>&lt;/p>
 &lt;blockquote>
 &lt;p>函数重载：函数重载的关键是函数的参数列表—也称为函数特征标(function signature)。如果两个函数的参数数目和类型相同，同时参数的排列顺序也相同，则他们的特征标相同，而变量名是无关紧要的。函数名相同而特征标不同的函数是重载函数。&lt;/p>
-&lt;p>double func(int a, double b) 和 double func(double a, int b)也是重载函数，后边有实验证明。&lt;/p>
-&lt;/blockquote>
+&lt;p>double func(int a, double b) 和 double func(double a, int b)也是重载函数，后边有实验证明。&lt;/p>&lt;/blockquote>
 &lt;p>运算符重载的时候&lt;strong>左侧&lt;/strong>的操作数应该是调用对象，比如&lt;code>A = B*2.75&lt;/code>等价于&lt;code>A = B.operator*(2.75)&lt;/code>。而&lt;code>A = 2.75*B&lt;/code>会出错。&lt;/p>
 &lt;p>要实现&lt;code>A = 2.75*B&lt;/code>可以通过&lt;strong>友元函数&lt;/strong>来实现。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -7532,8 +7521,7 @@ fir dou
 &lt;li>string：与vector相似的容器，但专门用于保存字符，随机访问快。&lt;/li>
 &lt;/ul>
 &lt;blockquote>
-&lt;p>array和forward是C++新标准增加的类型&lt;/p>
-&lt;/blockquote>
+&lt;p>array和forward是C++新标准增加的类型&lt;/p>&lt;/blockquote>
 &lt;p>额外三个顺序容器适配器&lt;/p>
 &lt;ul>
 &lt;li>stack&lt;/li>
@@ -7541,8 +7529,7 @@ fir dou
 &lt;li>Priority_queue&lt;/li>
 &lt;/ul>
 &lt;blockquote>
-&lt;p>适配器（adaptor）是标准库中的一个通用概念。容器、迭代器和函数都有适配器。本质上，一个适配器是一种机制，能使某种事物的行为看起来像另外一种事物一样。一个容器能接受一种已有的容器类型，使其行为看起来像另外一种不同的类型。例如stack适配器使用一种顺序容器，使其操作起来像一个stack一样。每个适配器都在其底层顺序容器类型之上定义了一个新的接口。&lt;/p>
-&lt;/blockquote>
+&lt;p>适配器（adaptor）是标准库中的一个通用概念。容器、迭代器和函数都有适配器。本质上，一个适配器是一种机制，能使某种事物的行为看起来像另外一种事物一样。一个容器能接受一种已有的容器类型，使其行为看起来像另外一种不同的类型。例如stack适配器使用一种顺序容器，使其操作起来像一个stack一样。每个适配器都在其底层顺序容器类型之上定义了一个新的接口。&lt;/p>&lt;/blockquote>
 &lt;h2 id="第十一章关联容器associative-container">第十一章：关联容器(associative-container)&lt;/h2>
 &lt;p>关联容器中的元素是按照关键字来保存和访问的&lt;/p>
 &lt;p>主要有两个&lt;/p>
@@ -7581,8 +7568,7 @@ fir dou
 &lt;blockquote>
 &lt;p>map和multimap定义在头文件map中&lt;/p>
 &lt;p>set和multiset定义在头文件set中&lt;/p>
-&lt;p>无序容器定义在unordered_map和unordered_set中。&lt;/p>
-&lt;/blockquote>
+&lt;p>无序容器定义在unordered_map和unordered_set中。&lt;/p>&lt;/blockquote>
 &lt;p>使用关联容器的一个例子&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7792,8 +7778,7 @@ fir dou
 &lt;li>结构体变量的&lt;strong>起始地址&lt;/strong>能够被其最宽的成员大小整除&lt;/li>
 &lt;li>结构体每个成员相对于&lt;strong>起始地址的偏移&lt;/strong>能够被其&lt;strong>自身大小整除&lt;/strong>，如果不能则在&lt;strong>前一个成员后面&lt;/strong>补充字节&lt;/li>
 &lt;li>结构体总体大小能够&lt;strong>被最宽的成员的大小&lt;/strong>整除，如不能则在&lt;strong>后面&lt;/strong>补充字节&lt;/li>
-&lt;/ol>
-&lt;/blockquote>
+&lt;/ol>&lt;/blockquote>
 &lt;p>拿&lt;code>struct a &lt;/code>来说，&lt;/p>
 &lt;ul>
 &lt;li>第一个成员是&lt;code>char&lt;/code>类型的，占用一个字节，偏移地址为0。&lt;/li>
@@ -7803,8 +7788,7 @@ fir dou
 &lt;li>最后，整个结构体占用24个字节，最宽的成员是&lt;code>double d&lt;/code>占8个字节，24能被8整除，所以&lt;code>sizeof (struct a) = 24&lt;/code>。&lt;/li>
 &lt;/ul>
 &lt;blockquote>
-&lt;p>使用定义在 stddef.h 的宏offsetof(type, member) ，可以查看成员相对与结构体类型的偏移值&lt;/p>
-&lt;/blockquote>
+&lt;p>使用定义在 stddef.h 的宏offsetof(type, member) ，可以查看成员相对与结构体类型的偏移值&lt;/p>&lt;/blockquote>
 &lt;h1 id="一道关于内存计算的题">一道关于内存计算的题&lt;/h1>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -7927,8 +7911,7 @@ fir dou
 &lt;/div>
 &lt;/div>&lt;p>此程序能够正常编译运行输出&lt;code>hello world&lt;/code>。&lt;/p>
 &lt;blockquote>
-&lt;p>c++类方法存储在代码段，因此同一个类的所有方法公用代码段，p-&amp;gt;p(&amp;ldquo;hello world\n&amp;rdquo;)；访问的是代码段，所以不会出现段错误或者core dump。&lt;/p>
-&lt;/blockquote>
+&lt;p>c++类方法存储在代码段，因此同一个类的所有方法公用代码段，p-&amp;gt;p(&amp;ldquo;hello world\n&amp;rdquo;)；访问的是代码段，所以不会出现段错误或者core dump。&lt;/p>&lt;/blockquote>
 &lt;h1 id="红黑树的性质">红黑树的性质&lt;/h1>
 &lt;p>红黑树是每个节点都带有颜色属性的&lt;strong>二叉查找树&lt;/strong>。在二叉查找树强制一般要求外，对于任何有效的红黑树增加额外的要求。&lt;/p>
 &lt;ul>
@@ -7946,7 +7929,7 @@ fir dou
 &lt;li>任意节点的左右子树也分别为二叉查找树；&lt;/li>
 &lt;li>没有键值相等的节点。&lt;/li>
 &lt;/ul>
-&lt;h1 id="tcp三次握手和四次挥手httpshit-alibabagithubiointerviewbasicnetworktcphtml">&lt;a href="https://hit-alibaba.github.io/interview/basic/network/TCP.html">TCP三次握手和四次挥手&lt;/a>&lt;/h1>
+&lt;h1 id="tcp三次握手和四次挥手">&lt;a href="https://hit-alibaba.github.io/interview/basic/network/TCP.html">TCP三次握手和四次挥手&lt;/a>&lt;/h1>
 &lt;h1 id="死锁">死锁&lt;/h1>
 &lt;p>死锁：多个进程由于互相等待对方持有的资源而造成的谁都无法执行的情况叫死锁。&lt;/p>
 &lt;h2 id="死锁产生的四个必要条件">死锁产生的四个必要条件&lt;/h2>
@@ -7978,14 +7961,14 @@ fir dou
 &lt;li>&lt;a href="https://blog.csdn.net/qq_33414271/article/details/80245715">银行家算法&lt;/a>
 &lt;ul>
 &lt;li>请求出现时：首先假装分配，然后调用银行家算法，如果进程序列无法运行下去就拒绝。&lt;/li>
-&lt;li>时间复杂度为&lt;img src="http://latex.codecogs.com/gif.latex?O(mn^2)">， m为资源个数， n为进程的个数。&lt;/li>
+&lt;li>时间复杂度为&lt;img src="http://latex.codecogs.com/gif.latex?O%28mn%5e2%29" alt="">， m为资源个数， n为进程的个数。&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;li>死锁检测+恢复：检测到死锁出现时，让一些进程回滚从而让出资源；
 &lt;ul>
-&lt;li>银行家算法每次申请都需要执行&lt;img src="http://latex.codecogs.com/gif.latex?O(mn^2)">, 效率低：发现问题再处理
+&lt;li>银行家算法每次申请都需要执行&lt;img src="http://latex.codecogs.com/gif.latex?O%28mn%5e2%29" alt="">, 效率低：发现问题再处理
 &lt;ul>
 &lt;li>定时检测或者发现资源利用率低时检测。&lt;/li>
 &lt;li>选择哪些进程回滚？&lt;/li>
@@ -8011,19 +7994,19 @@ fir dou
 &lt;p>GDT : &lt;strong>Global Descriptor Table&lt;/strong> , 全局描述符表，用来存放全局的段描述符。&lt;/p>
 &lt;p>GDTR ： &lt;strong>Global Descriptor Table Register&lt;/strong>， 用来保存全局描述符表（GDT）的起始地址。&lt;/p>
 &lt;p>整个系统中，全局描述符表GDT只有一张(一个处理器对应一个GDT)，GDT可以被放在内存的任何位置，但CPU必须知道GDT的入口，也就是基地址放在哪里，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址，程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。GDTR中存放的是GDT在内存中的基地址和其表长界限。&lt;/p>
-&lt;p>&lt;img alt="image-20201120211741700" src="/post/os/gdtldtidttss/1.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/1.png" alt="image-20201120211741700">&lt;/p>
 &lt;ul>
 &lt;li>全局描述符表线性基地址：保存的是全局描述符表在内存中的起始线性地址；&lt;/li>
 &lt;li>16位的全局描述符表边界：在数值上等于表的大小（总字节数）减一，16位决定了表最大65536字节（64KB），又因为每个描述符占8个字节，所以最多能有8192个描述符；&lt;/li>
 &lt;/ul>
 &lt;p>**段选择子（Selector）**由GDTR访问全局描述符表是通过“段选择子”（实模式下的段寄存器）来完成的。段选择子是一个16位的寄存器（同实模式下的段寄存器相同）。&lt;/p>
-&lt;p>&lt;img alt="image-20201120213926975" src="/post/os/gdtldtidttss/2.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/2.png" alt="image-20201120213926975">&lt;/p>
 &lt;ul>
 &lt;li>描述符索引 ： 指示段描述符在GDT中的下标；&lt;/li>
 &lt;li>TI ： 描述符表指示器（Table Indicator）0表示此描述符在GDT中，1表示此描述符在LDT中；&lt;/li>
 &lt;li>RPL：请求特权级，表示给出当前选择子的那个程序的特权级；&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img alt="image-20201120212305819" src="/post/os/gdtldtidttss/3.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/3.png" alt="image-20201120212305819">&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>G ：粒度（Granularity）位，解释段界限的含义，0表示段界限以字节为单位；1表示段界限以4KB为单位；&lt;/p>
@@ -8045,7 +8028,7 @@ fir dou
 &lt;/li>
 &lt;li>
 &lt;p>TYPE段共4位，用于指示描述符的子类型，X表示是否可执行。E表示数据段的扩展方向，E=0表示向上扩展，也就是向高地址方向扩展，即普通数据段；E=1表示向下扩展，即栈段；W=0表示不可写入；C=0表示非依从代码段，这样的代码段可以从与它特权级相同的代码段调用；C=1表示允许从低特权级的程序转移到该段执行。&lt;/p>
-&lt;p>&lt;img alt="image-20201120213542008" src="/post/os/gdtldtidttss/4.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/4.png" alt="image-20201120213542008">&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="ldt--ldtr">LDT &amp;amp; LDTR&lt;/h2>
@@ -8055,18 +8038,18 @@ fir dou
 &lt;h2 id="idt--idtr">IDT &amp;amp; IDTR&lt;/h2>
 &lt;p>中断描述符表（Interrupt Descriptor Table, IDT）保存的是和中断过程有关的描述符，包括中断门、陷阱门和任务门，整个系统中只有一个IDT。&lt;/p>
 &lt;p>中断描述符表寄存器（Interrupt Descriptor Table Register,IDTR）保存着中断描述符表在内存中的线性基地址和界限。&lt;/p>
-&lt;p>&lt;img alt="image-20201120221137076" src="/post/os/gdtldtidttss/5.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/5.png" alt="image-20201120221137076">&lt;/p>
 &lt;p>中断描述符表的每一行是一个门描述符。&lt;/p>
 &lt;p>门描述符：中断门(Interrupt Gate)，陷阱门（Trap Gate） 任务门(Task Gate)和调用门(Interrupt Gate)，其中中断门和陷阱门必须存放在IDT中，任务门和调用门可以存储在GDT\LDT和IDT中。除了任务门外其他三种门的结构基本相同， 中断门，陷阱门，调用门结构如下图所示。任务门结构在下一小节&lt;code>TSS&amp;amp;TR&lt;/code>后边有贴图。&lt;/p>
-&lt;p>&lt;img alt="image-gate" src="/post/os/gdtldtidttss/6.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/6.png" alt="image-gate">&lt;/p>
 &lt;p>中断i发生 -&amp;gt;确定与中断或异常关联的向量i-&amp;gt; 通过查询IDT的第i项目 -&amp;gt; 得到中断描述符（门）-&amp;gt; 得到段选择符 -&amp;gt; 查询GDT - &amp;gt;得到段描述符 -&amp;gt; 得到段的基地址 -&amp;gt; 段基地址加上中断描述符中的偏移地址 -&amp;gt; 得到中断服务程序的入口地址。 过程中或检查特权级，如果特权级发生了变化还会发生栈切换。&lt;/p>
 &lt;p>中断门和陷阱门的唯一区别在于，通过中断门进入中断服务程序时CPU会自动关闭中断，也就是将CPU中的&lt;code>EFLAGS&lt;/code>寄存器的&lt;code>IF&lt;/code>标志位清成0，即防止中断嵌套。而通过陷阱门进入服务程序时则维持&lt;code>IF&lt;/code>标志位不变。&lt;/p>
 &lt;h2 id="tss--tr">TSS &amp;amp; TR&lt;/h2>
 &lt;p>任务状态段(Task State Segment : TSS）是一个专门用来保存任务运行&lt;strong>现场&lt;/strong>的数据结构，其中包括CPU中所有与具体进程有关的寄存器的内容（包含页面目录指针CR3），还包括了三个堆栈指针。中断发生时，CPU在中断向量表中找到相应的表项。如果找到的表项是一个&lt;strong>任务门&lt;/strong>，并且通过了优先级别的检查，CPU就会将当前任务的运行现场保存相应的TSS中，并将任务门所指向的TSS作为当前任务，将其内容装入CPU中各个寄存器，从而完成一次任务的切换。&lt;/p>
 &lt;p>任务寄存器TR用来指向当前任务的TSS。 TR寄存器在处理器中也是只有一个，当任务切换发生时，TR寄存器的内容会跟着指向新的任务的TSS。这个过程是这样的：首先，处理器将当前任务的现场信息保存到由TR寄存器指向的TSS, 然后，再使TR寄存器指向新的TSS，并从新任务的TSS中恢复现场。&lt;/p>
-&lt;p>&lt;img alt="image-20201120220217034" src="/post/os/gdtldtidttss/7.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/7.png" alt="image-20201120220217034">&lt;/p>
 &lt;p>进入中断服务函数，或者发生任务切换时，栈也要发生切换，TSS中除了保存有常规的寄存器内容外，还有三个额外的堆栈指针（&lt;code>SS&lt;/code>和&lt;code>ESP&lt;/code>），这三个额外的堆栈指针分别用于当CPU在目标代码段中的运行级别为0,1,2时的栈。图中的&lt;code>SS0&lt;/code> &lt;code>ESP0&lt;/code> &lt;code>SS1&lt;/code> &lt;code>ESP1&lt;/code>等就对应不同级别下的栈。&lt;/p>
-&lt;p>&lt;img alt="image-task_gate" src="/post/os/gdtldtidttss/task_gate.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/gdtldtidttss/task_gate.png" alt="image-task_gate">&lt;/p>
 &lt;h2 id="dpl--cpl--rpl">DPL &amp;amp; CPL &amp;amp; RPL&lt;/h2>
 &lt;p>DPL : Descriptor Privilege Level, 存放在段描述符中，用于表示段的特权级;&lt;/p>
 &lt;p>CPL : Current Privilege Level, 代表当前执行程序的特权级;&lt;/p>
@@ -8116,8 +8099,7 @@ fir dou
 &lt;/div>
 &lt;/div></description></item><item><title>GNU C 内联汇编</title><link>/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/gnu-c-%E5%B5%8C%E5%85%A5%E6%B1%87%E7%BC%96/</guid><description>&lt;h1 id="gnu-c-内联汇编">GNU C 内联汇编&lt;/h1>
 &lt;blockquote>
-&lt;p>内核代码中有很多内联汇编，为了更好的读懂内核，上网搜罗了一些内联汇编的文章在这里，方便自己随时查阅。&lt;a href="https://dirtysalt.github.io/html/gcc-asm.html">这篇文章&lt;/a>比较有价值，特别是后半段引用的中国科大BBS站的一些邮件列表，“对 《gcc中的内嵌汇编语言》一文的补充说明”中的一些例子描述的很好，能够帮助更好的理解内联汇编。这里摘抄一些。&lt;/p>
-&lt;/blockquote>
+&lt;p>内核代码中有很多内联汇编，为了更好的读懂内核，上网搜罗了一些内联汇编的文章在这里，方便自己随时查阅。&lt;a href="https://dirtysalt.github.io/html/gcc-asm.html">这篇文章&lt;/a>比较有价值，特别是后半段引用的中国科大BBS站的一些邮件列表，“对 《gcc中的内嵌汇编语言》一文的补充说明”中的一些例子描述的很好，能够帮助更好的理解内联汇编。这里摘抄一些。&lt;/p>&lt;/blockquote>
 &lt;p>&lt;a href="https://www.linuxprobe.com/gcc-how-to.html">参考二&lt;/a> &lt;a href="https://sites.google.com/site/wyylview/linux-qian-ru-hui-bian">参考三&lt;/a>&lt;/p>
 &lt;h2 id="基本形式">基本形式&lt;/h2>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -8311,12 +8293,12 @@ movl eax,bar
 &lt;/ul>
 &lt;h3 id="格式化u盘">格式化U盘&lt;/h3>
 &lt;p>在虚拟机中新建一个大小为10G的硬盘，插入后MacOS会检测到，然后点击&lt;code>Initialize...&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-01.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-02.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-02.png" alt="">&lt;/p>
 &lt;p>左边选择好要擦除的硬盘后，点击上方的&lt;code>Erase&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-03.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-03.png" alt="">&lt;/p>
 &lt;p>&lt;code>Name&lt;/code>随便写，&lt;code>Format&lt;/code>选择&lt;code>OS X Extended&lt;/code>， 最后一行的&lt;code>Scheme&lt;/code> 一定选&lt;code>GUID&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-04.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-04.png" alt="">&lt;/p>
 &lt;h3 id="方式一使用镜像中的工具制作">方式一：使用镜像中的工具制作&lt;/h3>
 &lt;p>命令如下 :&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -8351,62 +8333,61 @@ movl eax,bar
 &lt;li>输入密码，输入&lt;code>Y&lt;/code>，开始刻录U盘；&lt;/li>
 &lt;li>刻录完成；&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-01.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-02.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-done.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-02.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-done.png" alt="">&lt;/p>
 &lt;p>此种方法刻录的U盘好像不用再用&lt;code>Clover&lt;/code>写入引导，我在虚拟机中测试可以引导，具体情况还得到实体机上测试。&lt;/p>
-&lt;h3 id="方案二windows下使用transmac软件制作---todo">方案二：windows下使用transmac软件制作 &amp;ndash;TODO&lt;/h3>
+&lt;h3 id="方案二windows下使用transmac软件制作-todo">方案二：windows下使用transmac软件制作 &amp;ndash;TODO&lt;/h3>
 &lt;p>&lt;a href="http://www.acutesystems.com/tmac/tmsetup.zip">下载&lt;/a>安装后会在桌面生成快捷方式。右键&lt;strong>以管理员身份&lt;/strong>打开。&lt;/p>
 &lt;p>&lt;a href="http://www.xitongcheng.com/jiaocheng/xtazjc_article_41339.html">教程&lt;/a>&lt;/p>
 &lt;h3 id="方案三使用unibeats工具制作">方案三：使用UniBeats工具制作&lt;/h3>
 &lt;blockquote>
-&lt;p>注：使用的工具都在&lt;code>tonymacx86.com&lt;/code>下载，下载需要登录，注册需要使用国外的邮箱，我使用了gmail。&lt;/p>
-&lt;/blockquote>
+&lt;p>注：使用的工具都在&lt;code>tonymacx86.com&lt;/code>下载，下载需要登录，注册需要使用国外的邮箱，我使用了gmail。&lt;/p>&lt;/blockquote>
 &lt;p>先在虚拟机中分了一个10G大小的硬盘当做的我U盘，挂载到Mac的虚拟机后格式化为GPT分区格式。&lt;/p>
 &lt;p>然后打开UniBeast工具开始制作。&lt;/p>
 &lt;p>此软件要求系统语言是英文，所以如果系统语言不是英文会要求更改，只需打开&lt;code>系统偏好设置&lt;/code> 然后将英文拖动到第一位，点击重启就好了。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-01.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-02.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-03.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-04.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-05.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-02.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-03.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-04.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-05.png" alt="">&lt;/p>
 &lt;p>点击&lt;code>Agree&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-06.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-06.png" alt="">&lt;/p>
 &lt;p>选中U盘，我这里前边把U盘命名为&lt;code>boot&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-07.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-07.png" alt="">&lt;/p>
 &lt;p>选中要刻录的系统，这里的&lt;code>Mojave&lt;/code>系统要拖动到&lt;code>Application&lt;/code>目录中才能自动识别出来。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-08.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-08.png" alt="">&lt;/p>
 &lt;p>选择&lt;code>UEFI&lt;/code>引导模式。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-09.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-09.png" alt="">&lt;/p>
 &lt;p>注入显卡驱动&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-10.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-10.png" alt="">&lt;/p>
 &lt;p>开始拷贝文件&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/coping-file-to-usb.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/copying-done.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/coping-file-to-usb.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/copying-done.png" alt="">&lt;/p>
 &lt;p>制作完成后桌面会多出来一个EFI分区。&lt;/p>
 &lt;h3 id="写入clover引导">写入Clover引导&lt;/h3>
 &lt;p>打开&lt;code>Clover&lt;/code>开始写入引导。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-0.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-1.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-0.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-1.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-2.png" alt="">&lt;/p>
 &lt;p>这里要选择&lt;code>Change Install Location...&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-3.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-3.png" alt="">&lt;/p>
 &lt;p>选择&lt;code>Install ...&lt;/code> 这个是写入镜像后的U盘，名字变了可以通过分区大小区分。然后点击&lt;code>Continue&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-4.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-4.png" alt="">&lt;/p>
 &lt;p>点击&lt;code>Customize&lt;/code> 进入配置页面，选择一些必要的驱动，点击&lt;code>Install&lt;/code>&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-5.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-6.png">&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-7.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-5.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-6.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-7.png" alt="">&lt;/p>
 &lt;p>关闭虚拟机，在虚拟机重启时进入BIOS,选择做好的U盘引导系统。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-boot.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-boot.png" alt="">&lt;/p>
 &lt;h2 id="3-配置clover">3. 配置Clover&lt;/h2>
 &lt;p>使用前边制作好的U盘就可以插入电脑从U盘启动了，接下来进入安装黑苹果最难的部分：配置Clover驱动。&lt;/p>
 &lt;p>使用&lt;code>Clover Configure&lt;/code>软件进行配置。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-1.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-1.png" alt="">&lt;/p>
 &lt;p>打开软件后，在左边找到&lt;code>Mount EFI&lt;/code> 左下会出现可以挂载的&lt;code>EFI&lt;/code>分区。点击&lt;code>Mount Partition -&amp;gt; Open Parition&lt;/code>。如下图，选择&lt;code>EFI -&amp;gt; CLOVER -&amp;gt; config.plist&lt;/code> 双击打开。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-2.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-2.png" alt="">&lt;/p>
 &lt;p>然后就进入了下边的配置界面。&lt;/p>
-&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-3.png">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-3.png" alt="">&lt;/p>
 &lt;p>后边的内容需要在实体机上根据具体的硬件信息进行配置，暂时不看。&lt;/p>
 &lt;h2 id="4-安装系统">4. 安装系统&lt;/h2>
 &lt;h2 id="5-进入系统解决驱动问题">5. 进入系统解决驱动问题&lt;/h2>
@@ -9404,8 +9385,7 @@ movl eax,bar
 │   └── ac.c&lt;br>
 ├── a.c&lt;br>
 ├── b.c&lt;br>
-└── c.c&lt;/p>
-&lt;/blockquote>
+└── c.c&lt;/p>&lt;/blockquote>
 &lt;p>vim Makefile 并写入一下内容&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -9433,15 +9413,13 @@ movl eax,bar
 &lt;blockquote>
 &lt;p>a.c b.c c.c ./a/aa.c ./a/ab.c ./a/ac.c&lt;br>
 a.c b.c c.c aa.c ab.c ac.c&lt;br>
-a.o b.o c.o ./a/aa.o ./a/ab.o ./a/ac.o&lt;/p>
-&lt;/blockquote>
+a.o b.o c.o ./a/aa.o ./a/ab.o ./a/ac.o&lt;/p>&lt;/blockquote>
 &lt;h2 id="分析执行过程">分析执行过程&lt;/h2>
 &lt;p>通过第一行的输出可以看出，wildcard的作用是用后边的通配符去匹配文件名。&lt;/p>
 &lt;p>通过第二行的输出可以看出，notdir的作用是省略掉文件名中的路径信息，只保留最后的文件名称。&lt;/p>
 &lt;p>通过第三行的输出可以看出，patsubst的作用是把$SRC中所有的.c文件名修改为.o&lt;/p>
 &lt;blockquote>
-&lt;p>‘%’（百分号）表示匹配任意长度的子串&lt;/p>
-&lt;/blockquote>
+&lt;p>‘%’（百分号）表示匹配任意长度的子串&lt;/p>&lt;/blockquote>
 &lt;h2 id="扩展">扩展&lt;/h2>
 &lt;p>此外还有几种方法效果和&lt;code> OBJ=$(patsubst %.c, %.o, $(SRC))&lt;/code>一样&lt;/p>
 &lt;h4 id="makefile中的变量替换引用">Makefile中的变量替换引用&lt;/h4>
@@ -9521,8 +9499,7 @@ a/ac.o&lt;br>
 a/ac.c&lt;br>
 a.c b.c c.c ./a/aa.c ./a/ab.c ./a/ac.c&lt;br>
 a.c b.c c.c aa.c ab.c ac.c&lt;br>
-a.o b.o c.o ./a/aa.o ./a/ab.o ./a/ac.o&lt;/p>
-&lt;/blockquote></description></item><item><title>Omv</title><link>/post/service/2020-03-08-omv/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-03-08-omv/</guid><description>&lt;h1 id="openmediavaultnextcloud搭建私有云盘">OpenMediaVault+Nextcloud搭建私有云盘&lt;/h1>
+a.o b.o c.o ./a/aa.o ./a/ab.o ./a/ac.o&lt;/p>&lt;/blockquote></description></item><item><title>Omv</title><link>/post/service/2020-03-08-omv/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-03-08-omv/</guid><description>&lt;h1 id="openmediavaultnextcloud搭建私有云盘">OpenMediaVault+Nextcloud搭建私有云盘&lt;/h1>
 &lt;h2 id="安装omv">安装omv&lt;/h2>
 &lt;p>&lt;a href="https://sourceforge.net/projects/openmediavault/files/">下载镜像&lt;/a>&lt;/p>
 &lt;h3 id="macos制作启动盘">macOS制作启动盘&lt;/h3>
@@ -9546,8 +9523,7 @@ a.o b.o c.o ./a/aa.o ./a/ab.o ./a/ac.o&lt;/p>
 &lt;p>安装完成后终端会显示&lt;code>IP&lt;/code>地址，直接在浏览器中输入相应的&lt;code>IP&lt;/code>就可以打开管理页面。默认用户名和密码在终端中也有显示。&lt;/p>
 &lt;blockquote>
 &lt;p>默认用户名 admin&lt;/p>
-&lt;p>默认密码 openmediavault&lt;/p>
-&lt;/blockquote>
+&lt;p>默认密码 openmediavault&lt;/p>&lt;/blockquote>
 &lt;h3 id="安装插件">安装插件&lt;/h3>
 &lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -9938,8 +9914,7 @@ lsmod | grep bbr
 &lt;li>
 &lt;p>修改&lt;code>/usr/lib/proxychains3/proxyresolv&lt;/code> 中的&lt;code>export LD_PRELOAD=libproxychains.so.3&lt;/code>为&lt;code>/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>&lt;/p>
 &lt;blockquote>
-&lt;p>其中&lt;code>/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>可以通过命令&lt;code>sudo find /usr/ -name &amp;quot;libproxychains.so.3&amp;quot;&lt;/code>找到。&lt;/p>
-&lt;/blockquote>
+&lt;p>其中&lt;code>/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>可以通过命令&lt;code>sudo find /usr/ -name &amp;quot;libproxychains.so.3&amp;quot;&lt;/code>找到。&lt;/p>&lt;/blockquote>
 &lt;/li>
 &lt;/ul>
 &lt;h1 id="安装simple_obfs混淆插件">安装&lt;code>simple_obfs&lt;/code>混淆插件&lt;/h1>

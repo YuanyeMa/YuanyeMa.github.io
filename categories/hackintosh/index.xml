@@ -1,1 +1,503 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hackintosh on Yuanye Ma's Blog</title><link>/categories/hackintosh/</link><description>Recent content in Hackintosh on Yuanye Ma's Blog</description><generator>Hugo</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 13 May 2019 16:01:23 +0800</lastBuildDate><atom:link href="/categories/hackintosh/index.xml" rel="self" type="application/rss+xml"/><item><title>在黑苹果上部署开发环境</title><link>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 13 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid><description>在黑苹果上部署开发环境 使用ubuntu的nfs 首先在ubuntu上安装nfs服务 1 sudo apt install nfs-kernel-server 创建共享目录并赋予权限 1 2 sudo mkdir /home/rl/share sudo chmod 777 /home/rl/share 配置/et</description></item><item><title>Hackintosh</title><link>/post/hackintosh/hackintosh/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/hackintosh/</guid><description>黑苹果安装步骤简记 最近突然对安装黑苹果系统很感兴趣，就上网找了一些资料来看看，下边简单记录一下我的收获。以下操作都在虚拟机中进行。工具软件在</description></item><item><title>制作dmg格式的苹果镜像</title><link>/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/</guid><description>制作dmg格式的苹果镜像 思路：创建一个dmg镜像，将macos的内容写入dmg，然后将dmg转换为压缩镜像。 但是直接拷贝到其他系统中就是一个</description></item><item><title>尝试安装黑苹果系统</title><link>/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/</guid><description>尝试吃苹果 系统配置 CPU i7 7700k GPU GTX 1050 Ti 主板 ASUS PRIME Z270-P 声卡 瑞昱 ALC887 网卡 瑞昱 RTL8186/8111/8112 具体请看鲁大师检测结果(原谅手机的渣像素) BIOS先恢复默认，然后设置成下边样</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hackintosh on Yuanye Ma's Blog</title><link>/categories/hackintosh/</link><description>Recent content in Hackintosh on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 13 May 2019 16:01:23 +0800</lastBuildDate><atom:link href="/categories/hackintosh/index.xml" rel="self" type="application/rss+xml"/><item><title>在黑苹果上部署开发环境</title><link>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 13 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="在黑苹果上部署开发环境">在黑苹果上部署开发环境&lt;/h1>
+&lt;h1 id="使用ubuntu的nfs">使用ubuntu的nfs&lt;/h1>
+&lt;p>首先在ubuntu上安装nfs服务&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt install nfs-kernel-server
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>创建共享目录并赋予权限&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo mkdir /home/rl/share
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo chmod &lt;span style="color:#40a070">777&lt;/span> /home/rl/share
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>配置&lt;code>/etc/exports&lt;/code>文件&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4">4&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo vim /etc/exports
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入下边内容&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/home/rl/share *&lt;span style="color:#666">(&lt;/span>rw,sync,insecure,no_subtree_check,no_root_squash&lt;span style="color:#666">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 注意 `insecure`必须填，不然在macos的Finder中无法访问nfs目录&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在&lt;code>MacOS&lt;/code>中访问&lt;code>ubuntu&lt;/code>的&lt;code>nfs&lt;/code>目录&lt;/p>
+&lt;p>首先在终端中查看共享目录共享是否成功&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ showmount -e 192.168.50.30
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Exports list on 192.168.50.30:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/home/rl/share *
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后在&lt;code>Finder&lt;/code>中链接nfs服务&lt;/p>
+&lt;p>在&lt;code>Finder&lt;/code>图标上右键选择&lt;code>连接服务器&lt;/code>，填入共享目录，如下图点击&lt;code>connect&lt;/code>。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder-nfs.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/finder.png" alt="">&lt;/p>
+&lt;h1 id="深度学习环境搭建">深度学习环境搭建&lt;/h1>
+&lt;p>参照&lt;a href="https://blog.csdn.net/wz22881916/article/details/78807993/">此教程&lt;/a>安装CUDA&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/0.png" alt="">&lt;/p>
+&lt;h2 id="nvidia-driver">Nvidia driver&lt;/h2>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png" alt="">&lt;/p>
+&lt;h2 id="cuda-driver">CUDA driver&lt;/h2>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png" alt="">&lt;/p>
+&lt;h2 id="cuda-toolkits">CUDA Toolkits&lt;/h2>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png" alt="">&lt;/p>
+&lt;p>添加环境变量&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">CUDA_HOME&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/local/cuda
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">DYLD_LIBRARY_PATH&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>&lt;span style="color:#bb60d5">$CUDA_HOME&lt;/span>&lt;span style="color:#4070a0">/lib:&lt;/span>&lt;span style="color:#bb60d5">$CUDA_HOME&lt;/span>&lt;span style="color:#4070a0">/extras/CUPTI/lib&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">LD_LIBRARY_PATH&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#bb60d5">$DYLD_LIBRARY_PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">PATH&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#bb60d5">$DYLD_LIBRARY_PATH&lt;/span>:&lt;span style="color:#bb60d5">$PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">flags&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#4070a0">&amp;#34;--config=cuda --config=opt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">export&lt;/span> &lt;span style="color:#bb60d5">PATH&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#4070a0">&amp;#34;/Developer/NVIDIA/CUDA-9.2/bin:&lt;/span>&lt;span style="color:#bb60d5">$PATH&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#nvcc 命令路径&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;hr>
+&lt;p>以下为尝试，未能解决问题。&lt;/p>
+&lt;p>首先需要安装&lt;code>Xcode&lt;/code>，登录&lt;a href="https://developer.apple.com/download/more/">苹果开发者&lt;/a>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1557821485474.png" alt="1557821485474">&lt;/p>
+&lt;p>下载完成后得到一个&lt;code>.xip&lt;/code>压缩文件，双击进行校验，校验完成后会自动解压。解压完成得到&lt;code>Xcode.app&lt;/code>拖进&lt;code>/Applications&lt;/code>中完成安装。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-11">11&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>再次执行编译命令
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make -C ./1_Utilities/deviceQuery
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>然后会显示
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Agreeing to the Xcode/iOS licese requires admin privileges, please run &lt;span style="color:#4070a0">`&lt;/span>sudo xcodebuild -license &lt;span style="color:#4070a0">`&lt;/span> and &lt;span style="color:#007020;font-weight:bold">then&lt;/span> retry this &lt;span style="color:#007020">command&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>然后执行
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo xcodebuild -license
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>按回车
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>按space直到最后然后输入 agree
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>再次执行编译命令,报错
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nvcc fatal : The version &lt;span style="color:#666">(&lt;/span>&lt;span style="color:#4070a0">&amp;#39;10.0&amp;#39;&lt;/span>&lt;span style="color:#666">)&lt;/span> of the host compiler &lt;span style="color:#666">(&lt;/span>&lt;span style="color:#4070a0">&amp;#39;Apple clang&amp;#39;&lt;/span>&lt;span style="color:#666">)&lt;/span> is not supported
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;hr>
+&lt;p>网上找到&lt;a href="https://www.twblogs.net/a/5c1f8fedbd9eee16b3daa981/">解决方案&lt;/a>，此错误是&lt;code>Xcode Command Line&lt;/code>版本太高了，需要切换为低版本的。&lt;/p>
+&lt;p>下载安装&lt;code>Command Line Tools macOS 10.13 for Xcode9.2&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1">1&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo xcode-select --switch /Library/Developer/CommandLineTools
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/00.png" alt="">&lt;/p>
+&lt;p>如图，编译成功，执行编译完的程序，发现能够正常识别显卡。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/01.png" alt="">&lt;/p>
+&lt;h2 id="cudnn">cudnn&lt;/h2>
+&lt;p>参照教程我也下载了&lt;code>cudnn v7.2.1&lt;/code>下载完成双击解压，然后按照下边过程安装。&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-12">12&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo cp cuda/include/cudnn.h /usr/local/cuda/include/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo cp cuda/lib/libcudnn* /usr/local/cuda/lib/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib/libcudnn*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ vim ~/.zshrc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>写入：export &lt;span style="color:#bb60d5">DYLD_LIBRARY_PATH&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/local/cuda/lib/:&lt;span style="color:#bb60d5">$DYLD_LIBRARY_PATH&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">source&lt;/span> ~/.zshrc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>测试
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> -e &lt;span style="color:#4070a0">&amp;#39;#include &amp;#34;cudnn.h&amp;#34;\n void main(){}&amp;#39;&lt;/span> | &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>nvcc -x -c - -o /dev/null -I/usr/local/cuda/include &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>-L /usr/local/cuda/lib -lcudnn
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/02.png" alt="">&lt;/p>
+&lt;h2 id="测试">测试&lt;/h2>
+&lt;h3 id="cuda">cuda&lt;/h3>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/03.png" alt="">&lt;/p>
+&lt;h3 id="cudnn-1">cudnn&lt;/h3>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/04.png" alt="">&lt;/p>
+&lt;h2 id="pytorch">pytorch&lt;/h2>
+&lt;p>&lt;code>cuda&lt;/code>和&lt;code>cudnn&lt;/code>都安装完了后，安装pytorch。&lt;/p>
+&lt;p>首先按照这篇&lt;a href="http://richard.blog.nctu.edu.tw/pytorch/">&lt;code>blog&lt;/code>&lt;/a>尝试安装&lt;code>pytorch 0.4.0&lt;/code>但是切换到&lt;code>v0.4.0&lt;/code>执行&lt;code>git submodule update init&lt;/code>的时候一直报 错，说找不到仓库。&lt;/p>
+&lt;p>后按照另外一篇&lt;a href="https://oldpan.me/archives/pytorch-build-simple-instruction">&lt;code>blog&lt;/code>&lt;/a>，直接安装&lt;code>pytorch 1.1.0&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git clone --recursive https://github.com/pytorch/pytorch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git submodule update --init --recursive
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python setup.py install
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>安装完成后需要切换出&lt;code>pytorch&lt;/code>的源码目录，再执行&lt;code>python&lt;/code>然后&lt;code>import torch&lt;/code>才有效，不然会报错&lt;code>ModuleNotFoundError: No module named 'torch._C'&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%9C%A8%E9%BB%91%E8%8B%B9%E6%9E%9C%E4%B8%8A%E9%83%A8%E7%BD%B2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/pytorch.png" alt="">&lt;/p></description></item><item><title>Hackintosh</title><link>/post/hackintosh/hackintosh/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/hackintosh/</guid><description>&lt;h1 id="黑苹果安装步骤简记">黑苹果安装步骤简记&lt;/h1>
+&lt;p>最近突然对安装黑苹果系统很感兴趣，就上网找了一些资料来看看，下边简单记录一下我的收获。以下操作都在虚拟机中进行。&lt;a href="/resources/2019415">工具软件在这里&lt;/a>(显示不出来了，可以直接到tonymac.com下载)&lt;/p>
+&lt;p>今天无意间发现&lt;a href="https://www.sqlsec.com/2018/07/hackintosh.html#toc-heading-1">大神们&lt;/a>整理的&lt;a href="https://dev.tencent.com/u/sqlsec/p/Coding_clover/git/tree/1d6efb70475a2a1bf2477a1fa479fbf5baf98281">资源&lt;/a>，然后刚好和我的一台台式机型号匹配，打算有时间的时候操刀试试。&lt;/p>
+&lt;hr>
+&lt;h2 id="目录">目录&lt;/h2>
+&lt;h2 id="toc">{:toc}&lt;/h2>
+&lt;h2 id="1-下载镜像">1. 下载镜像&lt;/h2>
+&lt;p>我在win里边装了一个macos的虚拟机，在app sotre中下载的mojave镜像。不过下载的时候有一个小插曲，我虚拟机装的是10.11.6的，在app store中只能下载22.8MB的一个在线升级工具，最后通过&lt;a href="http://dosdude1.com/mojave/">这个工具&lt;/a>下载到了完整的6G+的镜像。此外其他版本的完整镜像也可以通过&lt;a href="http://dosdude1.com/software.html">这个工具&lt;/a>下载。&lt;/p>
+&lt;h2 id="2-制作启动u盘">2. 制作启动U盘&lt;/h2>
+&lt;p>制作启动U盘有很多中方式，前题是U盘必须转换为GUID格式。&lt;/p>
+&lt;ul>
+&lt;li>windows 下可以使用&lt;a href="https://www.acutesystems.com/scrtm.htm">transmac&lt;/a>软件制作&lt;/li>
+&lt;li>使用镜像中的工具制作&lt;/li>
+&lt;li>使用tonymacx86论坛提供的UniBeats工具制作&lt;/li>
+&lt;/ul>
+&lt;h3 id="格式化u盘">格式化U盘&lt;/h3>
+&lt;p>在虚拟机中新建一个大小为10G的硬盘，插入后MacOS会检测到，然后点击&lt;code>Initialize...&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-02.png" alt="">&lt;/p>
+&lt;p>左边选择好要擦除的硬盘后，点击上方的&lt;code>Erase&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-03.png" alt="">&lt;/p>
+&lt;p>&lt;code>Name&lt;/code>随便写，&lt;code>Format&lt;/code>选择&lt;code>OS X Extended&lt;/code>， 最后一行的&lt;code>Scheme&lt;/code> 一定选&lt;code>GUID&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/initialize-04.png" alt="">&lt;/p>
+&lt;h3 id="方式一使用镜像中的工具制作">方式一：使用镜像中的工具制作&lt;/h3>
+&lt;p>命令如下 :&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo /Applications/Install&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>macOS&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>Mojave.app/Contents/Resources/createinstallmedia &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--volume /Volumes/Mojave /Applications/Install&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>macOS&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>Mojave.app &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--nointeraction
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>其中&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>第一项：&lt;code>/Applications/Install\ macOS\Mojave.app/Contents/Resources/createinstallmedia&lt;/code> 指的是下载好的镜像中的工具的路径；&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>第二项：&lt;code>--volume /Volumes/Mojave&lt;/code> 指定U盘位置&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>第三项：&lt;code>/Applications/Install\ macOS\ Mojave.app&lt;/code> 整个安装包的路径&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>操作步骤如下&lt;/p>
+&lt;ul>
+&lt;li>右键点击下载好的&lt;code>Mojave&lt;/code>镜像，选择&lt;code>Show Package Contents&lt;/code>， 然后找到&lt;code>Contents -&amp;gt; Resources -&amp;gt; createinstallmedia&lt;/code> 文件，直接拖动放入&lt;code>Terminal；&lt;/code>&lt;/li>
+&lt;li>输入&lt;code>--velume /Volumes/you_disk&lt;/code> 可以通过&lt;code>tab&lt;/code>键补全路径名；&lt;/li>
+&lt;li>点击返回按钮，返回到没有打开镜像的地方，拖动镜像放入&lt;code>Terminal&lt;/code>中；&lt;/li>
+&lt;li>输入密码，输入&lt;code>Y&lt;/code>，开始刻录U盘；&lt;/li>
+&lt;li>刻录完成；&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-02.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/cl-done.png" alt="">&lt;/p>
+&lt;p>此种方法刻录的U盘好像不用再用&lt;code>Clover&lt;/code>写入引导，我在虚拟机中测试可以引导，具体情况还得到实体机上测试。&lt;/p>
+&lt;h3 id="方案二windows下使用transmac软件制作-todo">方案二：windows下使用transmac软件制作 &amp;ndash;TODO&lt;/h3>
+&lt;p>&lt;a href="http://www.acutesystems.com/tmac/tmsetup.zip">下载&lt;/a>安装后会在桌面生成快捷方式。右键&lt;strong>以管理员身份&lt;/strong>打开。&lt;/p>
+&lt;p>&lt;a href="http://www.xitongcheng.com/jiaocheng/xtazjc_article_41339.html">教程&lt;/a>&lt;/p>
+&lt;h3 id="方案三使用unibeats工具制作">方案三：使用UniBeats工具制作&lt;/h3>
+&lt;blockquote>
+&lt;p>注：使用的工具都在&lt;code>tonymacx86.com&lt;/code>下载，下载需要登录，注册需要使用国外的邮箱，我使用了gmail。&lt;/p>&lt;/blockquote>
+&lt;p>先在虚拟机中分了一个10G大小的硬盘当做的我U盘，挂载到Mac的虚拟机后格式化为GPT分区格式。&lt;/p>
+&lt;p>然后打开UniBeast工具开始制作。&lt;/p>
+&lt;p>此软件要求系统语言是英文，所以如果系统语言不是英文会要求更改，只需打开&lt;code>系统偏好设置&lt;/code> 然后将英文拖动到第一位，点击重启就好了。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-01.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-02.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-03.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-04.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-05.png" alt="">&lt;/p>
+&lt;p>点击&lt;code>Agree&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-06.png" alt="">&lt;/p>
+&lt;p>选中U盘，我这里前边把U盘命名为&lt;code>boot&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-07.png" alt="">&lt;/p>
+&lt;p>选中要刻录的系统，这里的&lt;code>Mojave&lt;/code>系统要拖动到&lt;code>Application&lt;/code>目录中才能自动识别出来。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-08.png" alt="">&lt;/p>
+&lt;p>选择&lt;code>UEFI&lt;/code>引导模式。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-09.png" alt="">&lt;/p>
+&lt;p>注入显卡驱动&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/UniBeast-10.png" alt="">&lt;/p>
+&lt;p>开始拷贝文件&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/coping-file-to-usb.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/copying-done.png" alt="">&lt;/p>
+&lt;p>制作完成后桌面会多出来一个EFI分区。&lt;/p>
+&lt;h3 id="写入clover引导">写入Clover引导&lt;/h3>
+&lt;p>打开&lt;code>Clover&lt;/code>开始写入引导。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-0.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-1.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-2.png" alt="">&lt;/p>
+&lt;p>这里要选择&lt;code>Change Install Location...&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-3.png" alt="">&lt;/p>
+&lt;p>选择&lt;code>Install ...&lt;/code> 这个是写入镜像后的U盘，名字变了可以通过分区大小区分。然后点击&lt;code>Continue&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-4.png" alt="">&lt;/p>
+&lt;p>点击&lt;code>Customize&lt;/code> 进入配置页面，选择一些必要的驱动，点击&lt;code>Install&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-5.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-6.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-7.png" alt="">&lt;/p>
+&lt;p>关闭虚拟机，在虚拟机重启时进入BIOS,选择做好的U盘引导系统。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-boot.png" alt="">&lt;/p>
+&lt;h2 id="3-配置clover">3. 配置Clover&lt;/h2>
+&lt;p>使用前边制作好的U盘就可以插入电脑从U盘启动了，接下来进入安装黑苹果最难的部分：配置Clover驱动。&lt;/p>
+&lt;p>使用&lt;code>Clover Configure&lt;/code>软件进行配置。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-1.png" alt="">&lt;/p>
+&lt;p>打开软件后，在左边找到&lt;code>Mount EFI&lt;/code> 左下会出现可以挂载的&lt;code>EFI&lt;/code>分区。点击&lt;code>Mount Partition -&amp;gt; Open Parition&lt;/code>。如下图，选择&lt;code>EFI -&amp;gt; CLOVER -&amp;gt; config.plist&lt;/code> 双击打开。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-2.png" alt="">&lt;/p>
+&lt;p>然后就进入了下边的配置界面。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/hackintosh/clover-config-3.png" alt="">&lt;/p>
+&lt;p>后边的内容需要在实体机上根据具体的硬件信息进行配置，暂时不看。&lt;/p>
+&lt;h2 id="4-安装系统">4. 安装系统&lt;/h2>
+&lt;h2 id="5-进入系统解决驱动问题">5. 进入系统解决驱动问题&lt;/h2>
+&lt;h2 id="6-将clover引导写入硬盘">6. 将Clover引导写入硬盘&lt;/h2></description></item><item><title>制作dmg格式的苹果镜像</title><link>/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/</guid><description>&lt;h1 id="制作dmg格式的苹果镜像">制作dmg格式的苹果镜像&lt;/h1>
+&lt;p>思路：创建一个dmg镜像，将macos的内容写入dmg，然后将dmg转换为压缩镜像。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557368406153.png" alt="下载好的镜像长这个样子">&lt;/p>
+&lt;p>但是直接拷贝到其他系统中就是一个文件夹。&lt;/p>
+&lt;p>开始制作&lt;/p>
+&lt;p>一、 创建一个镜像文件&lt;/p>
+&lt;p>将&lt;code>Install macOS High Sierra.app&lt;/code>内容复制到桌面的&lt;code>High Sierra&lt;/code>文件夹;&lt;/p>
+&lt;p>然后打开&lt;code>Disk Utility&lt;/code>工具，选择&lt;code>File -&amp;gt; New Image -&amp;gt; Image from Folder&lt;/code>;&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557368499763.png" alt="disk utility">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557369926752.png" alt="1557369926752">&lt;/p>
+&lt;p>点击桌面上刚才创建的&lt;code>High Sierra&lt;/code>文件夹，选择下边的&lt;code>Choose&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557369997216.png" alt="1557369997216">&lt;/p>
+&lt;p>保存路径选为桌面，镜像格式选择为&lt;code>read/write&lt;/code>，最后选择&lt;code>save&lt;/code>,几分钟后会在桌面生成一个&lt;code>High Sierra.dmg&lt;/code>的镜像文件。&lt;/p>
+&lt;p>二、 写入镜像内容&lt;/p>
+&lt;p>此部分和制作&lt;code>U&lt;/code>盘镜像的方法一样。&lt;/p>
+&lt;p>首先双击刚才生成的&lt;code>High Sierra.dmg&lt;/code>，会在桌面出现&lt;code>High Sierra&lt;/code>挂载点。&lt;/p>
+&lt;p>打开终端，输入命令&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4">4&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo ~/Desktop/Install&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>macOS&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>High&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>Sierra.app/Contents/Resources/createinstallmedia &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--volume /Volumes/High&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>Sierra &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--applicationpath ~/Desktop/Install&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>macOS&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>High&lt;span style="color:#4070a0;font-weight:bold">\ &lt;/span>Sierra.app &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--nointeraction
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557370690039.png" alt="1557370690039">&lt;/p>
+&lt;p>&lt;code>createinstallmedia&lt;/code>命令的参数列表如下, 个人猜测后边的&lt;code>--applicationpath&lt;/code> 和&lt;code> --nointeraction&lt;/code>参数不加也无所谓&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557370535005.png" alt="1557370535005">&lt;/p>
+&lt;p>命令执行完成后发现，桌面上的卷标从&lt;code>High Sierra&lt;/code> 变为了&lt;code>Install macOS High Sierra&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557370943284.png" alt="1557370943284">&lt;/p>
+&lt;p>推出刚才创建的&lt;code>Install macOS High Sierra&lt;/code>卷，删除桌面上最开始创建的文件夹&lt;code>High Sierra&lt;/code>。&lt;/p>
+&lt;p>三、转换镜像格式&lt;/p>
+&lt;p>打开刚才用到的&lt;code>Disk Utility&lt;/code>工具，点击&lt;code>Images-&amp;gt;Convert&lt;/code>,选择桌面的&lt;code>High Sierra.dmg&lt;/code>,按照如下图的参数，点击&lt;code>Convert&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557372185549.png" alt="1557372185549">&lt;/p>
+&lt;p>四、验证&lt;/p>
+&lt;p>双击创建好的&lt;code>macOS High Sierra.dmg&lt;/code>验证完毕后打开如下窗口。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%88%B6%E4%BD%9Cdmg%E6%A0%BC%E5%BC%8F%E7%9A%84%E8%8B%B9%E6%9E%9C%E9%95%9C%E5%83%8F/1557372584098.png" alt="1557372584098">&lt;/p>
+&lt;p>搞定。&lt;/p></description></item><item><title>尝试安装黑苹果系统</title><link>/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/</guid><description>&lt;h1 id="尝试吃苹果">尝试吃苹果&lt;/h1>
+&lt;h2 id="系统配置">系统配置&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>CPU&lt;/th>
+&lt;th>i7 7700k&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>GPU&lt;/td>
+&lt;td>GTX 1050 Ti&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>主板&lt;/td>
+&lt;td>ASUS PRIME Z270-P&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>声卡&lt;/td>
+&lt;td>瑞昱 ALC887&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>网卡&lt;/td>
+&lt;td>瑞昱 RTL8186/8111/8112&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>具体请看鲁大师检测结果(原谅手机的渣像素)&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/LuDashi.jpg" alt="LuDashi">&lt;/p>
+&lt;p>BIOS先恢复默认，然后设置成下边样子。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/BIOS-config.jpg" alt="">&lt;/p>
+&lt;h1 id="u盘启动">U盘启动&lt;/h1>
+&lt;p>本来在虚拟机中装了一个macOS系统，想着使用&lt;code>tonymacx86&lt;/code>网站提供的&lt;code>UniBeast&lt;/code>软件写盘的，但是发现&lt;code>UniBeast&lt;/code>在虚拟机中使用时不能写U盘。&lt;/p>
+&lt;p>后使用命令的方式将&lt;code>mac High Sierra.dmg&lt;/code>镜像写入了U盘。&lt;/p>
+&lt;p>插入电脑进入&lt;code>BIOS&lt;/code>设置从U盘启动，发现U盘没有引导程序，使用windows下的&lt;code>Transmac&lt;/code>软件或者使用镜像中提供的工具写的U盘都额外需要使用&lt;code>Clover&lt;/code>手动创建引导。创建引导的时候只需要写成&lt;code>EFI&lt;/code>方式就好，其他的无所谓，因为后边还要修改参数。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Clover.png" alt="Clover">&lt;/p>
+&lt;p>刚开始从网上找了一个和自己配置一样的&lt;code>EFI&lt;/code>文件想着偷下懒，直接拖进U盘的&lt;code>EFI&lt;/code>分区，后来发现启动不了，最后按照&lt;a href="https://www.bilibili.com/video/av8653761?from=search&amp;amp;seid=87555593627717333">B站 爱折腾 前辈&lt;/a>的建议，删掉所有东西&lt;code>遇到问题再添&lt;/code>的思路，删掉了&lt;code>EFI/CLOVER/kexts&lt;/code>目录下的所有东西，只留了一个&lt;code>EFI/CLOVER/kexts/Other/FakeSMC.kext&lt;/code>。并且用&lt;code>Clover Configurator&lt;/code>打开&lt;code>EFI/CLOVER/config.plist&lt;/code>取消&lt;code>ACPI&lt;/code>设置中的所有&lt;code>Fixes&lt;/code>，并删掉了补丁栏目中的所有东西。再次插入U盘重启，打开&lt;code>-v&lt;/code>参数，看到了下边的错误。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/error.jpg" alt="error">&lt;/p>
+&lt;p>网上搜了一番后说是需要在&lt;code>引导参数&lt;/code>中添加&lt;code>-disablegfxfirmware&lt;/code>参数，终于进入U盘引导。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/fix-error.png" alt="fix-error">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/machine-select.png" alt="">&lt;/p>
+&lt;h1 id="格盘装系统">格盘装系统&lt;/h1>
+&lt;p>这部分也纠结了一番，本来win-ubuntu的双系统硬盘还有一百多个G的空余，就想把macos安装在这一百多个G的空间，但是&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/mopan-error.jpg" alt="">&lt;/p>
+&lt;p>后来，又搜索一番后，在这个磁盘的头部分配了一个500MB大小的&lt;code>EFI&lt;/code>分区，才抹盘成功。&lt;/p>
+&lt;h1 id="装驱动">装驱动&lt;/h1>
+&lt;h2 id="网卡驱动">网卡驱动&lt;/h2>
+&lt;p>网卡驱动比较好弄，直接用&lt;code>MultiBeast&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Network.png" alt="">&lt;/p>
+&lt;p>重启后就可以在&lt;code>关于本机-&amp;gt;系统报告-&amp;gt;网络&lt;/code>部分看到。&lt;img src="images/20190513/Network-1.png" alt="">&lt;/p>
+&lt;p>这里还有一点，BIOS中要开启网络堆栈，不然的话进入系统后，能看到网卡，但是&lt;code>系统偏好设置-&amp;gt;网络&lt;/code>部分一直显示&amp;rsquo;未连接&amp;rsquo;或者&amp;rsquo;电缆拔出'&lt;/p>
+&lt;h2 id="显卡驱动">显卡驱动&lt;/h2>
+&lt;p>在&lt;a href="https://www.tonymacx86.com/nvidia-drivers/">tonymacx86/Download/Nvidia Driver&lt;/a>下载&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/NvidisDriver.png" alt="">点最右边的图标是下载。&lt;/p>
+&lt;h2 id="声卡驱动">声卡驱动&lt;/h2>
+&lt;p>首先使用AppleHDA Patcher软件&lt;code>show Jarvis&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-0.png" alt="">&lt;/p>
+&lt;p>发现声卡未识别，显示&lt;code>Found &amp;quot;Device(HDAS)&amp;quot; in DSDT.aml, you should rename it as &amp;quot;Device(HDEF)&amp;quot; for a working audio&lt;/code>&lt;/p>
+&lt;p>打开&lt;code>Clover Configurator&lt;/code> 挂载&lt;code>EFI&lt;/code>分区，用&lt;code>Clover Configurator&lt;/code>打开&lt;code>EFI/CLOVER/config.plist&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-1.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-2.png" alt="">&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-3.png" alt="">&lt;/p>
+&lt;p>设置有效，但是仍然未识别出来声卡型号。&lt;/p>
+&lt;p>尝试使用万能声卡。&lt;/p>
+&lt;p>到&lt;a href="https://sourceforge.net/projects/voodoohda/">sourceforge.net&lt;/a>上搜索&lt;code>VoodooHDA&lt;/code>,下载，拖到&lt;code>EFI/CLOVER/kexts/Other&lt;/code>&lt;/p>
+&lt;p>重启后在&lt;code>关于本机-&amp;gt;系统报告-&amp;gt; 音频&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-4.png" alt="">&lt;/p>
+&lt;p>&lt;code>系统偏好设置 -&amp;gt; 声音 -&amp;gt; 输出&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-5.png" alt="">&lt;/p>
+&lt;p>均能看到音频设备。&lt;/p>
+&lt;p>再次打开&lt;code>AppleHDA Patcher&lt;/code>&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-6.png" alt="">&lt;/p>
+&lt;p>好像识别的是&lt;code>HDMI&lt;/code>&lt;/p>
+&lt;p>下载安装网易云音乐随便放一首音乐，可以正常播放。&lt;/p>
+&lt;p>&lt;code>系统偏好设置 -&amp;gt; 声音 -&amp;gt; 输出&lt;/code>下边的&lt;code>[]在菜单栏中显示音量&lt;/code>勾选后就可以点击屏幕的右上角喇叭状图标调节音量，并选择输出设备。&lt;/p>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/Audio-7.png" alt="">&lt;/p>
+&lt;h2 id="usb-30">USB 3.0&lt;/h2>
+&lt;p>USB3.0口无效，只能用来充电，即使是USB3.0的U盘也只能在USB2.0的口上被识别出来。&lt;/p>
+&lt;p>打开&lt;code>Clover Configuator&lt;/code>挂载&lt;code>EFI&lt;/code>分区，打开&lt;code>EFI/CLOVER/config.plist&lt;/code>。&lt;/p>
+&lt;p>然后转到&lt;code>内核和驱动补丁&lt;/code>选项，&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>key&lt;/th>
+&lt;th>value&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>名称&lt;/td>
+&lt;td>com.apple.driver.usb.AppleUSBXHCI&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>查找&lt;/td>
+&lt;td>837D880F 0F83A704 0000&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>替换&lt;/td>
+&lt;td>837D880F 90909090 9090&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>注释&lt;/td>
+&lt;td>随便写&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;img src="/post/hackintosh/%E5%B0%9D%E8%AF%95%E5%AE%89%E8%A3%85%E9%BB%91%E8%8B%B9%E6%9E%9C/usb3.0.png" alt="">&lt;/p>
+&lt;p>此外还要到&lt;a href="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">这个网站&lt;/a>下载&lt;code>USBInjectALL.kext&lt;/code>驱动程序并放入&lt;code>EFI/CLOVER/kexts/Other&lt;/code>目录中，然后重启。&lt;/p>
+&lt;p>重启后打开&lt;code>关于本机-&amp;gt;系统报告-&amp;gt;USB&lt;/code>可以看到速度原本&lt;code>最大480Mb/秒&lt;/code>的U盘现在识别为&lt;code>最大5 Gb/秒&lt;/code>,U盘插入&lt;code>USB 3.0&lt;/code>的插口也能正常识别。&lt;/p>
+&lt;h2 id="todo">TODO&lt;/h2>
+&lt;ol>
+&lt;li>AppleALC原生驱动&lt;/li>
+&lt;li>长时间睡眠唤醒会一直黑屏&lt;/li>
+&lt;/ol>
+&lt;h2 id="工具列表">工具列表&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>名称&lt;/th>
+&lt;th>作用&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Clover&lt;/td>
+&lt;td>引导工具&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Clover Configurator&lt;/td>
+&lt;td>Clover配置工具&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PlistEdit Pro&lt;/td>
+&lt;td>同样是编辑CLOVER/config.plist的工具&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MultiBeast&lt;/td>
+&lt;td>安装驱动以及安装clover到磁盘的EFI分区（有些驱动会安装失败）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Kext Wizard&lt;/td>
+&lt;td>安装驱动到 /L/E，并构建内核驱动列表库&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DPCIManager&lt;/td>
+&lt;td>查看网卡信息&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>IORegistryExplorer&lt;/td>
+&lt;td>查看系统硬件接口信息&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>AppleHDA Patcher&lt;/td>
+&lt;td>注入AppleALC&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></description></item></channel></rss>

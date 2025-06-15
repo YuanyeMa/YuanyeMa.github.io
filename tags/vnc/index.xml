@@ -1,1 +1,109 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vnc on Yuanye Ma's Blog</title><link>/tags/vnc/</link><description>Recent content in Vnc on Yuanye Ma's Blog</description><generator>Hugo</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Wed, 15 May 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/vnc/index.xml" rel="self" type="application/rss+xml"/><item><title>在ubuntu上安装vnc服务</title><link>/post/service/vnc/</link><pubDate>Wed, 15 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/vnc/</guid><description>在ubuntu上安装vnc服务 故事起因 由于需要运行一些桌面程序，但是又没有多余的地方放置显示器以及鼠标键盘balaba乱七八糟的东西，于是就</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vnc on Yuanye Ma's Blog</title><link>/tags/vnc/</link><description>Recent content in Vnc on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Wed, 15 May 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/vnc/index.xml" rel="self" type="application/rss+xml"/><item><title>在ubuntu上安装vnc服务</title><link>/post/service/vnc/</link><pubDate>Wed, 15 May 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/vnc/</guid><description>&lt;h1 id="在ubuntu上安装vnc服务">在ubuntu上安装vnc服务&lt;/h1>
+&lt;h2 id="故事起因">故事起因&lt;/h2>
+&lt;p>由于需要运行一些桌面程序，但是又没有多余的地方放置显示器以及鼠标键盘balaba乱七八糟的东西，于是就想在跑代码的机器上开启共享桌面，然后在自己的座位上用写代码的机器远程桌面连接上去。&lt;/p>
+&lt;h2 id="最初的想法">最初的想法&lt;/h2>
+&lt;p>最初在网上搜索的都是使用系统原生自带的桌面共享实现的。&lt;a href="https://my.oschina.net/michaelshu/blog/3018932">参考&lt;/a>&lt;/p>
+&lt;pre tabindex="0">&lt;code>sudo apt install dconf-editor
+选择 org-&amp;gt;gnome-&amp;gt;desktop-&amp;gt;remote access-&amp;gt;require encrytion 选择OFF
+然后重启桌面共享服务：Settings-&amp;gt; Sharing-&amp;gt; Screen Sharing:设置 允许远程连接，设置密码
+重启ubuntu后在其他电脑上用vncviewer登录 ip:5900 输入密码
+&lt;/code>&lt;/pre>&lt;p>此种方法也能实现远程桌面连接，而且远程桌面和服务器上的桌面环境是同步的，使用的也是原生的GNOME 3环境。&lt;/p>
+&lt;p>但是。。。。&lt;/p>
+&lt;p>此种方法有一个弊端，必须要连上屏幕、键盘、鼠标，手动登录系统后，才能在别的地方连接上。直接冷启动是连不上的。&lt;/p>
+&lt;p>&lt;a href="http://www.cnblogs.com/leaven/archive/2012/03/31/2427240.html">网友&lt;/a>的说法是，vnc和GNOME 3不兼容，Ubuntu系统自带的屏幕共享是Ubuntu自己开发的&lt;code>Vino-Server&lt;/code>，必须要先登录，创建一个&lt;code>session&lt;/code>后才能从远程连接上去。&lt;/p>
+&lt;p>果断放弃这种方式。&lt;/p>
+&lt;h2 id="最终解决方案">最终解决方案&lt;/h2>
+&lt;p>&lt;a href="https://www.htcp.net/2524.html">参照&lt;/a>&lt;/p>
+&lt;h3 id="安装所需环境">安装所需环境&lt;/h3>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install vnc4server
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install --no-install-recommends ubuntu-desktop gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal -y
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="配置">配置&lt;/h3>
+&lt;p>先用命令&lt;code>vncserver :1&lt;/code>使其自动创建配置文件&lt;code>~/.vnc/xstartup&lt;/code>， 然后使用命令&lt;code>vncserver -kill :1&lt;/code>断开连接。&lt;/p>
+&lt;p>然后打开配置文件&lt;code>~/.vnc/xstartup&lt;/code>在&lt;code>x-window-manger &amp;amp;&lt;/code>后边添加下边内容&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6">6&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>gnome-session &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gnome-panel &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gnome-settings-daemon &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>metacity &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nautilus &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dbus-launch gnome-terminal &amp;amp; &lt;span style="color:#60a0b0;font-style:italic"># 这一项是为了解决连接后无法打开terminal的问题&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>可以在&lt;code>~/.vnc/xxx.log&lt;/code>中查看&lt;code>vncserver&lt;/code>的运行信息。&lt;/p>
+&lt;blockquote>
+&lt;p>我当时先是连接上后无法打开terminal后，查看log显示下边的报错信息。然后参照&lt;a href="https://blog.csdn.net/ztguang/article/details/70572872">这篇blog&lt;/a>输入了上边那条命令 ： dbus-launch gnome-terminal &amp;amp;&lt;/p>
+&lt;p>Error constructing proxy for org.gnome.Terminal:/org/gnome/Terminal/Factory0: 为 org.gnome.Terminal 调用 StartServiceByName 出错：已到超时限制&lt;/p>&lt;/blockquote>
+&lt;p>完整的&lt;code>xstartup&lt;/code>文件内容如下&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14">14&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15">15&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16">16&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17">17&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-18">18&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#!/bin/sh
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># Uncomment the following two lines for normal desktop:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># unset SESSION_MANAGER&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># exec /etc/X11/xinit/xinitrc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span> -x /etc/vnc/xstartup &lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#007020">exec&lt;/span> /etc/vnc/xstartup
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span> -r &lt;span style="color:#bb60d5">$HOME&lt;/span>/.Xresources &lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> xrdb &lt;span style="color:#bb60d5">$HOME&lt;/span>/.Xresources
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>xsetroot -solid grey
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vncconfig -iconic &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>x-terminal-emulator -geometry 80x24+10+10 -ls -title &lt;span style="color:#4070a0">&amp;#34;&lt;/span>&lt;span style="color:#bb60d5">$VNCDESKTOP&lt;/span>&lt;span style="color:#4070a0"> Desktop&amp;#34;&lt;/span> &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>x-window-manager &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gnome-session &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gnome-panel &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gnome-settings-daemon &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>metacity &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nautilus &amp;amp;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dbus-launch gnome-terminal &amp;amp;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="修改系统的默认启动环境">修改系统的默认启动环境&lt;/h3>
+&lt;p>既然要将机器放到角落里去吃灰，当然要关闭桌面环境了。&lt;/p>
+&lt;p>&lt;code>Ubuntu 18.04&lt;/code>和别的&lt;code>Linux&lt;/code>系统不同，修改默认启动环境要使用下边命令&lt;/p>
+&lt;pre tabindex="0">&lt;code>默认以字符界面启动：
+sudo systemctl set-default multi-user.targe
+在字体界面系统桌面环境：
+sudo systemctl start lightdm
+默认以图形界面方式启动：
+sudo systemctl set-default graphical.target
+&lt;/code>&lt;/pre>&lt;h3 id="最终效果">最终效果&lt;/h3>
+&lt;p>&lt;img src="/post/service/vnc/final.png" alt="">&lt;/p>
+&lt;p>启动训练代码，然后关闭窗口，随时重新连接查看运行结果。美滋滋。。。。&lt;/p></description></item></channel></rss>

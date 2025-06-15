@@ -1,1 +1,59 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Uboot on Yuanye Ma's Blog</title><link>/tags/uboot/</link><description>Recent content in Uboot on Yuanye Ma's Blog</description><generator>Hugo</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Wed, 07 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/tags/uboot/index.xml" rel="self" type="application/rss+xml"/><item><title>uboot</title><link>/post/embeeding/uboot/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/embeeding/uboot/</guid><description>uboot make xxx_defconfig Top Makefile : %config 依赖 scripts_basic $(Q)$(MAKE) $(build)=scripts/basic $(build) 定义在 scripts/Kbuild.include中 build := -f $(srctree)/scripts/Makefile.build obj 即 命令展开为 @ make -f $(srctree)/scripts/Makefile.build obj=scripts/basic 编译生成了 scripts/basic/fixdep outputmakefile FORCE 命令 $(Q)$(MAKE) $(build)=scripts/kconfig $@ 展开</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Uboot on Yuanye Ma's Blog</title><link>/tags/uboot/</link><description>Recent content in Uboot on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/tags/uboot/index.xml" rel="self" type="application/rss+xml"/><item><title>uboot</title><link>/post/embeeding/uboot/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/embeeding/uboot/</guid><description>&lt;h1 id="uboot">uboot&lt;/h1>
+&lt;h2 id="make-xxx_defconfig">make xxx_defconfig&lt;/h2>
+&lt;h3 id="top-makefile--config">Top Makefile : %config&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>依赖&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>scripts_basic&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>$(Q)$(MAKE) $(build)=scripts/basic&lt;/p>
+&lt;blockquote>
+&lt;p>$(build) 定义在 scripts/Kbuild.include中&lt;/p>
+&lt;p>build := -f $(srctree)/scripts/Makefile.build obj&lt;/p>
+&lt;p>即 命令展开为 @ make -f $(srctree)/scripts/Makefile.build obj=scripts/basic&lt;/p>
+&lt;p>编译生成了 scripts/basic/fixdep&lt;/p>&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>outputmakefile&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>FORCE&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>命令&lt;/p>
+&lt;ul>
+&lt;li>$(Q)$(MAKE) $(build)=scripts/kconfig $@
+展开为 @ make -f $(srctree)/scripts/Makefile.build obj=scripts/kconfig xxx_defconfig&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>src = scripts/kconf&lt;/p>
+&lt;p>kbuild-dir = scripts/kconf&lt;/p>
+&lt;p>kbuild-file = scripts/kconf/Makefile&lt;/p>
+&lt;p>include scripts/kconf/Makefile # xxx_defconfig 目标定义在这个文件中&lt;/p>
+&lt;p>%_defconfig: $(obj)/conf &lt;br>
+$(Q)$&amp;lt; $(silent) &amp;ndash;defconfig=arch/$(SRCARCH)/configs/$@ $(Kconfig)&lt;/p>
+&lt;p>$&amp;lt;表示第一个依赖文件， $^ 表示所有依赖文件， $@ 表示目标&lt;/p>
+&lt;p>即展开为 @scripts/kconfig/conf -s &amp;ndash;defconfig=arch/$(SRCARCH)/configs/xxx_defconfig $(Kconfig)&lt;/p>
+&lt;p>通过&lt;a href="https://blog.csdn.net/guyongqiangx/article/details/52679635">对conf源码的分析&lt;/a>，大概知道conf程序用于维护 .config ，&lt;/p>
+&lt;ul>
+&lt;li>如果传入了&amp;ndash;defconfig参数就读取 Kconfig文件生成 .config文件&lt;/li>
+&lt;li>如果传入了 &amp;ndash;silentoldconfig （在make 整个u-boot时）则生成以下文件
+&lt;ul>
+&lt;li>&lt;code>include/generated/autoconf.h&lt;/code> 是C语言头文件，主要影响C语言编译过程。&lt;/li>
+&lt;li>&lt;code>include/config/auto.conf.cmd&lt;/code>&lt;/li>
+&lt;li>&lt;code>include/config/tristate.conf&lt;/code>&lt;/li>
+&lt;li>&lt;code>include/config/auto.conf&lt;/code> 被顶层Makefile包含，影响编译过程。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="make">make&lt;/h2>
+&lt;p>&lt;img src="/post/embeeding/uboot/uboot-make.png" alt="uboot-make">&lt;/p></description></item></channel></rss>
