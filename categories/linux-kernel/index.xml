@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux Kernel on Yuanye Ma's Blog</title><link>/categories/linux-kernel/</link><description>Recent content in Linux Kernel on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 01 Nov 2020 16:01:23 +0800</lastBuildDate><atom:link href="/categories/linux-kernel/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核内存管理</title><link>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link><pubDate>Fri, 30 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid><description>&lt;h1 id="linux-内核内存管理">Linux 内核内存管理&lt;/h1>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux Kernel on Yuanye Ma's Blog</title><link>/categories/linux-kernel/</link><description>Recent content in Linux Kernel on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sun, 22 Jun 2025 10:50:18 +0800</lastBuildDate><atom:link href="/categories/linux-kernel/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核内存管理</title><link>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</link><pubDate>Fri, 30 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</guid><description>&lt;h1 id="linux-内核内存管理">Linux 内核内存管理&lt;/h1>
 &lt;p>[toc]&lt;/p>
 &lt;p>越整理发现知识越多，分页机制、伙伴算法、slab等任何一块单独拿出来都有很多东西，因此本文先粗略的统揽全貌，有时间再针对每个部分，逐个深入，单独分析梳理成文章。&lt;/p>
 &lt;h2 id="内存寻址的基本框架">内存寻址的基本框架&lt;/h2>
@@ -15803,4 +15803,158 @@ the options specified using the non-subdir variants.
 &lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mount -o loop -t iso9660 /usr/local/tooldisk/mydisk4.iso /mnt/vcdrom
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div></description></item></channel></rss>
+&lt;/div></description></item><item><title>第一次尝试向Linux Kernel提交Patch</title><link>/post/os/linux-kernel/kernel-patch1/</link><pubDate>Sun, 22 Jun 2025 10:50:18 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/kernel-patch1/</guid><description>&lt;h1 id="第一次提交内核patch尝试">第一次提交内核patch尝试&lt;/h1>
+&lt;p>虽然很早就对linux kernel的开发流程比较熟悉了，但是一直没有尝试过向内核社区贡献 patch , 最近看到一个内核开发者写的&lt;a href="https://www.linkedin.com/newsletters/a-kernel-developer%E2%80%99s-notes-7335172980781568000/">A Kernel Developer`s Notes&lt;/a>专栏文章，介绍了自己对内核理解、跟踪学习内核 patch 流程，以及复现内核 bug 、提交 patch 的流程等等，写的很好，很有可操作性。因此也想跟着学习一番。&lt;br>
+本文是阅读以下文章后的尝试：
+&lt;a href="https://www.linkedin.com/pulse/fixing-one-line-learning-whole-process-moon-hee-lee-uu0cc/?trackingId=wxTo5KYjT5KhL8zO9ZXqIw%3D%3D">https://www.linkedin.com/pulse/fixing-one-line-learning-whole-process-moon-hee-lee-uu0cc/?trackingId=wxTo5KYjT5KhL8zO9ZXqIw%3D%3D&lt;/a>&lt;/p>
+&lt;h2 id="准备内核">准备内核&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6">6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7">7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8">8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9">9&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt install git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> linux/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install make llvm lld clang flex bison libssl-dev &lt;span style="color:#60a0b0;font-style:italic"># 编译的时候缺什么就装什么&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &lt;span style="color:#bb60d5">O&lt;/span>&lt;span style="color:#666">=&lt;/span>llvm-build &lt;span style="color:#bb60d5">LLVM&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span> defconfig
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make &lt;span style="color:#bb60d5">O&lt;/span>&lt;span style="color:#666">=&lt;/span>llvm-build &lt;span style="color:#bb60d5">LLVM&lt;/span>&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span> -j&lt;span style="color:#007020;font-weight:bold">$(&lt;/span>nproc&lt;span style="color:#007020;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="准备patch">准备patch&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12">12&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>make htmldocs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 会提醒缺少依赖，全部安装一下&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt-get install imagemagick graphviz dvipng python3-venv gcc latexmk librsvg2-bin texlive-lang-chinese texlive-xetex python3-sphinx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 会发现有很多报错，也可以研究一下，fix掉，提patch&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install codespell
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>find Documentation/ -path Documentation/translations -prune -o -name &lt;span style="color:#4070a0">&amp;#39;*.rst&amp;#39;&lt;/span> -print | xargs codespell
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 会发现有很多报错，可以尝试找几个简单的尝试修复一下 &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git commit -s
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git format-patch -1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scripts/checkpatch.pl ./0001-docs-f2fs-fix-typos-in-f2fs.rst.patch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="生成gmail的应用专用密码">生成gmail的应用专用密码&lt;/h2>
+&lt;p>Google账号→ 安全性 → 您的账号登录选项 → 两部验证 → 应用专用密码 → 输入应用名字后点创建 → 保存好密码后点完成&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/kernel-patch1/image.png" alt="image.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/kernel-patch1/image-1.png" alt="image.png">&lt;/p>
+&lt;p>&lt;img src="/post/os/linux-kernel/kernel-patch1/image-2.png" alt="image.png">&lt;/p>
+&lt;h2 id="设置git-email的smtp服务">设置git-email的smtp服务&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"> 1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"> 2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"> 3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"> 4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"> 5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6"> 6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7"> 7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-8"> 8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-9"> 9&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-10">10&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-11">11&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-12">12&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-13">13&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-14">14&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt install git-email
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim ~/.gitconfig
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>user&lt;span style="color:#666">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">email&lt;/span> &lt;span style="color:#666">=&lt;/span> xxxx@gmail.com
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">name&lt;/span> &lt;span style="color:#666">=&lt;/span> xxxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>core&lt;span style="color:#666">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">editor&lt;/span> &lt;span style="color:#666">=&lt;/span> vim
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>sendemail&lt;span style="color:#666">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">smtpserver&lt;/span> &lt;span style="color:#666">=&lt;/span> smtp.gmail.com
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">smtpserverport&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">587&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">smtpencryption&lt;/span> &lt;span style="color:#666">=&lt;/span> tls
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">smtpuser&lt;/span> &lt;span style="color:#666">=&lt;/span> xxxx@gmail.com
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">smtpPass&lt;/span> &lt;span style="color:#666">=&lt;/span> passwd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>端口号在&lt;a href="https://support.google.com/mail/answer/7104828?hl=zh-Hans&amp;amp;sjid=11981818515342586304-NC">https://support.google.com/mail/answer/7104828?hl=zh-Hans&amp;amp;sjid=11981818515342586304-NC&lt;/a>&lt;/p>
+&lt;h2 id="发送patch">发送patch&lt;/h2>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2">2&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查找收件人&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./scripts/get_maintainer.pl xxxxx.patch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="/post/os/linux-kernel/kernel-patch1/image-4.png" alt="image.png">&lt;/p>
+&lt;p>这么多收件人，哪些应该是 &lt;code>--to&lt;/code> 哪些应该是 &lt;code>--cc&lt;/code> ？ 看看 &lt;code>ChatGPT&lt;/code> 怎么说：
+&lt;img src="/post/os/linux-kernel/kernel-patch1/image-5.png" alt="image.png">&lt;/p>
+&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7">7&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8">8&lt;/a>
+&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9">9&lt;/a>
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 发送patch &lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git send-email &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--to&lt;span style="color:#666">=&lt;/span>jaegeuk@kernel.org &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--to&lt;span style="color:#666">=&lt;/span>chao@kernel.org &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--to&lt;span style="color:#666">=&lt;/span>linux-f2fs-devel@lists.sourceforge.net &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--cc&lt;span style="color:#666">=&lt;/span>corbet@lwn.net &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--cc&lt;span style="color:#666">=&lt;/span>linux-doc@vger.kernel.org &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>--cc&lt;span style="color:#666">=&lt;/span>linux-kernel@vger.kernel.org &lt;span style="color:#4070a0;font-weight:bold">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>0001-docs-f2fs-fix-typos-in-f2fs.rst.patch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="/post/os/linux-kernel/kernel-patch1/image-6.png" alt="image.png">&lt;/p>
+&lt;blockquote>
+&lt;p>记得 &lt;code>--cc=xxxx@gmail.com&lt;/code> 抄送自己的邮箱&lt;/p>&lt;/blockquote>
+&lt;p>Kernel Mail List : &lt;a href="https://lore.kernel.org/all/20250618225546.104949-1-yuanye.ma20@gmail.com/T/#t">https://lore.kernel.org/all/20250618225546.104949-1-yuanye.ma20@gmail.com/T/#t&lt;/a>&lt;/p>
+&lt;h2 id="patch被接受">patch被接受&lt;/h2>
+&lt;p>过了两天，收到了 &lt;code>patch&lt;/code> 被接受的邮件：
+&lt;img src="/post/os/linux-kernel/kernel-patch1/image-7.png" alt="image.png">&lt;/p>
+&lt;p>&lt;a href="https://lore.kernel.org/all/877c14dfa5.fsf@trenco.lwn.net/">https://lore.kernel.org/all/877c14dfa5.fsf@trenco.lwn.net/&lt;/a>&lt;/p>
+&lt;h2 id="patch-被合入上游仓库">patch 被合入上游仓库&lt;/h2>
+&lt;p>还需要等待patch进入上游仓库。&lt;/p>
+&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>整个过程并不复杂，重要的是要去做，只有做了才知道哪里理解的不到位，才能进一步去改进。&lt;/p>
+&lt;p>此外，patch 的 commitmsg 很重要，patch 并不只是提交代码，更重要的是和社区的其他开发者们交流/协作，因此要认真对待，不仅要写清楚“改了什么”，更要说明“为什么改”，以及“怎么发现的”。&lt;/p>
+&lt;blockquote>
+&lt;p>补丁不仅仅是一个改动，它是一份贡献 —— 而它必须是自洽、独立成立的。这也包括说明问题是如何被发现的，以及为什么这个修复是合理的。尤其是对于新贡献者来说，这比 diff 的大小更重要。这不仅仅是“提交补丁”，更是在帮助他人理解这个改动为什么正确。&lt;br>
+一个合格的 commit message 不只是描述“改了什么”，更要说明“为什么改”，以及“怎么发现的”。&lt;/p>&lt;/blockquote></description></item></channel></rss>
