@@ -4565,7 +4565,9 @@ the options specified using the non-subdir variants.
 &lt;img src="/post/os/linux-kernel/kernel-patch1/image-7.png" alt="image.png">&lt;/p>
 &lt;p>&lt;a href="https://lore.kernel.org/all/877c14dfa5.fsf@trenco.lwn.net/">https://lore.kernel.org/all/877c14dfa5.fsf@trenco.lwn.net/&lt;/a>&lt;/p>
 &lt;h2 id="patch-被合入上游仓库">patch 被合入上游仓库&lt;/h2>
-&lt;p>还需要等待patch进入上游仓库。&lt;/p>
+&lt;p>patch先被合入了&lt;code>next tree&lt;/code> : &lt;a href="https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=0242b8b0cc89599b3e4162add672179ce2dd4131">https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=0242b8b0cc89599b3e4162add672179ce2dd4131&lt;/a>
+&lt;img src="/post/os/linux-kernel/kernel-patch1/linux-next.png" alt="linux-next">
+还需要等待patch进入上游仓库。&lt;/p>
 &lt;h2 id="总结">总结&lt;/h2>
 &lt;p>整个过程并不复杂，重要的是要去做，只有做了才知道哪里理解的不到位，才能进一步去改进。&lt;/p>
 &lt;p>此外，patch 的 commitmsg 很重要，patch 并不只是提交代码，更重要的是和社区的其他开发者们交流/协作，因此要认真对待，不仅要写清楚“改了什么”，更要说明“为什么改”，以及“怎么发现的”。&lt;/p>
