@@ -1,507 +1,508 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shadowsocks on Yuanye Ma's Blog</title><link>/tags/shadowsocks/</link><description>Recent content in Shadowsocks on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/shadowsocks/index.xml" rel="self" type="application/rss+xml"/><item><title>shadowsocks</title><link>/post/service/2019-07-27-breakwall/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2019-07-27-breakwall/</guid><description>&lt;h1 id="docker部署python版本的shadowsocks服务">Docker部署python版本的shadowsocks服务&lt;/h1>
-&lt;h2 id="ubuntu服务端">ubuntu服务端&lt;/h2>
-&lt;ul>
-&lt;li>安装docker&lt;/li>
-&lt;li>使用shadowsocks的docker镜像启动服务&lt;/li>
-&lt;li>更新内核启用Google BBR进行加速&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7">7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8">8&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装docker&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install docker
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install docker.io
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 拉取镜像&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker pull oddrationale/docker-shadowsocks
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 启动container&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>docker run -d -p port:port oddrationale/docker-shadowsocks -s 0.0.0 -p port -k passwd -m aes-256-cfb
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="bbr加速">BBR加速&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-29">29&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-30">30&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-31">31&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-32">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-32">32&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-33">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-33">33&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-34">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-34">34&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-35">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-35">35&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-36">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-36">36&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 下载安装新版本的内核&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.11.4/linux-image-4.11.4-041104-generic_4.11.4-041104.201706071003_amd64.deb
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装新版本内核&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dpkg -i ./linux-image-4.11.4-041104-generic_4.11.4-041104.201706071003_amd64.deb
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查看现在使用的内核版本&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lsmod | grep bbr
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>uname -r
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 更新grub使新版本内核开机自启&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>update-grub
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 卸载多余的软件包&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt autoremove
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 重启系统启用新的内核&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reboot
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查看是否启用了新版本内核，以及是否支持BBR&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lsmod | grep bbr
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>uname -r
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 开启BBR&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>modprobe tcp_bbr
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;tcp_bbr&amp;#34;&lt;/span> &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cat /etc/modules-load.d/modules.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;net.core.default_qdisc=fq&amp;#34;&lt;/span> &amp;gt;&amp;gt;/etc/sysctl.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;net.ipv4.tcp_congestion_control=bbr&amp;#34;&lt;/span> &amp;gt;&amp;gt;/etc/sysctl.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sysctl -p
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查看BBR是否启动&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sysctl net.ipv4.tcp_available_congestion_control
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic"># net.ipv4.tcp_available_congestion_control = bbr cubic reno&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sysctl net.ipv4.tcp_congestion_control
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic"># net.ipv4.tcp_congestion_control = bbr&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sysctl net.core.default_qdisc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic"># net.core.default_qdisc = fq&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>uname -r
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic"># 4.11.4-041104-generic&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lsmod | grep bbr
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic"># tcp_bbr 20480 156&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>此外还有&lt;a href="https://raw.githubusercontent.com/teddysun/across/master/bbr.sh">一键安装BBR的脚本&lt;/a>&lt;/p>
-&lt;p>&lt;a href="https://github.com/google/bbr/blob/master/Documentation/bbr-quick-start.md">https://github.com/google/bbr/blob/master/Documentation/bbr-quick-start.md&lt;/a>&lt;/p>
-&lt;h2 id="centos-7的服务端">CentOS 7的服务端&lt;/h2>
-&lt;p>安装docker&lt;/p>
-&lt;pre tabindex="0">&lt;code>yum update
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shadowsocks on Yuanye Ma's Blog</title><link>/tags/shadowsocks/</link><description>Recent content in Shadowsocks on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/shadowsocks/index.xml" rel="self" type="application/rss+xml"/><item><title>shadowsocks</title><link>/post/service/2019-07-27-breakwall/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2019-07-27-breakwall/</guid><description>&lt;h1 id="docker部署python版本的shadowsocks服务"&gt;Docker部署python版本的shadowsocks服务&lt;/h1&gt;
+&lt;h2 id="ubuntu服务端"&gt;ubuntu服务端&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;安装docker&lt;/li&gt;
+&lt;li&gt;使用shadowsocks的docker镜像启动服务&lt;/li&gt;
+&lt;li&gt;更新内核启用Google BBR进行加速&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"&gt;8&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装docker&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install docker
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install docker.io
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 拉取镜像&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker pull oddrationale/docker-shadowsocks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 启动container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run -d -p port:port oddrationale/docker-shadowsocks -s 0.0.0 -p port -k passwd -m aes-256-cfb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="bbr加速"&gt;BBR加速&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-29"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-29"&gt;29&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-30"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-30"&gt;30&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-31"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-31"&gt;31&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-32"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-32"&gt;32&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-33"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-33"&gt;33&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-34"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-34"&gt;34&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-35"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-35"&gt;35&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-36"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-36"&gt;36&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 下载安装新版本的内核&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget -c http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.11.4/linux-image-4.11.4-041104-generic_4.11.4-041104.201706071003_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装新版本内核&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dpkg -i ./linux-image-4.11.4-041104-generic_4.11.4-041104.201706071003_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 查看现在使用的内核版本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsmod | grep bbr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uname -r
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 更新grub使新版本内核开机自启&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;update-grub
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 卸载多余的软件包&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt autoremove
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 重启系统启用新的内核&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reboot
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 查看是否启用了新版本内核，以及是否支持BBR&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsmod | grep bbr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uname -r
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 开启BBR&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;modprobe tcp_bbr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;tcp_bbr&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; /etc/modules-load.d/modules.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat /etc/modules-load.d/modules.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;net.core.default_qdisc=fq&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt;/etc/sysctl.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;net.ipv4.tcp_congestion_control=bbr&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt;/etc/sysctl.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl -p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 查看BBR是否启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl net.ipv4.tcp_available_congestion_control
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# net.ipv4.tcp_available_congestion_control = bbr cubic reno&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl net.ipv4.tcp_congestion_control
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# net.ipv4.tcp_congestion_control = bbr&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sysctl net.core.default_qdisc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# net.core.default_qdisc = fq&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;uname -r
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# 4.11.4-041104-generic&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;lsmod | grep bbr
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# tcp_bbr 20480 156&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;此外还有&lt;a href="https://raw.githubusercontent.com/teddysun/across/master/bbr.sh"&gt;一键安装BBR的脚本&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/google/bbr/blob/master/Documentation/bbr-quick-start.md"&gt;https://github.com/google/bbr/blob/master/Documentation/bbr-quick-start.md&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="centos-7的服务端"&gt;CentOS 7的服务端&lt;/h2&gt;
+&lt;p&gt;安装docker&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;yum update
 yum install docker
 service docker start
-&lt;/code>&lt;/pre>&lt;p>设置docker自动启动&lt;/p>
-&lt;pre tabindex="0">&lt;code>chkconfig docker on
-&lt;/code>&lt;/pre>&lt;p>使用ncat测试网络是否联通&lt;/p>
-&lt;pre tabindex="0">&lt;code>yum install nmap-ncat -y
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;设置docker自动启动&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;chkconfig docker on
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;使用ncat测试网络是否联通&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;yum install nmap-ncat -y
 ncat -l port
-&lt;/code>&lt;/pre>&lt;p>在本地使用nc命令连接服务器指定port&lt;/p>
-&lt;pre tabindex="0">&lt;code>nc ip port
-&lt;/code>&lt;/pre>&lt;p>然后可以随便输入一下内容，看另外一端是否能正常收发数据。&lt;/p>
-&lt;p>拉取镜像并创建container&lt;/p>
-&lt;pre tabindex="0">&lt;code>docker pull oddrationale/docker-shadowsocks
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在本地使用nc命令连接服务器指定port&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;nc ip port
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后可以随便输入一下内容，看另外一端是否能正常收发数据。&lt;/p&gt;
+&lt;p&gt;拉取镜像并创建container&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;docker pull oddrationale/docker-shadowsocks
 docker run -d -p port:port --name name oddrationale/docker-shadowsocks -s 0.0.0.0 -p port -k passwd -m aes-256-cfb
-&lt;/code>&lt;/pre>&lt;p>查看是否正常监听端口&lt;/p>
-&lt;pre tabindex="0">&lt;code>netstat -nalp | grep port
-&lt;/code>&lt;/pre>&lt;p>设置container随docker自动启动&lt;/p>
-&lt;pre tabindex="0">&lt;code>docker update --restart=always &amp;lt;CONTAINER ID&amp;gt;
-&lt;/code>&lt;/pre>&lt;h3 id="bbr加速-1">BBR加速&lt;/h3>
-&lt;p>升级内核&lt;/p>
-&lt;pre tabindex="0">&lt;code>rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看是否正常监听端口&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;netstat -nalp | grep port
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;设置container随docker自动启动&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;docker update --restart=always &amp;lt;CONTAINER ID&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="bbr加速-1"&gt;BBR加速&lt;/h3&gt;
+&lt;p&gt;升级内核&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
 yum --enablerepo=elrepo-kernel install kernel-ml -y
-&lt;/code>&lt;/pre>&lt;p>设置grub2默认使用新内核启动&lt;/p>
-&lt;pre tabindex="0">&lt;code>egrep ^menuentry /etc/grub2.cfg | cut -f 2 -d \&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;设置grub2默认使用新内核启动&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;egrep ^menuentry /etc/grub2.cfg | cut -f 2 -d \&amp;#39;
 sudo grub2-set-default 0
 reboot
-&lt;/code>&lt;/pre>&lt;p>查看是否使用新内核启动&lt;/p>
-&lt;pre tabindex="0">&lt;code>uname -r
-&lt;/code>&lt;/pre>&lt;p>开启BBR&lt;/p>
-&lt;pre tabindex="0">&lt;code>echo &amp;#39;net.core.default_qdisc=fq&amp;#39; | sudo tee -a /etc/sysctl.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看是否使用新内核启动&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;uname -r
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;开启BBR&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;echo &amp;#39;net.core.default_qdisc=fq&amp;#39; | sudo tee -a /etc/sysctl.conf
 echo &amp;#39;net.ipv4.tcp_congestion_control=bbr&amp;#39; | sudo tee -a /etc/sysctl.conf
 sysctl -p
-&lt;/code>&lt;/pre>&lt;p>查看BBR是否开启&lt;/p>
-&lt;pre tabindex="0">&lt;code>sysctl net.ipv4.tcp_available_congestion_control
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看BBR是否开启&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;sysctl net.ipv4.tcp_available_congestion_control
 # 输出应为 net.ipv4.tcp_available_congestion_control = bbr cubic reno
 sysctl -n net.ipv4.tcp_congestion_control
 # 输出应为 bbr
 lsmod | grep bbr
 # 输出应类似 tcp_bbr 16384 28
-&lt;/code>&lt;/pre>&lt;h2 id="客户端">客户端&lt;/h2>
-&lt;h3 id="sslocal">sslocal&lt;/h3>
-&lt;p>Linux 安装shadowsocks客户端&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-14">14&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 使用python版的shadowsocks&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo apt install python3-pip
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ pip install shadowsocks
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 使用&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo vim /etc/shadowsocks/config.json &lt;span style="color:#60a0b0;font-style:italic"># 创建配置文件，并写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server&amp;#34;&lt;/span>: &lt;span style="color:#4070a0">&amp;#34;自己shadowsocks服务端ip&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server_port&amp;#34;&lt;/span>: &lt;span style="color:#4070a0">&amp;#34;服务端口&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;local_port&amp;#34;&lt;/span>: 1080,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;password&amp;#34;&lt;/span>: &lt;span style="color:#4070a0">&amp;#34;密码&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;timeout&amp;#34;&lt;/span>: 300,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;method&amp;#34;&lt;/span>: &lt;span style="color:#4070a0">&amp;#34;aes-256-cfb&amp;#34;&lt;/span> &lt;span style="color:#60a0b0;font-style:italic"># 加密方式根据自己需要修改&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sslocal -c /etc/shadowsocks/config.json &lt;span style="color:#60a0b0;font-style:italic"># 启动breakwall&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="proxychains">Proxychains&lt;/h3>
-&lt;p>&lt;code>Proxychains&lt;/code>是一个可以让终端命令走代理的软件。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装proxychains&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo apt install proxychains
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 修改配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo vim /etc/proxychains.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 注释掉最后一行的 #socks4 127.0.0.1 9050 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 添加一行 socks5 127.0.0.1 1080&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>proxychains&lt;/code>的使用&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-16-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-16-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ proxychains wget &lt;span style="color:#60a0b0;font-style:italic">#后边加一个下载地址&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>关于非&lt;code>sudo&lt;/code>执行&lt;code>proxychains&lt;/code>时会有一个错误：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ERROR: ld.so: object &lt;span style="color:#4070a0">&amp;#39;libproxychains.so.3&amp;#39;&lt;/span> from LD_PRELOAD cannot be preloaded &lt;span style="color:#666">(&lt;/span>cannot open shared object file&lt;span style="color:#666">)&lt;/span>: ignored.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>解决方法为&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>修改&lt;code>/usr/bin/proxychains&lt;/code> 中的&lt;code>export LD_PRELOAD=libproxychains.so.3&lt;/code>为&lt;code>export /usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>修改&lt;code>/usr/lib/proxychains3/proxyresolv&lt;/code> 中的&lt;code>export LD_PRELOAD=libproxychains.so.3&lt;/code>为&lt;code>/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>&lt;/p>
-&lt;blockquote>
-&lt;p>其中&lt;code>/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code>可以通过命令&lt;code>sudo find /usr/ -name &amp;quot;libproxychains.so.3&amp;quot;&lt;/code>找到。&lt;/p>&lt;/blockquote>
-&lt;/li>
-&lt;/ul>
-&lt;h1 id="安装simple_obfs混淆插件">安装&lt;code>simple_obfs&lt;/code>混淆插件&lt;/h1>
-&lt;p>&lt;a href="https://github.com/shadowsocks/simple-obfs">simple_obfs&lt;/a>是一个混淆插件，是把经过&lt;code>shadowsocks&lt;/code>封装&lt;code>socks5&lt;/code>协议后的数据包，再封装成正常的&lt;code>http/tls&lt;/code>数据包的一个插件。&lt;/p>
-&lt;p>&lt;a href="https://github.com/shadowsocks/shadowsocks-libev">&lt;code>shadowsocks-libev&lt;/code>&lt;/a>是另一个实现&lt;code>socks5&lt;/code>代理的软件本质上和前边用的&lt;code>python&lt;/code>版本的&lt;code>ssserver/sslocal&lt;/code>没什么区别。但是基于&lt;code>libev&lt;/code>实现的功能更加强大，不同版本的区别在&lt;a href="https://github.com/shadowsocks/shadowsocks/wiki/Feature-Comparison-across-Different-Versions">这里&lt;/a>。最明显的就是&lt;code>shadowsocks-libev&lt;/code>同时包含客户端和服务端即&lt;code>ss-local/ss-server&lt;/code>，而且都可以安装插件。&lt;/p>
-&lt;h2 id="ubuntu">Ubuntu&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install shadowsocks-libev
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="centos-7">CentOS 7&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-11">11&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>yum install git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 下载shadowsocks-libev的源代码&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/shadowsocks/shadowsocks-libev.git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> shadowsocks-libev/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git submodule update --init
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装依赖&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 编译安装&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./autogen.sh &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> ./configure &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> make &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> make installl
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="simple_obfs">simple_obfs&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-12">12&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装依赖&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo yum install gcc autoconf libtool automake make zlib-devel openssl-devel asciidoc xmlto libev-devel
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">## Ubuntu 安装依赖： sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev libpcre3-dev libev-dev asciidoc xmlto automake&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 下载源代码&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/shadowsocks/simple-obfs.git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> simple-obfs/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git submodule update --init --recursive
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 编译安装&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./autogen.sh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./configure &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> make &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> make install
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="启动配置">启动配置&lt;/h2>
-&lt;p>服务端：&lt;code>ss-server -c /etc/shadowsocks-libev/config.json&lt;/code>&lt;/p>
-&lt;p>客户端： &lt;code>ss-local -c /etc/shadowsocks-libev/config.json&lt;/code>&lt;/p>
-&lt;h2 id="创建配置文件">创建配置文件&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-29">29&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-30">30&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-31">31&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 创建配置文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir /etc/shadowsocks-libev
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/shadowsocks-libev/config.json
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 服务端写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;0.0.0.0&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server_port&amp;#34;&lt;/span>:8388,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;local_port&amp;#34;&lt;/span>:1080,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;password&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;passwd&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;user&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;nobody&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;timeout&amp;#34;&lt;/span>:600,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;method&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;chacha20-ietf-poly1305&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;fast_open&amp;#34;&lt;/span>: false,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;nameserver&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;8.8.8.8&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;mode&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;tcp_and_udp&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;plugin&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;obfs-server&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;plugin_opts&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;obfs=http&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 客户端写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;server_ip&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;server_port&amp;#34;&lt;/span>:8388,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;local_port&amp;#34;&lt;/span>:1080,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;password&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;passwd&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;timeout&amp;#34;&lt;/span>:60,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;method&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;chacha20-ietf-poly1305&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;plugin&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;obfs-local&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#34;plugin_opts&amp;#34;&lt;/span>:&lt;span style="color:#4070a0">&amp;#34;obfs=http;obfs-host=www.bing.com&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="设置systemctl托管shadowsocks-libev">设置systemctl托管shadowsocks-libev&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-14">14&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo vim /etc/systemd/system/shadowsocks-libev.service
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>Unit&lt;span style="color:#666">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">Description&lt;/span>&lt;span style="color:#666">=&lt;/span>Shadowsocks-libev Server
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">Documentation&lt;/span>&lt;span style="color:#666">=&lt;/span>https://shadowsocks.org/en/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">After&lt;/span>&lt;span style="color:#666">=&lt;/span>network.target
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>Service&lt;span style="color:#666">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">Type&lt;/span>&lt;span style="color:#666">=&lt;/span>simple
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">ExecStart&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/local/bin/ss-server -c /etc/shadowsocks-libev/config.json -u
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">Restart&lt;/span>&lt;span style="color:#666">=&lt;/span>on-abort
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#666">[&lt;/span>Install&lt;span style="color:#666">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">WantedBy&lt;/span>&lt;span style="color:#666">=&lt;/span>multi-user.target
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>启动服务： &lt;code>sudo systemctl start shadowsocks-libev&lt;/code>&lt;/p>
-&lt;p>开机自启动： &lt;code>sudo systemctl enable shadowsocks-libev&lt;/code>&lt;/p>
-&lt;h1 id="virtualbox部署lede旁路由">VirtualBox部署LEDE旁路由&lt;/h1>
-&lt;ol>
-&lt;li>
-&lt;p>安装VirtualBox&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>下载&lt;a href="https://firmware.koolshare.cn/">&lt;code>koolshare-lede&lt;/code>固件&lt;/a>，安装LEDE虚拟机，设置网络桥接到物理网卡。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>下载&lt;a href="https://github.com/hq450/fancyss_history_package">科学上网插件&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>登录LEDE后台，添加节点信息&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>将上网机器的网关和DNS都设置为LEDE的ip地址，LEDE的网关设置为主路由的IP。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>设置开机自动启动LEDE虚拟机(以下方法无效，新版本应该利用&lt;code>autostart-enabled&lt;/code>参数，具体设置方法应该参照&lt;a href="https://www.helplib.com/VIRTUALIZATION/article_182361">这个&lt;/a>或&lt;a href="https://kifarunix.com/autostart-virtualbox-vms-on-system-boot-on-linux/">这个&lt;/a>)&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-23">23&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查看虚拟机列表&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>VBoxManage list vms
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 启动LEDE&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>VBoxManage startvm LEDE -type headless &lt;span style="color:#60a0b0;font-style:italic"># headless是无图形界面的模式，gui为有图形界面的模式&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 关闭LEDE虚拟机&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>VBoxManage controlvm LEDE poweroff
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># --------- 修改ubuntu的启动项目&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo vim /etc/rc.local
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">#!/bin/bash&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> VBoxVRDP startvm LEDE -type headless
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 修改 rc.lodal的权限&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chmod &lt;span style="color:#40a070">755&lt;/span> /etc/rc.local
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 创建启动项&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo ln -fs /lib/systemd/system/rc-local.service /etc/systemd/system/rc-local.service &lt;span style="color:#60a0b0;font-style:italic"># Ubuntu 18.04默认没有启动rc.local的服务，需要手动开启，参考https://blog.csdn.net/github_38336924/article/details/98183253&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo vim /etc/systemd/system/rc-local.service
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">[&lt;/span>Install&lt;span style="color:#666">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">WantedBy&lt;/span>&lt;span style="color:#666">=&lt;/span>multi-user.target
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">Alias&lt;/span>&lt;span style="color:#666">=&lt;/span>rc-local.service
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>最后，服务器启动的时候会在network那里卡5min之久&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-24-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-24-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-24-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-24-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo vim /etc/systemd/system/network-online.target.wants/networking.service
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 将里面的TimeoutStartSec=5min 修改为TimeoutStartSec=30sec&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;/ol></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="客户端"&gt;客户端&lt;/h2&gt;
+&lt;h3 id="sslocal"&gt;sslocal&lt;/h3&gt;
+&lt;p&gt;Linux 安装shadowsocks客户端&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 使用python版的shadowsocks&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo apt install python3-pip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ pip install shadowsocks
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 使用&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo vim /etc/shadowsocks/config.json &lt;span style="color:#60a0b0;font-style:italic"&gt;# 创建配置文件，并写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server&amp;#34;&lt;/span&gt;: &lt;span style="color:#4070a0"&gt;&amp;#34;自己shadowsocks服务端ip&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server_port&amp;#34;&lt;/span&gt;: &lt;span style="color:#4070a0"&gt;&amp;#34;服务端口&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;local_port&amp;#34;&lt;/span&gt;: 1080,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;: &lt;span style="color:#4070a0"&gt;&amp;#34;密码&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;timeout&amp;#34;&lt;/span&gt;: 300,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;method&amp;#34;&lt;/span&gt;: &lt;span style="color:#4070a0"&gt;&amp;#34;aes-256-cfb&amp;#34;&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# 加密方式根据自己需要修改&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sslocal -c /etc/shadowsocks/config.json &lt;span style="color:#60a0b0;font-style:italic"&gt;# 启动breakwall&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="proxychains"&gt;Proxychains&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Proxychains&lt;/code&gt;是一个可以让终端命令走代理的软件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装proxychains&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo apt install proxychains
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 修改配置文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo vim /etc/proxychains.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 注释掉最后一行的 #socks4 127.0.0.1 9050 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 添加一行 socks5 127.0.0.1 1080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;proxychains&lt;/code&gt;的使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-16-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-16-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ proxychains wget &lt;span style="color:#60a0b0;font-style:italic"&gt;#后边加一个下载地址&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;关于非&lt;code&gt;sudo&lt;/code&gt;执行&lt;code&gt;proxychains&lt;/code&gt;时会有一个错误：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ERROR: ld.so: object &lt;span style="color:#4070a0"&gt;&amp;#39;libproxychains.so.3&amp;#39;&lt;/span&gt; from LD_PRELOAD cannot be preloaded &lt;span style="color:#666"&gt;(&lt;/span&gt;cannot open shared object file&lt;span style="color:#666"&gt;)&lt;/span&gt;: ignored.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;解决方法为&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;修改&lt;code&gt;/usr/bin/proxychains&lt;/code&gt; 中的&lt;code&gt;export LD_PRELOAD=libproxychains.so.3&lt;/code&gt;为&lt;code&gt;export /usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;修改&lt;code&gt;/usr/lib/proxychains3/proxyresolv&lt;/code&gt; 中的&lt;code&gt;export LD_PRELOAD=libproxychains.so.3&lt;/code&gt;为&lt;code&gt;/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;其中&lt;code&gt;/usr/lib/x86_64-linux-gnu/libproxychains.so.3&lt;/code&gt;可以通过命令&lt;code&gt;sudo find /usr/ -name &amp;quot;libproxychains.so.3&amp;quot;&lt;/code&gt;找到。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="安装simple_obfs混淆插件"&gt;安装&lt;code&gt;simple_obfs&lt;/code&gt;混淆插件&lt;/h1&gt;
+&lt;p&gt;&lt;a href="https://github.com/shadowsocks/simple-obfs"&gt;simple_obfs&lt;/a&gt;是一个混淆插件，是把经过&lt;code&gt;shadowsocks&lt;/code&gt;封装&lt;code&gt;socks5&lt;/code&gt;协议后的数据包，再封装成正常的&lt;code&gt;http/tls&lt;/code&gt;数据包的一个插件。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://github.com/shadowsocks/shadowsocks-libev"&gt;&lt;code&gt;shadowsocks-libev&lt;/code&gt;&lt;/a&gt;是另一个实现&lt;code&gt;socks5&lt;/code&gt;代理的软件本质上和前边用的&lt;code&gt;python&lt;/code&gt;版本的&lt;code&gt;ssserver/sslocal&lt;/code&gt;没什么区别。但是基于&lt;code&gt;libev&lt;/code&gt;实现的功能更加强大，不同版本的区别在&lt;a href="https://github.com/shadowsocks/shadowsocks/wiki/Feature-Comparison-across-Different-Versions"&gt;这里&lt;/a&gt;。最明显的就是&lt;code&gt;shadowsocks-libev&lt;/code&gt;同时包含客户端和服务端即&lt;code&gt;ss-local/ss-server&lt;/code&gt;，而且都可以安装插件。&lt;/p&gt;
+&lt;h2 id="ubuntu"&gt;Ubuntu&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install shadowsocks-libev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="centos-7"&gt;CentOS 7&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 下载shadowsocks-libev的源代码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/shadowsocks/shadowsocks-libev.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;cd&lt;/span&gt; shadowsocks-libev/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git submodule update --init
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;yum install gcc gettext autoconf libtool automake make pcre-devel asciidoc xmlto c-ares-devel libev-devel libsodium-devel mbedtls-devel -y
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 编译安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./autogen.sh &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./configure &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make installl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="simple_obfs"&gt;simple_obfs&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装依赖&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo yum install gcc autoconf libtool automake make zlib-devel openssl-devel asciidoc xmlto libev-devel
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;## Ubuntu 安装依赖： sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev libpcre3-dev libev-dev asciidoc xmlto automake&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 下载源代码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git clone https://github.com/shadowsocks/simple-obfs.git
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;cd&lt;/span&gt; simple-obfs/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git submodule update --init --recursive
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 编译安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./autogen.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./configure &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="启动配置"&gt;启动配置&lt;/h2&gt;
+&lt;p&gt;服务端：&lt;code&gt;ss-server -c /etc/shadowsocks-libev/config.json&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;客户端： &lt;code&gt;ss-local -c /etc/shadowsocks-libev/config.json&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="创建配置文件"&gt;创建配置文件&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-29"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-29"&gt;29&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-30"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-30"&gt;30&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-31"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-31"&gt;31&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 创建配置文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir /etc/shadowsocks-libev
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim /etc/shadowsocks-libev/config.json
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 服务端写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server_port&amp;#34;&lt;/span&gt;:8388,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;local_port&amp;#34;&lt;/span&gt;:1080,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;passwd&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;user&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;nobody&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;timeout&amp;#34;&lt;/span&gt;:600,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;method&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;chacha20-ietf-poly1305&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;fast_open&amp;#34;&lt;/span&gt;: false,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;nameserver&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;8.8.8.8&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;mode&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;tcp_and_udp&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;plugin&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;obfs-server&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;plugin_opts&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;obfs=http&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 客户端写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;server_ip&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;server_port&amp;#34;&lt;/span&gt;:8388,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;local_port&amp;#34;&lt;/span&gt;:1080,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;passwd&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;timeout&amp;#34;&lt;/span&gt;:60,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;method&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;chacha20-ietf-poly1305&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;plugin&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;obfs-local&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;plugin_opts&amp;#34;&lt;/span&gt;:&lt;span style="color:#4070a0"&gt;&amp;#34;obfs=http;obfs-host=www.bing.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="设置systemctl托管shadowsocks-libev"&gt;设置systemctl托管shadowsocks-libev&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-22-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-22-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vim /etc/systemd/system/shadowsocks-libev.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;[&lt;/span&gt;Unit&lt;span style="color:#666"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;Description&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;Shadowsocks-libev Server
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;Documentation&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;https://shadowsocks.org/en/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;After&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;network.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;[&lt;/span&gt;Service&lt;span style="color:#666"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;Type&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;simple
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/usr/local/bin/ss-server -c /etc/shadowsocks-libev/config.json -u
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;Restart&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;on-abort
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#666"&gt;[&lt;/span&gt;Install&lt;span style="color:#666"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;multi-user.target
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动服务： &lt;code&gt;sudo systemctl start shadowsocks-libev&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;开机自启动： &lt;code&gt;sudo systemctl enable shadowsocks-libev&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id="virtualbox部署lede旁路由"&gt;VirtualBox部署LEDE旁路由&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装VirtualBox&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下载&lt;a href="https://firmware.koolshare.cn/"&gt;&lt;code&gt;koolshare-lede&lt;/code&gt;固件&lt;/a&gt;，安装LEDE虚拟机，设置网络桥接到物理网卡。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;下载&lt;a href="https://github.com/hq450/fancyss_history_package"&gt;科学上网插件&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;登录LEDE后台，添加节点信息&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将上网机器的网关和DNS都设置为LEDE的ip地址，LEDE的网关设置为主路由的IP。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;设置开机自动启动LEDE虚拟机(以下方法无效，新版本应该利用&lt;code&gt;autostart-enabled&lt;/code&gt;参数，具体设置方法应该参照&lt;a href="https://www.helplib.com/VIRTUALIZATION/article_182361"&gt;这个&lt;/a&gt;或&lt;a href="https://kifarunix.com/autostart-virtualbox-vms-on-system-boot-on-linux/"&gt;这个&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-23-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-23-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 查看虚拟机列表&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;VBoxManage list vms
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 启动LEDE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;VBoxManage startvm LEDE -type headless &lt;span style="color:#60a0b0;font-style:italic"&gt;# headless是无图形界面的模式，gui为有图形界面的模式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 关闭LEDE虚拟机&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;VBoxManage controlvm LEDE poweroff
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# --------- 修改ubuntu的启动项目&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vim /etc/rc.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 写入 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#!/bin/bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; VBoxVRDP startvm LEDE -type headless
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 修改 rc.lodal的权限&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#40a070"&gt;755&lt;/span&gt; /etc/rc.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 创建启动项&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo ln -fs /lib/systemd/system/rc-local.service /etc/systemd/system/rc-local.service &lt;span style="color:#60a0b0;font-style:italic"&gt;# Ubuntu 18.04默认没有启动rc.local的服务，需要手动开启，参考https://blog.csdn.net/github_38336924/article/details/98183253&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vim /etc/systemd/system/rc-local.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 写入&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;[&lt;/span&gt;Install&lt;span style="color:#666"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#bb60d5"&gt;WantedBy&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;multi-user.target
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#bb60d5"&gt;Alias&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;rc-local.service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;最后，服务器启动的时候会在network那里卡5min之久&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-24-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-24-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-24-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-24-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo vim /etc/systemd/system/network-online.target.wants/networking.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 将里面的TimeoutStartSec=5min 修改为TimeoutStartSec=30sec&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item></channel></rss>

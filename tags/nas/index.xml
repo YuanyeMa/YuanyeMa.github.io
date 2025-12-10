@@ -1,181 +1,182 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NAS on Yuanye Ma's Blog</title><link>/tags/nas/</link><description>Recent content in NAS on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/nas/index.xml" rel="self" type="application/rss+xml"/><item><title>Omv</title><link>/post/service/2020-03-08-omv/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-03-08-omv/</guid><description>&lt;h1 id="openmediavaultnextcloud搭建私有云盘">OpenMediaVault+Nextcloud搭建私有云盘&lt;/h1>
-&lt;h2 id="安装omv">安装omv&lt;/h2>
-&lt;p>&lt;a href="https://sourceforge.net/projects/openmediavault/files/">下载镜像&lt;/a>&lt;/p>
-&lt;h3 id="macos制作启动盘">macOS制作启动盘&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5">5&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>diskutil list
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#确定是disk3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>diskutil unmountDisk /dev/disk3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 将镜像写入U盘&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dd &lt;span style="color:#007020;font-weight:bold">if&lt;/span>&lt;span style="color:#666">=&lt;/span>openmediavault.iso &lt;span style="color:#bb60d5">of&lt;/span>&lt;span style="color:#666">=&lt;/span>/dev/disk3
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>然后将U盘插入主机并调整开机引导选项，安装过程的提示都很显而易见。&lt;/p>
-&lt;p>安装完成后终端会显示&lt;code>IP&lt;/code>地址，直接在浏览器中输入相应的&lt;code>IP&lt;/code>就可以打开管理页面。默认用户名和密码在终端中也有显示。&lt;/p>
-&lt;blockquote>
-&lt;p>默认用户名 admin&lt;/p>
-&lt;p>默认密码 openmediavault&lt;/p>&lt;/blockquote>
-&lt;h3 id="安装插件">安装插件&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 安装Omg-extras&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all5.deb
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>按照以下步骤安装：&lt;code>插件-&amp;gt;上传-〉弹出选择文件框选，选中文件并上传-&amp;gt;选中openmediavault-omvextrasorg（点击方框打勾）-&amp;gt;安装&lt;/code>&lt;/p>
-&lt;h2 id="安装docker">安装docker&lt;/h2>
-&lt;p>&lt;code>点击侧边栏OMV-Extras -&amp;gt; docker-〉安装&lt;/code>&lt;/p>
-&lt;p>镜像加速&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7">7&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>ssh root@ip
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>vim /etc/systemd/system/multi-user.target.wants/docker.service
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># ------&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">ExecStart&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/bin/dockerd --registry-mirror&lt;span style="color:#666">=&lt;/span>https://docker.mirrors.ustc.edu.cn -H fd://
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># http://hub-mirror.c.163.com/&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># ------&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl daemon-reload 或者 service docker restart 或者reboot
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>安装硬盘&lt;/p>
-&lt;p>创建文件系统&lt;/p>
-&lt;p>挂载文件系统&lt;/p>
-&lt;p>启用SMB/CIFS&lt;/p>
-&lt;p>添加共享&lt;/p>
-&lt;h2 id="使用docker安装nextcloud">使用Docker安装nextcloud&lt;/h2>
-&lt;p>&lt;a href="https://www.okcode.net/article/38018">参考这篇文档&lt;/a>不过我先拉取了一个&lt;code>portainer&lt;/code>镜像，然后基于此通过图形界面安装&lt;code>nextcloud&lt;/code>和&lt;code> mariadb&lt;/code>&lt;/p>
-&lt;h3 id="数据库">数据库&lt;/h3>
-&lt;p>&lt;code>mariadb&lt;/code>没有配置成功，直接使用了&lt;code>sqlite&lt;/code>&lt;/p>
-&lt;h2 id="遇到的问题">遇到的问题&lt;/h2>
-&lt;h3 id="nextcloud通过不被信任的域名访问">nextcloud通过不被信任的域名访问&lt;/h3>
-&lt;p>&lt;code>vim path_to_nextcloud_html/config/config.php&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5">5&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4070a0">&amp;#39;trusted_domains&amp;#39;&lt;/span> &lt;span style="color:#666">=&lt;/span>&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> array &lt;span style="color:#666">(&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">0&lt;/span> &lt;span style="color:#666">=&lt;/span>&amp;gt; &lt;span style="color:#4070a0">&amp;#39;192.168.1.140:8888&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#bb60d5">1&lt;/span> &lt;span style="color:#666">=&lt;/span>&amp;gt; &lt;span style="color:#4070a0">&amp;#39;域名&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">)&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="omv启用rc-local">OMV启用rc-local&lt;/h3>
-&lt;p>起因是因为&lt;code>OMV&lt;/code>设置的静态&lt;code>IP&lt;/code>无效，每次开机都需要进入终端使用&lt;code>dhclient&lt;/code>命令去获取&lt;code>IP&lt;/code>，实在没办法了，就像写一个开机启动脚本在每次开机的时候去执行&lt;code>dhclient&lt;/code>命令。&lt;/p>
-&lt;p>&lt;code>Debian 10&lt;/code>默认禁用了&lt;code>rc-local&lt;/code>可以通过&lt;code>systemctl status rc-local&lt;/code>查看。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7">7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8">8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9">9&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>vim /etc/rc.local
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># --- 写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#!/bin/bash&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/sbin/dhclient
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;hello&amp;#34;&lt;/span> &amp;gt; /root/log &lt;span style="color:#60a0b0;font-style:italic"># 这行是为了重启后检查配置是否生效用的，配置好后可以删掉这一行。&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">exit&lt;/span> &lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># --- end&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>chmod &lt;span style="color:#40a070">755&lt;/span> /etc/rc.local
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemctl start rc-local
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="nextcloud-文件锁定">nextcloud 文件锁定&lt;/h3>
-&lt;p>&lt;code>nextcloud&lt;/code>的&lt;code>data&lt;/code>目录还可以通过&lt;code>smb&lt;/code>访问，所以从&lt;code>nextcloud&lt;/code>上传了一个文件，又在&lt;code>smb&lt;/code>中把上传的文件给删除了。然后造成&lt;code>nextcloud&lt;/code>中显示有所上传的文件，删除的时候报错，重复上传的时候显示&amp;quot;文件被锁定了&amp;quot;，删也删不掉。&lt;/p>
-&lt;p>&lt;code>google&lt;/code>了一下，都说先开启“维护模式”&lt;code>(maintenance:mode)&lt;/code>,然后进数据库删掉“锁定标记”，最后再关闭“维护模式“。但是实际部署时候的一些细节不一样，所以具体操作也不一样。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-28">28&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 首先登陆`portainer`，&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 找到nextcloud的contianer点击`Exec Console` &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># `User`处填入`www-data`点击`Connect`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 进入nextcloud的data所在目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> nextcloud/data/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 查看以下php可执行程序的路径&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>which php
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># /usr/local/bin/php 是我机器的响应&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/local/bin/php ./occ files:scan --all
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/local/bin/php ./occ files:cleanup
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 打开“维护模式”&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/local/bin/php ./occ maintenance:mode --on
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 然后ssh到omv上&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install sqlite3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">cd&lt;/span> /srv/xxxx/nextcloud/data
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sqlite3 nextcloud.db
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 在数据中执行&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>delete from oc_file_locks where &lt;span style="color:#40a070">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.exit &lt;span style="color:#60a0b0;font-style:italic"># 退出数据库&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 关闭“维护模式”&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 还回到&amp;#39;portainer&amp;#39;的nextcloud container的console执行下边命令&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/local/bin/php ./occ maintenance:mode --off
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 最后重启一下nextcloud的container&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NAS on Yuanye Ma's Blog</title><link>/tags/nas/</link><description>Recent content in NAS on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/nas/index.xml" rel="self" type="application/rss+xml"/><item><title>Omv</title><link>/post/service/2020-03-08-omv/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2020-03-08-omv/</guid><description>&lt;h1 id="openmediavaultnextcloud搭建私有云盘"&gt;OpenMediaVault+Nextcloud搭建私有云盘&lt;/h1&gt;
+&lt;h2 id="安装omv"&gt;安装omv&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://sourceforge.net/projects/openmediavault/files/"&gt;下载镜像&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="macos制作启动盘"&gt;macOS制作启动盘&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diskutil list
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#确定是disk3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;diskutil unmountDisk /dev/disk3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 将镜像写入U盘&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dd &lt;span style="color:#007020;font-weight:bold"&gt;if&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;openmediavault.iso &lt;span style="color:#bb60d5"&gt;of&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/dev/disk3
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后将U盘插入主机并调整开机引导选项，安装过程的提示都很显而易见。&lt;/p&gt;
+&lt;p&gt;安装完成后终端会显示&lt;code&gt;IP&lt;/code&gt;地址，直接在浏览器中输入相应的&lt;code&gt;IP&lt;/code&gt;就可以打开管理页面。默认用户名和密码在终端中也有显示。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;默认用户名 admin&lt;/p&gt;
+&lt;p&gt;默认密码 openmediavault&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="安装插件"&gt;安装插件&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 安装Omg-extras&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;wget http://omv-extras.org/openmediavault-omvextrasorg_latest_all5.deb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;按照以下步骤安装：&lt;code&gt;插件-&amp;gt;上传-〉弹出选择文件框选，选中文件并上传-&amp;gt;选中openmediavault-omvextrasorg（点击方框打勾）-&amp;gt;安装&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="安装docker"&gt;安装docker&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;点击侧边栏OMV-Extras -&amp;gt; docker-〉安装&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;镜像加速&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@ip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim /etc/systemd/system/multi-user.target.wants/docker.service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# ------&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;ExecStart&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/usr/bin/dockerd --registry-mirror&lt;span style="color:#666"&gt;=&lt;/span&gt;https://docker.mirrors.ustc.edu.cn -H fd://
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# http://hub-mirror.c.163.com/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# ------&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl daemon-reload 或者 service docker restart 或者reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装硬盘&lt;/p&gt;
+&lt;p&gt;创建文件系统&lt;/p&gt;
+&lt;p&gt;挂载文件系统&lt;/p&gt;
+&lt;p&gt;启用SMB/CIFS&lt;/p&gt;
+&lt;p&gt;添加共享&lt;/p&gt;
+&lt;h2 id="使用docker安装nextcloud"&gt;使用Docker安装nextcloud&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.okcode.net/article/38018"&gt;参考这篇文档&lt;/a&gt;不过我先拉取了一个&lt;code&gt;portainer&lt;/code&gt;镜像，然后基于此通过图形界面安装&lt;code&gt;nextcloud&lt;/code&gt;和&lt;code&gt; mariadb&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="数据库"&gt;数据库&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;mariadb&lt;/code&gt;没有配置成功，直接使用了&lt;code&gt;sqlite&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="遇到的问题"&gt;遇到的问题&lt;/h2&gt;
+&lt;h3 id="nextcloud通过不被信任的域名访问"&gt;nextcloud通过不被信任的域名访问&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;vim path_to_nextcloud_html/config/config.php&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#4070a0"&gt;&amp;#39;trusted_domains&amp;#39;&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; array &lt;span style="color:#666"&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#bb60d5"&gt;0&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt;&amp;gt; &lt;span style="color:#4070a0"&gt;&amp;#39;192.168.1.140:8888&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#bb60d5"&gt;1&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt;&amp;gt; &lt;span style="color:#4070a0"&gt;&amp;#39;域名&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;)&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="omv启用rc-local"&gt;OMV启用rc-local&lt;/h3&gt;
+&lt;p&gt;起因是因为&lt;code&gt;OMV&lt;/code&gt;设置的静态&lt;code&gt;IP&lt;/code&gt;无效，每次开机都需要进入终端使用&lt;code&gt;dhclient&lt;/code&gt;命令去获取&lt;code&gt;IP&lt;/code&gt;，实在没办法了，就像写一个开机启动脚本在每次开机的时候去执行&lt;code&gt;dhclient&lt;/code&gt;命令。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Debian 10&lt;/code&gt;默认禁用了&lt;code&gt;rc-local&lt;/code&gt;可以通过&lt;code&gt;systemctl status rc-local&lt;/code&gt;查看。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8"&gt;8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9"&gt;9&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;vim /etc/rc.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# --- 写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#!/bin/bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/sbin/dhclient
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;hello&amp;#34;&lt;/span&gt; &amp;gt; /root/log &lt;span style="color:#60a0b0;font-style:italic"&gt;# 这行是为了重启后检查配置是否生效用的，配置好后可以删掉这一行。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;exit&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# --- end&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod &lt;span style="color:#40a070"&gt;755&lt;/span&gt; /etc/rc.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;systemctl start rc-local
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="nextcloud-文件锁定"&gt;nextcloud 文件锁定&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;nextcloud&lt;/code&gt;的&lt;code&gt;data&lt;/code&gt;目录还可以通过&lt;code&gt;smb&lt;/code&gt;访问，所以从&lt;code&gt;nextcloud&lt;/code&gt;上传了一个文件，又在&lt;code&gt;smb&lt;/code&gt;中把上传的文件给删除了。然后造成&lt;code&gt;nextcloud&lt;/code&gt;中显示有所上传的文件，删除的时候报错，重复上传的时候显示&amp;quot;文件被锁定了&amp;quot;，删也删不掉。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;google&lt;/code&gt;了一下，都说先开启“维护模式”&lt;code&gt;(maintenance:mode)&lt;/code&gt;,然后进数据库删掉“锁定标记”，最后再关闭“维护模式“。但是实际部署时候的一些细节不一样，所以具体操作也不一样。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 首先登陆`portainer`，&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 找到nextcloud的contianer点击`Exec Console` &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# `User`处填入`www-data`点击`Connect`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 进入nextcloud的data所在目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;cd&lt;/span&gt; nextcloud/data/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 查看以下php可执行程序的路径&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;which php
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# /usr/local/bin/php 是我机器的响应&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/local/bin/php ./occ files:scan --all
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/local/bin/php ./occ files:cleanup
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 打开“维护模式”&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/local/bin/php ./occ maintenance:mode --on
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 然后ssh到omv上&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;apt install sqlite3
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;cd&lt;/span&gt; /srv/xxxx/nextcloud/data
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sqlite3 nextcloud.db
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 在数据中执行&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;delete from oc_file_locks where &lt;span style="color:#40a070"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.exit &lt;span style="color:#60a0b0;font-style:italic"&gt;# 退出数据库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 关闭“维护模式”&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 还回到&amp;#39;portainer&amp;#39;的nextcloud container的console执行下边命令&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/local/bin/php ./occ maintenance:mode --off
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 最后重启一下nextcloud的container&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

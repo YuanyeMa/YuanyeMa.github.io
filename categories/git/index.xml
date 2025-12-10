@@ -1,32 +1,33 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git on Yuanye Ma's Blog</title><link>/categories/git/</link><description>Recent content in Git on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/categories/git/index.xml" rel="self" type="application/rss+xml"/><item><title>Git常用指令</title><link>/post/git/2019-01-04-git-tag%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/git/2019-01-04-git-tag%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid><description>&lt;h1 id="git-tag常用命令">Git-tag常用命令&lt;/h1>
-&lt;h2 id="列出标签">列出标签&lt;/h2>
-&lt;p>git tag 列出当前的所有tag&lt;br>
-git tag -l &amp;lsquo;v0.1.*&amp;rsquo; 列出所有 v0.1.开头的标签&lt;/p>
-&lt;h2 id="查看tag信息">查看tag信息&lt;/h2>
-&lt;p>git show 查看标签的版本信息&lt;/p>
-&lt;h2 id="创建标签">创建标签&lt;/h2>
-&lt;h3 id="创建附注标签">创建附注标签&lt;/h3>
-&lt;p>git tag -a v0.1.2 -m &amp;ldquo;0.1.2版本&amp;rdquo;&lt;br>
--a 即 annotated的缩写，指定标签类型，后附注签名。&lt;br>
-git tag -s v0.1.2 -m &amp;ldquo;0.1.2版本&amp;rdquo;&lt;br>
--s 即 signed的缩写，可以用 GPG 来签署标签。&lt;/p>
-&lt;p>验证标签：git tag -v [tag-name] （译注：取 verify 的首字母）&lt;/p>
-&lt;h3 id="创建轻量级标签">创建轻量级标签&lt;/h3>
-&lt;p>git tag v1.4-lw 一般用于临时打标签。&lt;/p>
-&lt;h3 id="后期添加标签">后期添加标签&lt;/h3>
-&lt;p>git tag -a v0.1.1 9fbc3d0&lt;br>
-后边的9fbc3d0是相应commit的校验和，通过git log 命令得到。&lt;/p>
-&lt;h2 id="切换到标签">切换到标签&lt;/h2>
-&lt;p>git checkout [tagname]&lt;/p>
-&lt;h2 id="删除标签">删除标签&lt;/h2>
-&lt;p>git tag -d v0.1.2&lt;/p>
-&lt;h2 id="标签发布">标签发布&lt;/h2>
-&lt;p>git push origin v0.1.2 将v0.1.2标签提交到git服务器&lt;br>
-git push origin &amp;ndash;tags 将本地所有标签一次性提交到git服务器&lt;/p>
-&lt;h2 id="得到tag的代码">得到tag的代码&lt;/h2>
-&lt;ul>
-&lt;li>git clone整个仓库；&lt;/li>
-&lt;li>git checkout tag_name；&lt;/li>
-&lt;/ul>
-&lt;blockquote>
-&lt;p>但是这个时候git处于“detached HEAD&amp;quot; 状态，因为tag相当于一个快照，不能更改。如果需要在tag代码的基础上修改，需要先git checkout -b branch_name tag-name 创建一个分支，再在分支上进行修改。&lt;/p>&lt;/blockquote></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git on Yuanye Ma's Blog</title><link>/categories/git/</link><description>Recent content in Git on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Tue, 06 Mar 2018 16:01:23 +0800</lastBuildDate><atom:link href="/categories/git/index.xml" rel="self" type="application/rss+xml"/><item><title>Git常用指令</title><link>/post/git/2019-01-04-git-tag%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link><pubDate>Tue, 06 Mar 2018 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/git/2019-01-04-git-tag%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid><description>&lt;h1 id="git-tag常用命令"&gt;Git-tag常用命令&lt;/h1&gt;
+&lt;h2 id="列出标签"&gt;列出标签&lt;/h2&gt;
+&lt;p&gt;git tag 列出当前的所有tag&lt;br&gt;
+git tag -l &amp;lsquo;v0.1.*&amp;rsquo; 列出所有 v0.1.开头的标签&lt;/p&gt;
+&lt;h2 id="查看tag信息"&gt;查看tag信息&lt;/h2&gt;
+&lt;p&gt;git show 查看标签的版本信息&lt;/p&gt;
+&lt;h2 id="创建标签"&gt;创建标签&lt;/h2&gt;
+&lt;h3 id="创建附注标签"&gt;创建附注标签&lt;/h3&gt;
+&lt;p&gt;git tag -a v0.1.2 -m &amp;ldquo;0.1.2版本&amp;rdquo;&lt;br&gt;
+-a 即 annotated的缩写，指定标签类型，后附注签名。&lt;br&gt;
+git tag -s v0.1.2 -m &amp;ldquo;0.1.2版本&amp;rdquo;&lt;br&gt;
+-s 即 signed的缩写，可以用 GPG 来签署标签。&lt;/p&gt;
+&lt;p&gt;验证标签：git tag -v [tag-name] （译注：取 verify 的首字母）&lt;/p&gt;
+&lt;h3 id="创建轻量级标签"&gt;创建轻量级标签&lt;/h3&gt;
+&lt;p&gt;git tag v1.4-lw 一般用于临时打标签。&lt;/p&gt;
+&lt;h3 id="后期添加标签"&gt;后期添加标签&lt;/h3&gt;
+&lt;p&gt;git tag -a v0.1.1 9fbc3d0&lt;br&gt;
+后边的9fbc3d0是相应commit的校验和，通过git log 命令得到。&lt;/p&gt;
+&lt;h2 id="切换到标签"&gt;切换到标签&lt;/h2&gt;
+&lt;p&gt;git checkout [tagname]&lt;/p&gt;
+&lt;h2 id="删除标签"&gt;删除标签&lt;/h2&gt;
+&lt;p&gt;git tag -d v0.1.2&lt;/p&gt;
+&lt;h2 id="标签发布"&gt;标签发布&lt;/h2&gt;
+&lt;p&gt;git push origin v0.1.2 将v0.1.2标签提交到git服务器&lt;br&gt;
+git push origin &amp;ndash;tags 将本地所有标签一次性提交到git服务器&lt;/p&gt;
+&lt;h2 id="得到tag的代码"&gt;得到tag的代码&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;git clone整个仓库；&lt;/li&gt;
+&lt;li&gt;git checkout tag_name；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;但是这个时候git处于“detached HEAD&amp;quot; 状态，因为tag相当于一个快照，不能更改。如果需要在tag代码的基础上修改，需要先git checkout -b branch_name tag-name 创建一个分支，再在分支上进行修改。&lt;/p&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>

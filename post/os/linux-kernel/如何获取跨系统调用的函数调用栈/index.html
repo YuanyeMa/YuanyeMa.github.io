@@ -1,0 +1,713 @@
+<!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><title>在本地复现syzbot Bugs - Yuanye Ma's Blog</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=MobileOptimized content="width"><meta name=HandheldFriendly content="true"><meta name=applicable-device content="pc,mobile"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=mobile-web-app-capable content="yes"><meta name=author content="Yuanye Ma"><meta name=description content="在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。
+一种方法是使用simpleperf ：
+simpleperf record -g -o <path_to_perf.data> -- <path_to_exe_with_debuginfo> python3 <path-to-ndk>/android-ndk-r27c/simpleperf/gecko_profile_generator.py \ -i <path_to_perf.data> \ --symfs <path_to_symbols> \ --kallsyms <path_to_System.map> | gzip > <path_to_perf.json.gz> 浏览器打开https://profiler.firefox.com/将生成的add_client.perf.json.gz拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。
+"><meta name=keywords content="Hugo,theme,jane"><meta name=generator content="Hugo 0.152.2"><link rel=canonical href=/post/os/linux-kernel/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E8%B7%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/><link rel=icon href=/favicon.ico><link rel=stylesheet href=/sass/jane.min.4f1c6e4dafb93a81387ca9a997d899414a5a8f573408e0cec2f65ae4e0482a03.css integrity="sha256-TxxuTa+5OoE4fKmpl9iZQUpaj1c0CODOwvZa5OBIKgM=" media=screen crossorigin=anonymous><meta property="og:url" content="/post/os/linux-kernel/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E8%B7%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/"><meta property="og:site_name" content="Yuanye Ma's Blog"><meta property="og:title" content="在本地复现syzbot Bugs"><meta property="og:description" content="在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。
+一种方法是使用simpleperf ：
+simpleperf record -g -o <path_to_perf.data> -- <path_to_exe_with_debuginfo> python3 <path-to-ndk>/android-ndk-r27c/simpleperf/gecko_profile_generator.py \ -i <path_to_perf.data> \ --symfs <path_to_symbols> \ --kallsyms <path_to_System.map> | gzip > <path_to_perf.json.gz> 浏览器打开https://profiler.firefox.com/将生成的add_client.perf.json.gz拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。"><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2025-12-10T10:50:18+08:00"><meta property="article:modified_time" content="2025-12-10T10:50:18+08:00"><meta property="article:tag" content="Kernel"><meta itemprop=name content="在本地复现syzbot Bugs"><meta itemprop=description content="在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。
+一种方法是使用simpleperf ：
+simpleperf record -g -o <path_to_perf.data> -- <path_to_exe_with_debuginfo> python3 <path-to-ndk>/android-ndk-r27c/simpleperf/gecko_profile_generator.py \ -i <path_to_perf.data> \ --symfs <path_to_symbols> \ --kallsyms <path_to_System.map> | gzip > <path_to_perf.json.gz> 浏览器打开https://profiler.firefox.com/将生成的add_client.perf.json.gz拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。"><meta itemprop=datePublished content="2025-12-10T10:50:18+08:00"><meta itemprop=dateModified content="2025-12-10T10:50:18+08:00"><meta itemprop=wordCount content="3190"><meta itemprop=keywords content="Kernel"><meta name=twitter:card content="summary"><meta name=twitter:title content="在本地复现syzbot Bugs"><meta name=twitter:description content="在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。
+一种方法是使用simpleperf ：
+simpleperf record -g -o <path_to_perf.data> -- <path_to_exe_with_debuginfo> python3 <path-to-ndk>/android-ndk-r27c/simpleperf/gecko_profile_generator.py \ -i <path_to_perf.data> \ --symfs <path_to_symbols> \ --kallsyms <path_to_System.map> | gzip > <path_to_perf.json.gz> 浏览器打开https://profiler.firefox.com/将生成的add_client.perf.json.gz拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=back-to-top></div><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>功不唐捐</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><li class=mobile-menu-item><a class=menu-item-link href=/>Home</a></li><li class=mobile-menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=mobile-menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=mobile-menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=mobile-menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav><link rel=stylesheet href=/lib/photoswipe/photoswipe.min.css><link rel=stylesheet href=/lib/photoswipe/default-skin/default-skin.min.css><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>功不唐捐</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><div id=mobile-panel><main id=main class="main bg-llight wallpaper"><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>在本地复现syzbot Bugs</h1><div class=post-meta><div class=post-meta-author>by
+<a href=/about><span class=post-meta-author-name>Yuanye Ma</span></a></div><div class=post-meta-time><time datetime=2025-12-10>2025-12-10</time></div><div class=post-meta__right><div class=post-meta-category><a href=/categories/linux-kernel/>Linux Kernel</a></div></div></div></header><div class=post-content><p>在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。</p><p>一种方法是使用<code>simpleperf</code> ：</p><pre tabindex=0><code>simpleperf record -g -o &lt;path_to_perf.data&gt; -- &lt;path_to_exe_with_debuginfo&gt;
+python3 &lt;path-to-ndk&gt;/android-ndk-r27c/simpleperf/gecko_profile_generator.py \
+      -i &lt;path_to_perf.data&gt; \
+      --symfs &lt;path_to_symbols&gt; \
+      --kallsyms &lt;path_to_System.map&gt;  | gzip &gt; &lt;path_to_perf.json.gz&gt;
+</code></pre><p>浏览器打开<code>https://profiler.firefox.com/</code>将生成的<code>add_client.perf.json.gz</code>拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。</p><blockquote><p>参考另一篇文章 尝试通过一个demo分析binder的执行流程 的使用simpleperf抓取通讯双方的函数调用栈小节</p></blockquote><p>或者使用基于eBPF的工具比如stackplz 参考 ：https://github.com/SeeFlowerX/stackplz</p><p>这两种方式在尝试定位某些问题时比较受限，比如kernel启动早期时。因此本文尝试一种更加直接的方式：直接在目标位置打印函数调用栈。</p><h1 id=获取用户态和内核态的函数调用栈>获取用户态和内核态的函数调用栈</h1><p>首先确保
+<code>CONFIG_STACKTRACE</code> <code>CONFIG_KALLSYMS</code>和<code>CONFIG_USER_STACKTRACE_SUPPORT</code>内核宏打开</p><p>可以通过 <code>zcat /proc/config.gz | grep -E "STACKTRACE|KALLSYMS"</code> 确认。</p><p>在代码中插入以下代码：</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-45>45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-46>46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-47>47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-48>48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-49>49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-50>50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-51>51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-52>52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-53>53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-1-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-1-54>54</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#if IS_ENABLED(CONFIG_STACKTRACE)
+</span></span></span><span style=display:flex><span><span style=color:#007020>#include</span> <span style=color:#007020>&lt;linux/stacktrace.h&gt;</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020>#define STACK_ENTRIES 64
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * 打印当前进程的
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * 1) 内核调用栈（符号名）
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * 2) 用户空间调用栈（原始 PC 地址）
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>static</span> <span style=color:#902000>void</span> <span style=color:#06287e>dump_all_stacks</span>(<span style=color:#902000>void</span>)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#902000>int</span> i;
+</span></span><span style=display:flex><span>    <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> nr;
+</span></span><span style=display:flex><span>    <span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> entries[STACK_ENTRIES];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#60a0b0;font-style:italic>/* 基本进程信息 */</span>
+</span></span><span style=display:flex><span>    <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;pid=%d comm=%s</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>,
+</span></span><span style=display:flex><span>            current<span style=color:#666>-&gt;</span>pid, current<span style=color:#666>-&gt;</span>comm);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#06287e>memset</span>(entries, <span style=color:#40a070>0</span>, <span style=color:#007020;font-weight:700>sizeof</span>(entries));
+</span></span><span style=display:flex><span>    nr <span style=color:#666>=</span> <span style=color:#06287e>stack_trace_save</span>(entries, <span style=color:#06287e>ARRAY_SIZE</span>(entries), <span style=color:#40a070>0</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;kernel backtrace:</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>for</span> (i <span style=color:#666>=</span> <span style=color:#40a070>0</span>; i <span style=color:#666>&lt;</span> nr; i<span style=color:#666>++</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>/* %pS 依赖 CONFIG_KALLSYMS，可以打印出符号名 */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;  [k%02d] %pS</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, i, (<span style=color:#902000>void</span> <span style=color:#666>*</span>)entries[i]);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020>#if IS_ENABLED(CONFIG_USER_STACKTRACE_SUPPORT)
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>    <span style=color:#60a0b0;font-style:italic>/* -------- 用户空间调用栈 -------- */</span>
+</span></span><span style=display:flex><span>    <span style=color:#06287e>memset</span>(entries, <span style=color:#40a070>0</span>, <span style=color:#007020;font-weight:700>sizeof</span>(entries));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>     * 注意：save_stack_trace_user() 只能对 current 生效，
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>     * 会保存从用户态进入内核时的那一组返回地址。
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    nr <span style=color:#666>=</span> <span style=color:#06287e>stack_trace_save_user</span>(entries, <span style=color:#06287e>ARRAY_SIZE</span>(entries));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;user backtrace (raw user PCs):</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>for</span> (i <span style=color:#666>=</span> <span style=color:#40a070>0</span>; i <span style=color:#666>&lt;</span> nr; i<span style=color:#666>++</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#60a0b0;font-style:italic>/*
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         * 这些是用户虚拟地址，需要 offline 用 addr2line 等工具
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         * 结合 /proc/&lt;pid&gt;/maps 的映射基址还原成具体函数名/行号。
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>         */</span>
+</span></span><span style=display:flex><span>        <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;  [u%02d] 0x%016lx</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>, i, entries[i]);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span><span style=color:#007020>#else
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>    <span style=color:#06287e>pr_info</span>(<span style=color:#4070a0>&#34;user stack trace not supported &#34;</span>
+</span></span><span style=display:flex><span>            <span style=color:#4070a0>&#34;(CONFIG_USER_STACKTRACE_SUPPORT is disabled)</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#007020>#endif </span><span style=color:#60a0b0;font-style:italic>/* CONFIG_USER_STACKTRACE_SUPPORT */</span><span style=color:#007020>
+</span></span></span><span style=display:flex><span><span style=color:#007020></span>}
+</span></span><span style=display:flex><span><span style=color:#007020>#else
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#007020;font-weight:700>static</span> <span style=color:#007020;font-weight:700>inline</span> <span style=color:#902000>void</span> <span style=color:#06287e>dump_all_stacks</span>(<span style=color:#902000>void</span>) {}
+</span></span><span style=display:flex><span><span style=color:#007020>#endif </span><span style=color:#60a0b0;font-style:italic>/* CONFIG_STACKTRACE */</span><span style=color:#007020>
+</span></span></span></code></pre></td></tr></table></div></div><p>可以在目标位置插入调用<code>dump_all_stacks()</code>。 抓内核日志。</p><p><img src="https://p9-juejin-sign.byteimg.com/tos-cn-i-k3u1fbpfcp/4f0697fb210541f7b7cd3cfd1955b8a6~tplv-k3u1fbpfcp-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6:q75.awebp?rk3s=bb34011d&amp;x-expires=1765460747&amp;x-signature=R09xxbD1tIxT2terIqyG4yuQ6GQ%3D" alt=v2-8231221c3528c29fe62e04edde02358c_720w.png></p><h1 id=解析用户态调用栈>解析用户态调用栈</h1><p>准备了一个<code>python</code>脚本来解析用户态的堆栈，该脚本会计算堆栈中地址相对于符号文件的偏移，并用<code>addr2line</code>尝试解析符号。</p><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-1>  1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-2>  2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-3>  3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-4>  4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-5>  5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-6>  6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-7>  7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-8>  8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-9>  9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-10> 10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-11> 11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-12> 12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-13> 13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-14> 14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-15> 15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-16> 16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-17> 17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-18> 18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-19> 19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-20> 20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-21> 21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-22> 22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-23> 23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-24> 24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-25> 25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-26><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-26> 26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-27><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-27> 27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-28><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-28> 28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-29><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-29> 29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-30><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-30> 30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-31><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-31> 31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-32><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-32> 32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-33><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-33> 33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-34><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-34> 34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-35><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-35> 35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-36><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-36> 36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-37><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-37> 37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-38><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-38> 38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-39><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-39> 39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-40><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-40> 40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-41><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-41> 41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-42><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-42> 42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-43><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-43> 43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-44><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-44> 44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-45><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-45> 45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-46><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-46> 46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-47><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-47> 47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-48><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-48> 48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-49><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-49> 49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-50><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-50> 50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-51><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-51> 51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-52><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-52> 52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-53><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-53> 53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-54><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-54> 54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-55><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-55> 55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-56><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-56> 56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-57><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-57> 57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-58><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-58> 58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-59><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-59> 59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-60><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-60> 60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-61><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-61> 61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-62><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-62> 62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-63><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-63> 63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-64><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-64> 64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-65><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-65> 65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-66><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-66> 66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-67><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-67> 67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-68><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-68> 68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-69><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-69> 69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-70><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-70> 70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-71><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-71> 71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-72><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-72> 72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-73><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-73> 73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-74><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-74> 74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-75><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-75> 75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-76><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-76> 76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-77><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-77> 77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-78><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-78> 78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-79><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-79> 79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-80><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-80> 80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-81><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-81> 81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-82><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-82> 82</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-83><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-83> 83</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-84><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-84> 84</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-85><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-85> 85</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-86><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-86> 86</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-87><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-87> 87</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-88><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-88> 88</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-89><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-89> 89</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-90><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-90> 90</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-91><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-91> 91</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-92><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-92> 92</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-93><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-93> 93</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-94><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-94> 94</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-95><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-95> 95</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-96><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-96> 96</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-97><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-97> 97</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-98><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-98> 98</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-99><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-99> 99</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-100><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-100>100</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-101><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-101>101</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-102><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-102>102</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-103><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-103>103</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-104><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-104>104</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-105><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-105>105</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-106><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-106>106</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-107><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-107>107</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-108><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-108>108</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-109><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-109>109</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-110><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-110>110</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-111><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-111>111</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-112><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-112>112</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-113><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-113>113</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-114><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-114>114</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-115><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-115>115</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-116><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-116>116</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-117><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-117>117</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-118><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-118>118</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-119><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-119>119</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-120><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-120>120</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-121><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-121>121</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-122><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-122>122</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-123><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-123>123</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-124><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-124>124</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-125><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-125>125</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-126><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-126>126</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-127><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-127>127</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-128><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-128>128</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-129><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-129>129</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-130><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-130>130</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-131><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-131>131</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-132><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-132>132</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-133><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-133>133</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-134><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-134>134</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-135><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-135>135</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-136><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-136>136</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-137><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-137>137</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-138><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-138>138</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-139><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-139>139</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-140><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-140>140</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-141><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-141>141</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-142><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-142>142</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-143><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-143>143</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-144><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-144>144</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-145><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-145>145</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-146><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-146>146</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-147><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-147>147</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-148><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-148>148</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-149><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-149>149</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-150><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-150>150</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-151><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-151>151</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-152><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-152>152</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-153><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-153>153</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-154><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-154>154</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-155><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-155>155</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-156><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-156>156</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-157><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-157>157</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-158><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-158>158</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-159><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-159>159</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-160><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-160>160</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-161><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-161>161</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-162><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-162>162</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-163><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-163>163</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-164><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-164>164</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-165><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-165>165</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-166><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-166>166</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-167><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-167>167</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-168><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-168>168</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-169><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-169>169</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-170><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-170>170</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-171><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-171>171</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-172><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-172>172</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-173><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-173>173</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-174><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-174>174</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-175><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-175>175</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-176><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-176>176</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-177><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-177>177</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-178><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-178>178</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-179><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-179>179</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-180><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-180>180</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-181><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-181>181</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-182><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-182>182</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-183><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-183>183</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-184><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-184>184</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-185><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-185>185</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-186><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-186>186</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-187><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-187>187</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-188><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-188>188</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-189><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-189>189</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-190><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-190>190</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-191><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-191>191</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-192><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-192>192</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-193><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-193>193</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-194><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-194>194</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-195><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-195>195</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-196><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-196>196</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-197><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-197>197</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-2-198><a style=outline:none;text-decoration:none;color:inherit href=#hl-2-198>198</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python3 data-lang=python3><span style=display:flex><span><span style=color:#60a0b0;font-style:italic>#!/usr/bin/env python3</span>
+</span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic># -*- coding: utf-8 -*-</span>
+</span></span><span style=display:flex><span><span style=color:#4070a0>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>binder_user_stack_resolver.py
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>用法示例：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>1) 先把内核日志导出来：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>   adb shell dmesg | grep binder_open &gt; binder.log
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>2) 把 /proc/&lt;pid&gt;/maps 导出来：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>   adb shell cat /proc/1234/maps &gt; maps_1234.txt
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>3) 在宿主机上执行（假设已提取 system 映像到 /path/to/symbols）：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>   python3 binder_user_stack_resolver.py </span><span style=color:#4070a0;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span><span style=color:#4070a0>       --pid 1234 </span><span style=color:#4070a0;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span><span style=color:#4070a0>       --log binder.log </span><span style=color:#4070a0;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span><span style=color:#4070a0>       --maps maps_1234.txt </span><span style=color:#4070a0;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span><span style=color:#4070a0>       --sym-root /path/to/symbols </span><span style=color:#4070a0;font-weight:700>\
+</span></span></span><span style=display:flex><span><span style=color:#4070a0;font-weight:700></span><span style=color:#4070a0>       --addr2line aarch64-linux-android-addr2line
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>说明：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>- sym-root 目录下应当能找到类似 /system/bin/surfaceflinger 这样的路径
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>  （例如解包 system.img 后的根目录）
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>- addr2line 可以是 aarch64-linux-android-addr2line 或 llvm-addr2line 等
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>&#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>import</span> <span style=color:#0e84b5;font-weight:700>argparse</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>import</span> <span style=color:#0e84b5;font-weight:700>os</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>import</span> <span style=color:#0e84b5;font-weight:700>re</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>import</span> <span style=color:#0e84b5;font-weight:700>subprocess</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>import</span> <span style=color:#0e84b5;font-weight:700>sys</span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>from</span> <span style=color:#0e84b5;font-weight:700>typing</span> <span style=color:#007020;font-weight:700>import</span> List, Tuple, Dict, Optional
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>class</span> <span style=color:#0e84b5;font-weight:700>MapEntry</span>:
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>__init__</span>(<span style=color:#007020>self</span>, start: <span style=color:#007020>int</span>, end: <span style=color:#007020>int</span>, offset: <span style=color:#007020>int</span>, path: <span style=color:#007020>str</span>):
+</span></span><span style=display:flex><span>        <span style=color:#007020>self</span><span style=color:#666>.</span>start <span style=color:#666>=</span> start
+</span></span><span style=display:flex><span>        <span style=color:#007020>self</span><span style=color:#666>.</span>end <span style=color:#666>=</span> end
+</span></span><span style=display:flex><span>        <span style=color:#007020>self</span><span style=color:#666>.</span>offset <span style=color:#666>=</span> offset
+</span></span><span style=display:flex><span>        <span style=color:#007020>self</span><span style=color:#666>.</span>path <span style=color:#666>=</span> path
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>contains</span>(<span style=color:#007020>self</span>, addr: <span style=color:#007020>int</span>) <span style=color:#666>-&gt;</span> <span style=color:#007020>bool</span>:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#007020>self</span><span style=color:#666>.</span>start <span style=color:#666>&lt;=</span> addr <span style=color:#666>&lt;</span> <span style=color:#007020>self</span><span style=color:#666>.</span>end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>file_offset</span>(<span style=color:#007020>self</span>, addr: <span style=color:#007020>int</span>) <span style=color:#666>-&gt;</span> <span style=color:#007020>int</span>:
+</span></span><span style=display:flex><span>        <span style=color:#4070a0>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>        计算 addr 在 ELF 文件内的偏移：
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>        file_off = (addr - start_vma) + file_offset_column
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> (addr <span style=color:#666>-</span> <span style=color:#007020>self</span><span style=color:#666>.</span>start) <span style=color:#666>+</span> <span style=color:#007020>self</span><span style=color:#666>.</span>offset
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>parse_maps</span>(maps_path: <span style=color:#007020>str</span>) <span style=color:#666>-&gt;</span> List[MapEntry]:
+</span></span><span style=display:flex><span>    entries: List[MapEntry] <span style=color:#666>=</span> []
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>with</span> <span style=color:#007020>open</span>(maps_path, <span style=color:#4070a0>&#34;r&#34;</span>, encoding<span style=color:#666>=</span><span style=color:#4070a0>&#34;utf-8&#34;</span>, errors<span style=color:#666>=</span><span style=color:#4070a0>&#34;ignore&#34;</span>) <span style=color:#007020;font-weight:700>as</span> f:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>for</span> line <span style=color:#007020;font-weight:700>in</span> f:
+</span></span><span style=display:flex><span>            line <span style=color:#666>=</span> line<span style=color:#666>.</span>strip()
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> line:
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>            <span style=color:#60a0b0;font-style:italic># 形如：</span>
+</span></span><span style=display:flex><span>            <span style=color:#60a0b0;font-style:italic># start-end perms offset dev inode pathname</span>
+</span></span><span style=display:flex><span>            <span style=color:#60a0b0;font-style:italic># 0000007f8a100000-0000007f8a200000 r-xp 00000000 08:01 123456 /system/bin/surfaceflinger</span>
+</span></span><span style=display:flex><span>            parts <span style=color:#666>=</span> line<span style=color:#666>.</span>split()
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020>len</span>(parts) <span style=color:#666>&lt;</span> <span style=color:#40a070>5</span>:
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            addr_range <span style=color:#666>=</span> parts[<span style=color:#40a070>0</span>]
+</span></span><span style=display:flex><span>            perms <span style=color:#666>=</span> parts[<span style=color:#40a070>1</span>]
+</span></span><span style=display:flex><span>            offset_str <span style=color:#666>=</span> parts[<span style=color:#40a070>2</span>]
+</span></span><span style=display:flex><span>            path <span style=color:#666>=</span> parts[<span style=color:#40a070>5</span>] <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020>len</span>(parts) <span style=color:#666>&gt;=</span> <span style=color:#40a070>6</span> <span style=color:#007020;font-weight:700>else</span> <span style=color:#4070a0>&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#60a0b0;font-style:italic># 只关心可执行映射</span>
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> <span style=color:#4070a0>&#34;x&#34;</span> <span style=color:#007020;font-weight:700>not</span> <span style=color:#007020;font-weight:700>in</span> perms:
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>try</span>:
+</span></span><span style=display:flex><span>                start_str, end_str <span style=color:#666>=</span> addr_range<span style=color:#666>.</span>split(<span style=color:#4070a0>&#34;-&#34;</span>)
+</span></span><span style=display:flex><span>                start <span style=color:#666>=</span> <span style=color:#007020>int</span>(start_str, <span style=color:#40a070>16</span>)
+</span></span><span style=display:flex><span>                end <span style=color:#666>=</span> <span style=color:#007020>int</span>(end_str, <span style=color:#40a070>16</span>)
+</span></span><span style=display:flex><span>                offset <span style=color:#666>=</span> <span style=color:#007020>int</span>(offset_str, <span style=color:#40a070>16</span>)
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>except</span> <span style=color:#007020>ValueError</span>:
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> path <span style=color:#007020;font-weight:700>or</span> path <span style=color:#666>==</span> <span style=color:#4070a0>&#34;[vdso]&#34;</span> <span style=color:#007020;font-weight:700>or</span> path<span style=color:#666>.</span>startswith(<span style=color:#4070a0>&#39;[&#39;</span>):
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            entries<span style=color:#666>.</span>append(MapEntry(start, end, offset, path))
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>return</span> entries
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>find_mapping</span>(maps: List[MapEntry], addr: <span style=color:#007020>int</span>) <span style=color:#666>-&gt;</span> Optional[MapEntry]:
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>for</span> m <span style=color:#007020;font-weight:700>in</span> maps:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> m<span style=color:#666>.</span>contains(addr):
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>return</span> m
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>return</span> <span style=color:#007020;font-weight:700>None</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>resolve_addr</span>(addr: <span style=color:#007020>int</span>, maps: List[MapEntry], sym_root: <span style=color:#007020>str</span>, addr2line_bin: <span style=color:#007020>str</span>) <span style=color:#666>-&gt;</span> <span style=color:#007020>str</span>:
+</span></span><span style=display:flex><span>    m <span style=color:#666>=</span> find_mapping(maps, addr)
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> m:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> &lt;no mapping&gt;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    file_off <span style=color:#666>=</span> m<span style=color:#666>.</span>file_offset(addr)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#60a0b0;font-style:italic># 把 /system/bin/surfaceflinger 这种路径映射到 sym_root/system/bin/surfaceflinger</span>
+</span></span><span style=display:flex><span>    rel_path <span style=color:#666>=</span> m<span style=color:#666>.</span>path<span style=color:#666>.</span>lstrip(<span style=color:#4070a0>&#34;/&#34;</span>)  <span style=color:#60a0b0;font-style:italic># 去掉开头的 &#39;/&#39;</span>
+</span></span><span style=display:flex><span>    elf_path <span style=color:#666>=</span> os<span style=color:#666>.</span>path<span style=color:#666>.</span>join(sym_root, rel_path)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> os<span style=color:#666>.</span>path<span style=color:#666>.</span>exists(elf_path):
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> </span><span style=color:#70a0d0>{</span>m<span style=color:#666>.</span>path<span style=color:#70a0d0>}</span><span style=color:#4070a0>+0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> (ELF not found: </span><span style=color:#70a0d0>{</span>elf_path<span style=color:#70a0d0>}</span><span style=color:#4070a0>)&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    cmd <span style=color:#666>=</span> [addr2line_bin, <span style=color:#4070a0>&#34;-C&#34;</span>, <span style=color:#4070a0>&#34;-f&#34;</span>, <span style=color:#4070a0>&#34;-e&#34;</span>, elf_path, <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0>&#34;</span>]
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>try</span>:
+</span></span><span style=display:flex><span>        out <span style=color:#666>=</span> subprocess<span style=color:#666>.</span>check_output(cmd, stderr<span style=color:#666>=</span>subprocess<span style=color:#666>.</span>STDOUT)
+</span></span><span style=display:flex><span>        decoded <span style=color:#666>=</span> out<span style=color:#666>.</span>decode(<span style=color:#4070a0>&#34;utf-8&#34;</span>, errors<span style=color:#666>=</span><span style=color:#4070a0>&#34;ignore&#34;</span>)<span style=color:#666>.</span>strip()<span style=color:#666>.</span>splitlines()
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020>len</span>(decoded) <span style=color:#666>&gt;=</span> <span style=color:#40a070>2</span>:
+</span></span><span style=display:flex><span>            func <span style=color:#666>=</span> decoded[<span style=color:#40a070>0</span>]
+</span></span><span style=display:flex><span>            loc <span style=color:#666>=</span> decoded[<span style=color:#40a070>1</span>]
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> </span><span style=color:#70a0d0>{</span>m<span style=color:#666>.</span>path<span style=color:#70a0d0>}</span><span style=color:#4070a0>+0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> =&gt; </span><span style=color:#70a0d0>{</span>func<span style=color:#70a0d0>}</span><span style=color:#4070a0> @ </span><span style=color:#70a0d0>{</span>loc<span style=color:#70a0d0>}</span><span style=color:#4070a0>&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>elif</span> decoded:
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> </span><span style=color:#70a0d0>{</span>m<span style=color:#666>.</span>path<span style=color:#70a0d0>}</span><span style=color:#4070a0>+0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> =&gt; </span><span style=color:#70a0d0>{</span>decoded[<span style=color:#40a070>0</span>]<span style=color:#70a0d0>}</span><span style=color:#4070a0>&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>else</span>:
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> </span><span style=color:#70a0d0>{</span>m<span style=color:#666>.</span>path<span style=color:#70a0d0>}</span><span style=color:#4070a0>+0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> (no addr2line output)&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>except</span> subprocess<span style=color:#666>.</span>CalledProcessError <span style=color:#007020;font-weight:700>as</span> e:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>return</span> <span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;0x</span><span style=color:#70a0d0>{</span>addr<span style=color:#70a0d0>:</span><span style=color:#4070a0>016x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> </span><span style=color:#70a0d0>{</span>m<span style=color:#666>.</span>path<span style=color:#70a0d0>}</span><span style=color:#4070a0>+0x</span><span style=color:#70a0d0>{</span>file_off<span style=color:#70a0d0>:</span><span style=color:#4070a0>x</span><span style=color:#70a0d0>}</span><span style=color:#4070a0> (addr2line error: </span><span style=color:#70a0d0>{</span>e<span style=color:#70a0d0>}</span><span style=color:#4070a0>)&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>parse_log_for_pid</span>(log_path: <span style=color:#007020>str</span>, pid: <span style=color:#007020>int</span>) <span style=color:#666>-&gt;</span> List[<span style=color:#007020>int</span>]:
+</span></span><span style=display:flex><span>    <span style=color:#4070a0>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>    从 binder log 中抽取指定 pid 的 [uXX] 行的地址
+</span></span></span><span style=display:flex><span><span style=color:#4070a0>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    addrs: List[<span style=color:#007020>int</span>] <span style=color:#666>=</span> []
+</span></span><span style=display:flex><span>    current_pid: Optional[<span style=color:#007020>int</span>] <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>None</span>
+</span></span><span style=display:flex><span>    in_user_bt <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    pid_line_re <span style=color:#666>=</span> re<span style=color:#666>.</span>compile(<span style=color:#4070a0>r</span><span style=color:#4070a0>&#34;binder_open:\s+pid=(\d+)\s+comm=&#34;</span>)
+</span></span><span style=display:flex><span>    user_bt_re <span style=color:#666>=</span> re<span style=color:#666>.</span>compile(<span style=color:#4070a0>r</span><span style=color:#4070a0>&#34;binder_open:\s+user backtrace&#34;</span>)
+</span></span><span style=display:flex><span>    addr_re <span style=color:#666>=</span> re<span style=color:#666>.</span>compile(<span style=color:#4070a0>r</span><span style=color:#4070a0>&#34;\[u\d+\]\s+0x([0-9a-fA-F]+)&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>with</span> <span style=color:#007020>open</span>(log_path, <span style=color:#4070a0>&#34;r&#34;</span>, encoding<span style=color:#666>=</span><span style=color:#4070a0>&#34;utf-8&#34;</span>, errors<span style=color:#666>=</span><span style=color:#4070a0>&#34;ignore&#34;</span>) <span style=color:#007020;font-weight:700>as</span> f:
+</span></span><span style=display:flex><span>        <span style=color:#007020;font-weight:700>for</span> line <span style=color:#007020;font-weight:700>in</span> f:
+</span></span><span style=display:flex><span>            line <span style=color:#666>=</span> line<span style=color:#666>.</span>rstrip(<span style=color:#4070a0>&#34;</span><span style=color:#4070a0;font-weight:700>\n</span><span style=color:#4070a0>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            m <span style=color:#666>=</span> pid_line_re<span style=color:#666>.</span>search(line)
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> m:
+</span></span><span style=display:flex><span>                current_pid <span style=color:#666>=</span> <span style=color:#007020>int</span>(m<span style=color:#666>.</span>group(<span style=color:#40a070>1</span>))
+</span></span><span style=display:flex><span>                in_user_bt <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>False</span>
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> current_pid <span style=color:#666>==</span> pid <span style=color:#007020;font-weight:700>and</span> user_bt_re<span style=color:#666>.</span>search(line):
+</span></span><span style=display:flex><span>                in_user_bt <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>True</span>
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>continue</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#007020;font-weight:700>if</span> in_user_bt <span style=color:#007020;font-weight:700>and</span> current_pid <span style=color:#666>==</span> pid:
+</span></span><span style=display:flex><span>                m2 <span style=color:#666>=</span> addr_re<span style=color:#666>.</span>search(line)
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>if</span> m2:
+</span></span><span style=display:flex><span>                    addr_str <span style=color:#666>=</span> m2<span style=color:#666>.</span>group(<span style=color:#40a070>1</span>)
+</span></span><span style=display:flex><span>                    addr <span style=color:#666>=</span> <span style=color:#007020>int</span>(addr_str, <span style=color:#40a070>16</span>)
+</span></span><span style=display:flex><span>                    addrs<span style=color:#666>.</span>append(addr)
+</span></span><span style=display:flex><span>                <span style=color:#007020;font-weight:700>else</span>:
+</span></span><span style=display:flex><span>                    <span style=color:#60a0b0;font-style:italic># 遇到不是 [uXX] 的行，认为本次 user backtrace 结束</span>
+</span></span><span style=display:flex><span>                    <span style=color:#007020;font-weight:700>if</span> line<span style=color:#666>.</span>strip() <span style=color:#666>==</span> <span style=color:#4070a0>&#34;&#34;</span> <span style=color:#007020;font-weight:700>or</span> line<span style=color:#666>.</span>startswith(<span style=color:#4070a0>&#34;binder_open:&#34;</span>):
+</span></span><span style=display:flex><span>                        in_user_bt <span style=color:#666>=</span> <span style=color:#007020;font-weight:700>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>return</span> addrs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>def</span> <span style=color:#06287e>main</span>():
+</span></span><span style=display:flex><span>    parser <span style=color:#666>=</span> argparse<span style=color:#666>.</span>ArgumentParser(description<span style=color:#666>=</span><span style=color:#4070a0>&#34;Resolve SurfaceFlinger binder_open user stacks&#34;</span>)
+</span></span><span style=display:flex><span>    parser<span style=color:#666>.</span>add_argument(<span style=color:#4070a0>&#34;--pid&#34;</span>, <span style=color:#007020>type</span><span style=color:#666>=</span><span style=color:#007020>int</span>, required<span style=color:#666>=</span><span style=color:#007020;font-weight:700>True</span>, help<span style=color:#666>=</span><span style=color:#4070a0>&#34;surfaceflinger 的 pid&#34;</span>)
+</span></span><span style=display:flex><span>    parser<span style=color:#666>.</span>add_argument(<span style=color:#4070a0>&#34;--log&#34;</span>, required<span style=color:#666>=</span><span style=color:#007020;font-weight:700>True</span>, help<span style=color:#666>=</span><span style=color:#4070a0>&#34;包含 binder_open 打印的 log 文件&#34;</span>)
+</span></span><span style=display:flex><span>    parser<span style=color:#666>.</span>add_argument(<span style=color:#4070a0>&#34;--maps&#34;</span>, required<span style=color:#666>=</span><span style=color:#007020;font-weight:700>True</span>, help<span style=color:#666>=</span><span style=color:#4070a0>&#34;/proc/&lt;pid&gt;/maps 导出的文件路径&#34;</span>)
+</span></span><span style=display:flex><span>    parser<span style=color:#666>.</span>add_argument(<span style=color:#4070a0>&#34;--sym-root&#34;</span>, required<span style=color:#666>=</span><span style=color:#007020;font-weight:700>True</span>, help<span style=color:#666>=</span><span style=color:#4070a0>&#34;带符号 system/so/root 的根目录&#34;</span>)
+</span></span><span style=display:flex><span>    parser<span style=color:#666>.</span>add_argument(<span style=color:#4070a0>&#34;--addr2line&#34;</span>, default<span style=color:#666>=</span><span style=color:#4070a0>&#34;addr2line&#34;</span>,
+</span></span><span style=display:flex><span>                        help<span style=color:#666>=</span><span style=color:#4070a0>&#34;addr2line 可执行文件名（默认: addr2line，可改为 aarch64-linux-android-addr2line）&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    args <span style=color:#666>=</span> parser<span style=color:#666>.</span>parse_args()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    maps <span style=color:#666>=</span> parse_maps(args<span style=color:#666>.</span>maps)
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> maps:
+</span></span><span style=display:flex><span>        <span style=color:#007020>print</span>(<span style=color:#4070a0>&#34;ERROR: no executable mappings parsed from maps file&#34;</span>, file<span style=color:#666>=</span>sys<span style=color:#666>.</span>stderr)
+</span></span><span style=display:flex><span>        sys<span style=color:#666>.</span>exit(<span style=color:#40a070>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    addrs <span style=color:#666>=</span> parse_log_for_pid(args<span style=color:#666>.</span>log, args<span style=color:#666>.</span>pid)
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>if</span> <span style=color:#007020;font-weight:700>not</span> addrs:
+</span></span><span style=display:flex><span>        <span style=color:#007020>print</span>(<span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;ERROR: no user backtrace addresses found in log for pid=</span><span style=color:#70a0d0>{</span>args<span style=color:#666>.</span>pid<span style=color:#70a0d0>}</span><span style=color:#4070a0>&#34;</span>, file<span style=color:#666>=</span>sys<span style=color:#666>.</span>stderr)
+</span></span><span style=display:flex><span>        sys<span style=color:#666>.</span>exit(<span style=color:#40a070>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#007020>print</span>(<span style=color:#4070a0>f</span><span style=color:#4070a0>&#34;# binder_open user stack for pid=</span><span style=color:#70a0d0>{</span>args<span style=color:#666>.</span>pid<span style=color:#70a0d0>}</span><span style=color:#4070a0>&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#007020;font-weight:700>for</span> addr <span style=color:#007020;font-weight:700>in</span> addrs:
+</span></span><span style=display:flex><span>        resolved <span style=color:#666>=</span> resolve_addr(addr, maps, args<span style=color:#666>.</span>sym_root, args<span style=color:#666>.</span>addr2line)
+</span></span><span style=display:flex><span>        <span style=color:#007020>print</span>(resolved)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#007020;font-weight:700>if</span> <span style=color:#bb60d5>__name__</span> <span style=color:#666>==</span> <span style=color:#4070a0>&#34;__main__&#34;</span>:
+</span></span><span style=display:flex><span>    main()
+</span></span></code></pre></td></tr></table></div></div><p>解析示例</p><p><img src="https://p9-juejin-sign.byteimg.com/tos-cn-i-k3u1fbpfcp/feb930f59b384d90a80014e927befe32~tplv-k3u1fbpfcp-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6:q75.awebp?rk3s=bb34011d&amp;x-expires=1765460747&amp;x-signature=rpEePTAGbwPd85o%2BL9Dra5rbCHk%3D" alt=v2-1c6ad1e9a49a4784aacec07f570deefd~resize_1440_q75.png></p><h1 id=原理分析>原理分析</h1><h2 id=1-发生系统调用时保存现场>1. 发生系统调用时保存现场</h2><p>以用户空间执行 <code>open("/dev/binder")</code> 的系统调用为例，指令是：
+<code>svc #0</code></p><p>CPU 硬件做的事情:</p><ul><li>当 EL0 执行 svc #imm：</li><li>CPU 切换异常级：EL0 → EL1；</li><li>用户 PSTATE 保存到 SPSR_EL1</li><li>用户 PC（svc 下一条指令地址）保存到 ELR_EL1</li><li>使用异常向量表中 EL0 同步异常的入口地址（VBAR_EL1 指向的一张表）：</li><li>跳转到 el0_sync（或类似名字）的入口</li><li>切换栈指针：</li><li>使用 SP_EL1 作为栈指针（这时已经是内核栈）</li><li>SP_EL0 保留的是用户态栈，暂时不会动</li></ul><blockquote><p>注意：此时 x0–x30 里的值仍然是用户态的寄存器值，CPU 没帮你保存到内存，必须靠内核汇编自己存。</p></blockquote><pre tabindex=0><code class=language-assemble data-lang=assemble>arch/arm64/kernel/head.S
+__HEAD
+    primary_entry
+        __primary_switched
+            adr_l	x8, vectors			// load VBAR_EL1 with virtual
+            msr	        vbar_el1, x8			// vector table address
+</code></pre><p>将<code>vectors</code>填入<code>vbar_el1</code>寄存器中，其中<code>vectors</code>是一个全局标记：</p><pre><code>arch/arm64/kernel/entry.S
+/*
+ * Exception vectors.
+ */
+	.pushsection &amp;#34;.entry.text&amp;#34;, &amp;#34;ax&amp;#34;
+
+	.align	11
+SYM_CODE_START(vectors)
+	kernel_ventry	0, t, 64, sync		// Synchronous 64-bit EL0
+SYM_CODE_END(vectors)
+</code></pre><p><code>vectors</code>处通过<code>kernel_ventry</code>定义了多个入口:</p><pre><code>.macro kernel_ventry, el:req, ht:req, regsize:req, label:req
+.align 7
+sub	sp, sp, #PT_REGS_SIZE
+b	el\el\ht\()_\regsize\()_\label
+</code></pre><p>先预留<code>PT_REGS_SIZE</code>大小的栈空间，然后跳转到<code>el0t_64_sync</code>处执行</p><pre><code>SYM_CODE_START_LOCAL(el\el\ht\()_\regsize\()_\label)
+	kernel_entry \el, \regsize
+	mov	x0, sp
+	bl	el\el\ht\()_\regsize\()_\label\()_handler
+	.if \el == 0
+	b	ret_to_user
+	.else
+	b	ret_to_kernel
+	.endif
+SYM_CODE_END(el\el\ht\()_\regsize\()_\label)
+	.endm
+</code></pre><p><code>kernel_entry \el, \regsize</code>宏处保存寄存器信息到内核栈中</p><pre><code>.macro	kernel_entry, el, regsize = 64
+	stp	x0, x1, [sp, #16 * 0]
+	stp	x2, x3, [sp, #16 * 1]
+	stp	x4, x5, [sp, #16 * 2]
+	stp	x6, x7, [sp, #16 * 3]
+	stp	x8, x9, [sp, #16 * 4]
+	stp	x10, x11, [sp, #16 * 5]
+	stp	x12, x13, [sp, #16 * 6]
+	stp	x14, x15, [sp, #16 * 7]
+	stp	x16, x17, [sp, #16 * 8]
+	stp	x18, x19, [sp, #16 * 9]
+	stp	x20, x21, [sp, #16 * 10]
+	stp	x22, x23, [sp, #16 * 11]
+	stp	x24, x25, [sp, #16 * 12]
+	stp	x26, x27, [sp, #16 * 13]
+	stp	x28, x29, [sp, #16 * 14]
+
+	.if	\el == 0
+	clear_gp_regs
+	mrs	x21, sp_el0
+	ldr_this_cpu	tsk, __entry_task, x20
+	msr	sp_el0, tsk
+	.else
+	add	x21, sp, #PT_REGS_SIZE
+	get_current_task tsk
+	.endif /* \el == 0 */
+	mrs	x22, elr_el1
+	mrs	x23, spsr_el1
+	stp	lr, x21, [sp, #S_LR]
+
+	/*
+	 * For exceptions from EL0, create a final frame record.
+	 * For exceptions from EL1, create a synthetic frame record so the
+	 * interrupted code shows up in the backtrace.
+	 */
+	.if \el == 0
+	stp	xzr, xzr, [sp, #S_STACKFRAME] //  pt_regs 区域里写一个终止 frame record（FP、LR = 0），方便 unwinder 知道到头了。
+	.else
+	stp	x29, x22, [sp, #S_STACKFRAME]
+	.endif
+	add	x29, sp, #S_STACKFRAME
+</code></pre><p>之后栈布局如下</p><pre tabindex=0><code>低地址
++-------------------------+
+| struct thread_info      |  &lt;-- 与 task_struct 关联
++-------------------------+
+|                         |
+|       内核栈空间        |  &lt;-- 内核函数调用使用的栈
+|                         |
+|   ... (正常内核栈帧)    |
+|                         |
++-------------------------+  &lt;-- THREAD_SIZE 对齐的栈顶
+|     struct pt_regs      |  &lt;-- 从用户态陷入时压入的寄存器快照
++-------------------------+
+高地址
+</code></pre><h2 id=2--stack_trace的实现>2. stack_trace的实现</h2><div class=highlight><div style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-1><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-2><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-3><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-4><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-5><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-6><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-7><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-8><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-9><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-10><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-11><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-12><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-13><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-14><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-15><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-16><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-17><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-18><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-19><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-20><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-21><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-22><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-23><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-24><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f" id=hl-5-25><a style=outline:none;text-decoration:none;color:inherit href=#hl-5-25>25</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#007020>#ifdef CONFIG_USER_STACKTRACE_SUPPORT
+</span></span></span><span style=display:flex><span><span style=color:#007020></span><span style=color:#60a0b0;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * stack_trace_save_user - Save a user space stack trace into a storage array
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @store:	Pointer to storage array
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * @size:	Size of the storage array
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> * Return: Number of trace entries stored.
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> <span style=color:#06287e>stack_trace_save_user</span>(<span style=color:#902000>unsigned</span> <span style=color:#902000>long</span> <span style=color:#666>*</span>store, <span style=color:#902000>unsigned</span> <span style=color:#902000>int</span> size)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	stack_trace_consume_fn consume_entry <span style=color:#666>=</span> stack_trace_consume_entry;<span style=color:#60a0b0;font-style:italic>//函数指针 
+</span></span></span><span style=display:flex><span><span style=color:#60a0b0;font-style:italic></span>	<span style=color:#007020;font-weight:700>struct</span> stacktrace_cookie c <span style=color:#666>=</span> {
+</span></span><span style=display:flex><span>		.store	<span style=color:#666>=</span> store,
+</span></span><span style=display:flex><span>		.size	<span style=color:#666>=</span> size,
+</span></span><span style=display:flex><span>	};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#60a0b0;font-style:italic>/* Trace user stack if not a kernel thread */</span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>if</span> (current<span style=color:#666>-&gt;</span>flags <span style=color:#666>&amp;</span> PF_KTHREAD)
+</span></span><span style=display:flex><span>		<span style=color:#007020;font-weight:700>return</span> <span style=color:#40a070>0</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#06287e>arch_stack_walk_user</span>(consume_entry, <span style=color:#666>&amp;</span>c, <span style=color:#06287e>task_pt_regs</span>(current));
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#007020;font-weight:700>return</span> c.len;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#007020>#endif
+</span></span></span></code></pre></td></tr></table></div></div><p><code>arch_stack_walk_user</code>是一个架构相关的函数，定义在<code>arch/arm64/kernel/stacktrace.c</code>中：</p><pre tabindex=0><code>void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+					const struct pt_regs *regs)
+{
+	if (!consume_entry(cookie, regs-&gt;pc))
+		return;
+
+	if (!compat_user_mode(regs)) {
+		/* AARCH64 mode */
+		struct frame_tail __user *tail;
+
+		tail = (struct frame_tail __user *)regs-&gt;regs[29];
+		while (tail &amp;&amp; !((unsigned long)tail &amp; 0x7))
+			tail = unwind_user_frame(tail, cookie, consume_entry);
+	} else {
+                /* ...... */
+	}
+}
+</code></pre><p><code>task_pt_regs(current)</code></p><pre tabindex=0><code>#define task_pt_regs(p) \
+	((struct pt_regs *)(THREAD_SIZE + task_stack_page(p)) - 1)
+</code></pre><pre tabindex=0><code>/*
+ * When accessing the stack of a non-current task that might exit, use
+ * try_get_task_stack() instead.  task_stack_page will return a pointer
+ * that could get freed out from under you.
+ */
+static __always_inline void *task_stack_page(const struct task_struct *task)
+{
+	return task-&gt;stack;
+}
+</code></pre><p>其中<code>THREAD_SIZE</code> 是内核栈的大小，<code>task_stack_page</code>拿到的是栈的地址。
+因此<code>task_pt_regs(current)</code>拿到的就是当前进程内核栈上保存的中断线程，然后 <code>arch_stack_walk_user</code>从中找到<code>x29</code>寄存器，并依次去找<code>lr</code>指针和<code>fp</code>指针，就可以抓到用户态的调用栈。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>Yuanye Ma</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2025-12-10</span></p><p class=copyright-item><span class=item-title>License</span>
+<span class=item-content><a rel="license noopener" href=https://creativecommons.org/licenses/by-nc-nd/4.0/ target=_blank>CC BY-NC-ND 4.0</a></span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/kernel/>Kernel</a></div><nav class=post-nav><a class=prev href=/post/os/linux-kernel/2020-10-09-loop%E8%AE%BE%E5%A4%87%E7%9A%84%E4%BD%BF%E7%94%A8/><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417l277.93508-310.326815c11.338233-12.190647 11.035334-32.285311-.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"/></svg>
+</i><span class="prev-text nav-default">loop设备的使用</span>
+<span class="prev-text nav-mobile">Prev</span>
+</a><a class=next href=/post/os/linux-kernel/syzbot/><span class="next-text nav-default">在本地复现syzbot Bugs</span>
+<span class="prev-text nav-mobile">Next</span>
+<i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18"><path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697c-11.777231-11.500939-30.216186-10.304694-41.178865 2.712784z"/></svg></i></a></nav></footer></article><div class=post><script src=https://utteranc.es/client.js repo=YuanyeMa/YuanyeMa.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><nav class=toc id=toc><div class=toc-title>Table of Contents</div><div class="toc-content custom-scrollbar"><nav id=TableOfContents><ul><li><a href=#1-发生系统调用时保存现场>1. 发生系统调用时保存现场</a></li><li><a href=#2--stack_trace的实现>2. stack_trace的实现</a></li></ul></nav></div></nav></div></main><footer id=footer class=footer><div class=icon-links><a href=yuanye.ma@qq.com rel="me noopener" class=iconfont title=email target=_blank><svg class="icon" viewBox="0 0 1451 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36"><path d="M664.781909 681.472759.0 97.881301C0 3.997201 71.046997.0 71.046997.0H474.477909 961.649408h399.992405s71.046998 3.997201 71.046998 97.881301L771.345323 681.472759S764.482731 685.154773 753.594283 688.65053V688.664858C741.602731 693.493018 729.424896 695.068979 718.077952 694.839748 706.731093 695.068979 694.553173 693.493018 682.561621 688.664858V688.65053C671.644501 685.140446 664.781909 681.472759 664.781909 681.472759zm53.281707 130.131124C693.779541 811.016482 658.879232 802.205449 619.10784 767.734955 542.989056 701.759633.0 212.052267.0 212.052267V942.809523S0 1024 83.726336 1024H682.532949 753.579947h595.368192C1432.688811 1024 1432.688811 942.809523 1432.688811 942.809523V212.052267S893.138176 701.759633 817.019477 767.734955c-39.771477 34.470494-74.671786 43.295855-98.955861 43.868928z"/></svg>
+</a><a href=https://www.linkedin.com/in/yuanye-ma-210b6836a/ rel="me noopener" class=iconfont title=linkedin target=_blank><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="33" height="33"><path d="M872.405333 872.618667H720.768V635.008c0-56.661333-1.152-129.578667-79.018667-129.578667-79.061333.0-91.136 61.653333-91.136 125.397334v241.792H398.976V384H544.64v66.602667h1.962667c20.352-38.4 69.845333-78.933333 143.786666-78.933334 153.642667.0 182.058667 101.12 182.058667 232.746667v268.202667zM227.712 317.141333a87.978667 87.978667.0 01-88.021333-88.106666A88.064 88.064.0 11227.712 317.141333zm76.032 555.477334H151.68V384h152.064v488.618667zM948.266667.0h-872.704C33.792.0.0 33.024.0 73.770667v876.458666C0 991.018667 33.792 1024 75.562667 1024h872.576C989.866667 1024 1024 991.018667 1024 950.229333V73.770667C1024 33.024 989.866667.0 948.138667.0h.128z"/></svg>
+</a><a href=https://github.com/YuanyeMa rel="me noopener" class=iconfont title=github target=_blank><svg class="icon" style="" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36"><path d="M512 12.672c-282.88.0-512 229.248-512 512 0 226.261333 146.688 418.133333 350.08 485.76 25.6 4.821333 34.986667-11.008 34.986667-24.618667.0-12.16-.426667-44.373333-.64-87.04C242.005334 929.664 211.968 830.08 211.968 830.08 188.672 770.986667 155.008 755.2 155.008 755.2c-46.378667-31.744 3.584-31.104 3.584-31.104 51.413333 3.584 78.421333 52.736 78.421333 52.736 45.653333 78.293333 119.850667 55.68 149.12 42.581333 4.608-33.109333 17.792-55.68 32.426667-68.48-113.706667-12.8-233.216-56.832-233.216-253.013333.0-55.893333 19.84-101.546667 52.693333-137.386667-5.76-12.928-23.04-64.981333 4.48-135.509333.0.0 42.88-13.738667 140.8 52.48 40.96-11.392 84.48-17.024 128-17.28 43.52.256 87.04 5.888 128 17.28 97.28-66.218667 140.16-52.48 140.16-52.48 27.52 70.528 10.24 122.581333 5.12 135.509333 32.64 35.84 52.48 81.493333 52.48 137.386667.0 196.693333-119.68 240-233.6 252.586667 17.92 15.36 34.56 46.762667 34.56 94.72.0 68.522667-.64 123.562667-.64 140.202666.0 13.44 8.96 29.44 35.2 24.32C877.44 942.592 1024 750.592 1024 524.672c0-282.752-229.248-512-512-512"/></svg>
+</a><a href=https://www.zhihu.com/people/mr-kevin-92/posts rel="me noopener" class=iconfont title=zhihu target=_blank><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36"><path d="M351.791182 562.469462h192.945407c0-45.367257-21.3871-71.939449-21.3871-71.939449L355.897709 490.530013c3.977591-82.182744 7.541767-187.659007 8.816806-226.835262h159.282726s-.86367-67.402109-18.578124-67.402109-279.979646.0-279.979646.0 16.850783-88.141456 39.318494-127.053698c0 0-83.60514-4.510734-112.121614 106.962104S81.344656 355.077018 76.80834 367.390461s24.62791 5.832845 36.941354.0c12.313443-5.832845 68.050885-25.924439 84.252893-103.69571h86.570681c1.165546 49.28652 4.596691 200.335724 3.515057 226.835262H109.86113c-25.275663 18.147312-33.701566 71.939449-33.701566 71.939449H279.868105c-8.497535 56.255235-23.417339 128.763642-44.275389 167.210279-33.05279 60.921511-50.55235 116.65793-169.802314 212.576513.0.0-19.442818 14.257725 40.829917 9.073656 60.273758-5.185093 117.305683-20.739347 156.840094-99.807147 20.553105-41.107233 41.805128-93.250824 58.386782-146.138358l-.055259.185218 167.855986 193.263655s22.035876-51.847855 5.832845-108.880803L371.045711 650.610918l-42.1244 31.157627-.045025.151449c11.69946-41.020252 20.11206-81.5749 22.726607-116.858498C351.665315 564.212152 351.72876 563.345412 351.791182 562.469462z"/><path d="M584.918753 182.033893v668.840094h70.318532l28.807093 80.512708 121.875768-80.512708h153.600307L959.520453 182.033893h-374.6017zM887.150192 778.934538h-79.837326l-99.578949 65.782216-23.537066-65.782216h-24.855084L659.341766 256.673847h227.807403V778.934538z"/></svg>
+</a><a href="https://space.bilibili.com/159072924?spm_id_from=333.1007.0.0" rel="me noopener" class=iconfont title=bilibili target=_blank><svg class="icon" style="" viewBox="0 0 1024 1024" width="36" height="36" id="svg8"><path style="" d="M744.60599.00486267A41.779915 41.779915.0 00710.4184 18.673394L548.5048 255.32642h-11.70046a41.779915 41.779915.0 00-10.80295-7.84928L235.66 97.084498a41.779915 41.779915.0 00-20.07193-4.960864 41.779915 41.779915.0 00-18.3748 79.145436L359.4859 255.32642H128.16909c-49.458302.0-89.27932 39.82105-89.27932 89.27932v508.65224c0 49.4583 39.821018 89.27934 89.27932 89.27934h19.48445C149.12802 984.5043 179.92773 1024 224.79179 1024c44.86407.0 75.66379-39.4957 77.13826-81.46268H719.98116C721.45559 984.5043 752.25533 1024 797.1194 1024c44.86406.0 75.6638-39.4957 77.13824-81.46268h21.57323c49.45831.0 89.27936-39.82104 89.27936-89.27934V344.60574c0-49.45827-39.82105-89.27932-89.27936-89.27932H649.74567L779.38103 65.866924A41.779915 41.779915.0 00744.60599.00486267zM644.49108 418.70871c6.29985.21538 12.44451 2.01107 17.86888 5.22196l171.36218 98.10771c18.23417 10.21935 24.63334 33.34627 14.24614 51.48533-10.38726 18.13909-33.57344 24.32718-51.61587 13.77296L624.9903 489.18895c-15.21356-8.41858-22.66871-26.1765-18.03211-42.93436 4.63664-16.75784 20.15573-28.14465 37.53289-27.54588zM350.2006 432.31846c16.89952.0317 31.69582 11.33328 36.17844 27.62747 4.48262 16.2942-2.44981 33.57765-16.95507 42.24898l-140.7157 86.91312c-17.68528 11.18244-41.09629 5.77692-52.08912-12.02686-10.99282-17.80373-5.33855-41.15658 12.58167-51.95857L329.9002 438.2095c6.0643-3.86439 13.10951-5.90891 20.3004-5.89104zM501.605 641.53985c3.75002-.15248 7.48645.53903 10.93349 2.0235.15842.0637.31618.12888.47325.19582.59328.27092 1.17574.56489 1.74609.88121.15868.0854.31643.17233.47325.2611.55694.32165 1.10131.66458 1.63185 1.02807.16455.1123.32777.2265.48956.34269.50382.36781.99371.75428 1.46868 1.15864.18724.15504.37218.31282.55484.47323.43271.38784.8518.79061 1.25653 1.20756.15449.16114.30679.32437.45693.48959.40798.44266.79989.89988 1.17494 1.37076.17799.22544.35205.45395.5222.68538.25932.34701.50964.70071.75064 1.06071.26712.39516.52286.79784.76699 1.20757.16907.29043.33231.58424.48957.88123.21836.41297.42513.83199.62009 1.25653.14836.32333.28983.64976.42429.97911.21319.51552.40915 1.03801.58747 1.5666.0677.19499.13296.39085.19582.58748.18652.60823.34984 1.22334.48957 1.84399.0397.16277.0779.32601.11423.48957.1436.69112.25788 1.38801.34269 2.08877.005.0381.0111.0761.0163.11424.0857.78056.13474 1.56471.14687 2.34988.005.0543.0111.10879.0163.1632.0.0-.008 1.12132.0 1.45234.0.0-.14697 17.84761 5.89102 34.12231 3.01902 8.13734 7.33278 15.10615 12.61433 19.61501 5.28157 4.50889 11.42894 7.62081 23.64572 7.62081 12.2168.0 18.36416-3.11192 23.64573-7.62081 5.28154-4.50886 9.5953-11.47767 12.6143-19.61501 6.03799-16.2747 5.89103-34.12231 5.89103-34.12231-.44885-13.87045 10.45922-25.46302 24.3311-25.86506 13.87189-.40201 25.42828 10.53953 25.78348 24.41272.0.0 1.11929 25.7226-9.00791 53.01927-5.06359 13.64832-13.1986 28.46036-27.05631 40.29073-13.85772 11.83039-33.5454 19.63135-56.20142 19.63135-22.65603.0-42.34371-7.80096-56.20141-19.63135-4.1801-3.56856-7.78733-7.42433-10.99878-11.42303-3.21235 4.00037-6.81703 7.85309-10.99876 11.42303-13.85773 11.83039-33.5454 19.63135-56.20144 19.63135-22.65601.0-42.3437-7.80096-56.2014-19.63135-13.85775-11.83037-21.99272-26.64241-27.05632-40.29073-10.12725-27.29667-9.00789-53.01928-9.00789-53.01927.20714-13.83687 11.58744-24.88848 25.42444-24.69013 14.1263.19991 25.2971 12.0278 24.69011 26.14247.0.0-.14697 17.84761 5.89103 34.12231 3.01902 8.13734 7.31646 15.10615 12.598 19.61501 5.28155 4.50889 11.44526 7.62081 23.66203 7.62081 12.21681.0 18.36418-3.11192 23.64573-7.62081 5.28154-4.50886 9.57899-11.47767 12.598-19.61501 5.76352-15.53489 5.89112-32.05691 5.89103-33.56746.006-.37466.0111-1.05336.0163-1.20759-.0117-.74583.0105-1.49177.0652-2.23565.009-.15784.0204-.31561.0327-.47324.14204-1.56859.43163-3.12027.86487-4.63449.0213-.0763.0433-.15244.0652-.22848 3.0335-10.25748 12.24157-17.46007 22.92769-17.93417z" id="rect824"/></svg>
+</a><a href=/index.xml rel="noopener alternate" type=application/rss+xml class=iconfont title=rss target=_blank><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30"><path d="M819.157333 1024C819.157333 574.592 449.408 204.8.0 204.8V0c561.706667.0 1024 462.293333 1024 1024H819.157333zM140.416 743.04a140.8 140.8.0 01140.501333 140.586667A140.928 140.928.0 01140.074667 1024C62.72 1024 0 961.109333.0 883.626667S62.933333 743.082667 140.416 743.04zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667v-199.04c372.352.0 678.784 306.517333 678.784 678.826667z"/></svg></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a>
+</span><span class=division>|</span>
+<span class=theme-info>Theme - <a class=theme-link href=https://github.com/xianmin/hugo-theme-jane>Jane</a>
+</span><span class=copyright-year>&copy;
+2024 -
+2025
+<span class=heart><i class=iconfont><svg class="icon" viewBox="0 0 1025 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7.0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1.0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2.0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3.1-42.5-8-83.6-24-122.2z" fill="#8a8a8a"/></svg>
+</i></span><span class=author>Yuanye Ma</span></span></div></footer><div class=button__back-to-top><a href=#back-to-top><i class=iconfont><svg class="icon" viewBox="0 0 1024 1024" xmlns:xlink="http://www.w3.org/1999/xlink" width="35" height="35"><path d="M510.866688 227.694839 95.449397 629.218702h235.761562L329.15309 958.01517h362.40389L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777h894.052392v131.813095H63.840492V63.962777zm0 0"/></svg></i></a></div></div><script type=text/javascript src=/lib/jquery/jquery-3.7.1.min.js></script><script type=text/javascript src=/lib/slideout/slideout-1.0.1.min.js></script><script type=text/javascript src=/js/main.ddb067601dbea435ee282433c7362972c226a69b9e24dcc8b5d0115b68defa08.js integrity="sha256-3bBnYB2+pDXuKCQzxzYpcsImppueJNzItdARW2je+gg=" crossorigin=anonymous></script><script type=text/javascript src=/lib/photoswipe/photoswipe.min.js></script><script type=text/javascript src=/lib/photoswipe/photoswipe-ui-default.min.js></script></body></html>

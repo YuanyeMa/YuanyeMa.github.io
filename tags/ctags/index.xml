@@ -1,562 +1,565 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ctags on Yuanye Ma's Blog</title><link>/tags/ctags/</link><description>Recent content in Ctags on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Thu, 08 Oct 2020 16:01:23 +0800</lastBuildDate><atom:link href="/tags/ctags/index.xml" rel="self" type="application/rss+xml"/><item><title>vim ctags cscope</title><link>/post/os/linux-kernel/2020-10-08-vim-ctags-cscope/</link><pubDate>Thu, 08 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/2020-10-08-vim-ctags-cscope/</guid><description>&lt;h1 id="vim-ctags-cscope">vim ctags cscope&lt;/h1>
-&lt;h2 id="ctags-or-cscope">ctags or cscope&lt;/h2>
-&lt;p>&lt;a href="https://www.itranslater.com/qa/details/2131655261931701248">为什么要同时用ctags和cscope&lt;/a>&lt;/p>
-&lt;p>ctags启用了两个功能：允许您从函数调用跳转到其定义，以及omni完成。&lt;/p>
-&lt;p>​ 第一个功能意味着当您调用方法时，按&lt;code>cscope_gen.sh&lt;/code>或&lt;code>g]&lt;/code>将跳转到定义或实现该方法的位置。&lt;/p>
-&lt;p>​ 第二个功能意味着当您键入&lt;code>foo.&lt;/code>或&lt;code>foo-&amp;gt;&lt;/code>时，如果foo是结构，则将显示具有字段完成的弹出菜单。&lt;/p>
-&lt;p>cscope也有第一个功能 - 使用&lt;code>cscope_gen.sh&lt;/code> 。 但是，cscope还增加了跳转到调用函数的任何地方的能力。&lt;/p>
-&lt;p>因此，就跳转代码库而言，ctags只会引导您前往实现函数的位置，而cscope也可以向您显示调用函数的位置。&lt;/p>
-&lt;p>ctags更容易设置，运行速度更快，如果你只关心单向跳跃，它会显示更少的线条。 您只需运行&lt;code>cscope_gen.sh&lt;/code>和&lt;code>g]&lt;/code>即可。 它还可以实现全方位的完整。&lt;/p>
-&lt;p>Cscope非常适合更大，未知的代码库。 设置很痛苦，因为cscope需要一个包含要解析的文件名列表的文件。 同样在vim中，默认情况下没有设置键绑定 - 您需要手动运行&lt;code>cscope_gen.sh&lt;/code>。&lt;/p>
-&lt;hr>
-&lt;h2 id="安装">安装&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo apt-get install ctags
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt-get install cscope
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="ctags">ctags&lt;/h2>
-&lt;ol>
-&lt;li>
-&lt;p>生成tags&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5">5&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">cd&lt;/span> linux/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ctags -R ./
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 在当前目录生成了tags文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kevin→ $ ls -lh tags
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 392M 10月 &lt;span style="color:#40a070">8&lt;/span> 20:50 tags
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>将tags添加到vimrc中&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ vim ~/.vimrc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> &lt;span style="color:#bb60d5">tag&lt;/span> &lt;span style="color:#666">=&lt;/span> /home/kevin/linux/tags
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>简单使用&lt;/p>
-&lt;ul>
-&lt;li>光标停留在符号上按&lt;code>ctrl+]&lt;/code>自动跳转到定义处， &lt;code>ctrl+t&lt;/code>跳转回调用处。&lt;/li>
-&lt;li>&lt;code>vim -t start_kernel&lt;/code> 会自动打开打开并跳转。&lt;/li>
-&lt;li>vim中输入&lt;code>tselect tag&lt;/code>会列出tag的表单，输入数字选择跳转到哪一处&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>HOW TO USE WITH VI&lt;/p>
-&lt;p>Vi will, by default, expect a tag file by the name &amp;ldquo;tags&amp;rdquo; in the current directory. Once the tag file is built, the following commands exercise the tag indexing feature:&lt;/p>
-&lt;p>&lt;strong>vi −t tag&lt;/strong> Start vi and position the cursor at the file and line where &amp;ldquo;tag&amp;rdquo; is defined.
-&lt;strong>:ta tag&lt;/strong> Find a tag.&lt;br>
-&lt;strong>Ctrl-]&lt;/strong> Find the tag under the cursor.
-&lt;strong>Ctrl-T&lt;/strong> Return to previous location before jump to tag (not widely implemented).&lt;/p>&lt;/blockquote>
-&lt;h2 id="cscope">cscope&lt;/h2>
-&lt;p>配置&lt;code>cscope&lt;/code>&lt;/p>
-&lt;blockquote>
-&lt;p>在vim中输入&lt;code>:help cscope-suggestions&lt;/code>可以查看帮助&lt;/p>&lt;/blockquote>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16">16&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ vim ~/.vimrc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 写入以下内容&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">if&lt;/span> has&lt;span style="color:#666">(&lt;/span>&lt;span style="color:#4070a0">&amp;#34;cscope&amp;#34;&lt;/span>&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">set&lt;/span> &lt;span style="color:#bb60d5">csprg&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/bin/cscope &lt;span style="color:#4070a0">&amp;#34;指定用来执行 cscope 的命令
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0"> set csto=0
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0"> set cst &amp;#34;&lt;/span>使用|:cstag|&lt;span style="color:#666">(&lt;/span>:cs find g&lt;span style="color:#666">)&lt;/span>，而不是缺省的:tag
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">set&lt;/span> nocsverb &lt;span style="color:#4070a0">&amp;#34;不显示添加数据库是否成功
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0"> &amp;#34;&lt;/span> add any database in current directory
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">if&lt;/span> filereadable&lt;span style="color:#666">(&lt;/span>&lt;span style="color:#4070a0">&amp;#34;cscope.out&amp;#34;&lt;/span>&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cs add cscope.out &lt;span style="color:#4070a0">&amp;#34;添加cscope数据库
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0"> &amp;#34;&lt;/span> &lt;span style="color:#007020;font-weight:bold">else&lt;/span> add database pointed to by environment
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> elseif &lt;span style="color:#bb60d5">$CSCOPE_DB&lt;/span> !&lt;span style="color:#666">=&lt;/span> &lt;span style="color:#4070a0">&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cs add &lt;span style="color:#bb60d5">$CSCOPE_DB&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> endif
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">set&lt;/span> csverb &lt;span style="color:#4070a0">&amp;#34;显示添加成功与否
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">endif
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>生成符号数据库&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-19">19&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">cd&lt;/span> linux
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ make cscope
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#使用下面的命令生成代码的符号索引文件：&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cscope -Rbkq
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#这个命令会生成三个文件：cscope.out, cscope.in.out, cscope.po.out。&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#其中cscope.out是基本的符号索引，后两个文件是使用&amp;#34;-q&amp;#34;选项生成的，可以加快cscope的索引速度。上面命令的参数含义如下：&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -R: 在生成索引文件时，搜索子目录树中的代码&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -b: 只生成索引文件，不进入cscope的界面&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -d: 只调出cscope gui界面，不跟新cscope.out&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -k: 在生成索引文件时，不搜索/usr/include目录&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -q: 生成cscope.in.out和cscope.po.out文件，加快cscope的索引速度&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -i: 如果保存文件列表的文件名不是cscope.files时，需要加此选项告诉cscope到哪儿去找源文件列表。可以使用&amp;#34;-&amp;#34;，表示由标准输入获得文件列表。&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -I dir: 在-I选项指出的目录中查找头文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -u: 扫描所有文件，重新生成交叉索引文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -C: 在搜索时忽略大小写&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># -P path: 在以相对路径表示的文件前加上的path，这样，你不用切换到你数据库文件所在的目录也可以使用它了。 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">#在缺省情况下，cscope在生成数据库后就会进入它自己的查询界面，一般不用这个界面，所以使用了&amp;#34;-b&amp;#34;选项。如果已经进入了这个界面，按CTRL-D退出。 &lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>cscope&lt;/code>的，命令格式如下：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-16">16&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cscope 命令:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>add ：添加一个新的数据库 &lt;span style="color:#666">(&lt;/span>用法： add file|dir &lt;span style="color:#666">[&lt;/span>pre-path&lt;span style="color:#666">]&lt;/span> &lt;span style="color:#666">[&lt;/span>flags&lt;span style="color:#666">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>find ：查询一个模式 &lt;span style="color:#666">(&lt;/span>用法： find a|c|d|e|f|g|i|s|t name&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> a: Find assignments to this symbol
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> c: Find functions calling this &lt;span style="color:#007020;font-weight:bold">function&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> d: Find functions called by this &lt;span style="color:#007020;font-weight:bold">function&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> e: Find this egrep pattern
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f: Find this file
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> g: Find this definition
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> i: Find files &lt;span style="color:#60a0b0;font-style:italic">#including this file&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s: Find this C symbol
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> t: Find this text string
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">help&lt;/span> ：显示此信息 &lt;span style="color:#666">(&lt;/span>用法： &lt;span style="color:#007020">help&lt;/span>&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">kill&lt;/span> ：结束一个连接 &lt;span style="color:#666">(&lt;/span>用法： &lt;span style="color:#007020">kill&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>reset：重置所有连接 &lt;span style="color:#666">(&lt;/span>用法： reset&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>show ：显示连接 &lt;span style="color:#666">(&lt;/span>用法： show&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>说一下里边的键map映射&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-24">24&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>如： nmap &amp;lt;C-&lt;span style="color:#4070a0;font-weight:bold">\&amp;gt;&lt;/span>s :cs find s &amp;lt;C-R&amp;gt;&lt;span style="color:#666">=&lt;/span>expand&lt;span style="color:#666">(&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&amp;lt;cword&amp;gt;&amp;#34;&lt;/span>&lt;span style="color:#666">)&lt;/span>&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap 表示在vim的普通模式下，即相对于：编辑模块和可视模式，以下是几种模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :map 普通，可视模式及操作符等待模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :vmap 可视模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :omap 操作符等待模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :map! 插入和命令行模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :imap 插入模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> :cmap 命令行模式
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;C-&lt;span style="color:#4070a0;font-weight:bold">\&amp;gt;&lt;/span>表示：Ctrl+&lt;span style="color:#4070a0;font-weight:bold">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0;font-weight:bold">&lt;/span>s表示输入&lt;span style="color:#666">(&lt;/span>即按：s&lt;span style="color:#666">)&lt;/span>s
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>: 表示输入&lt;span style="color:#4070a0">&amp;#39;:&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>“cs find s&lt;span style="color:#4070a0">&amp;#34;表示输入&amp;#34;&lt;/span>cs find s&lt;span style="color:#4070a0">&amp;#34;也即是要输入的命令
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>cword&lt;span style="color:#4070a0">&amp;#34;)总体是为了得到：光标下的变量或函数。\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">cword 表示：cursor word, 类似的还有：cfile表示光标所在处的文件名
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">将下面的内容添加到~/.vimrc中, 并重启vim:
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;s :cs find s &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;g :cs find g &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;c :cs find c &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;t :cs find t &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;e :cs find e &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;f :cs find f &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cfile&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;i :cs find i ^&amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cfile&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&lt;/span>$&lt;span style="color:#4070a0">&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">nmap &amp;lt;C-_&amp;gt;d :cs find d &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span>&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0">&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">当光标停在某个你要查找的词上时, 按下&amp;lt;C-_&amp;gt;g, 就是查找该对象的定义, 其他的同理.
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h1 id="搭建阅读内核环境的一些补充">搭建阅读内核环境的一些补充&lt;/h1>
-&lt;blockquote>
-&lt;p>本节内容摘自《ARM Linux源码剖析》&lt;/p>&lt;/blockquote>
-&lt;ol>
-&lt;li>
-&lt;p>下载解压内核&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>安装&lt;code>ctages&lt;/code> 和 &lt;code>cscope&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo apt install ctags cscope
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>生成标签&lt;/p>
-&lt;p>&lt;code>ctags&lt;/code>程序通过程序代码生成标签，用以生成函数、变量、类成员、宏等的索引，以管理数据库。&lt;/p>
-&lt;p>使用&lt;code>ctags&lt;/code>生成标签的命令是&lt;code>ctags -R&lt;/code>。内核源码树中提供了用于生成各种架构&lt;code>ctags&lt;/code>标签的脚本&lt;code>./scripts/tags.sh&lt;/code>, 使用命令 &lt;code>make tags ARCH=arm&lt;/code>可以生成&lt;code>arm&lt;/code>架构的内核源码标签。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ ls ./scripts/tags.sh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./scripts/tags.sh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ make tags &lt;span style="color:#bb60d5">ARCH&lt;/span>&lt;span style="color:#666">=&lt;/span>arm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GEN tags
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ls -lah tags
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 89M Nov &lt;span style="color:#40a070">14&lt;/span> 16:36 ./tags &lt;span style="color:#60a0b0;font-style:italic"># 生成的89MB的tags文件&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;/ol>
-&lt;blockquote>
-&lt;p>&lt;code>tags&lt;/code>文件结构&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-7">7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-8">8&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>tart_kernel include/linux/start_kernel.h /^extern asmlinkage void __init start_kernel&lt;span style="color:#666">(&lt;/span>void&lt;span style="color:#666">)&lt;/span>;$/;&lt;span style="color:#4070a0">&amp;#34; p
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">start_kernel init/main.c /^asmlinkage void __init start_kernel(void)&lt;/span>$&lt;span style="color:#4070a0">/;&amp;#34;&lt;/span> f
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tags_name&amp;lt;TAB&amp;gt;file_name&amp;lt;TAB&amp;gt;ex_cmd;&amp;lt;TAB&amp;gt;extension_fields
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># tags_name 符号名 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># file_name 符号所在的文件名 &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># ex_cmd 在文件中查找符号时，使用vim的ex模式，在此模式中搜索范式的正则表达式&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># extension_field 符号类型 f=普通C函数， c=类， d=已定义的值&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/blockquote>
-&lt;p>生成&lt;code>cscope&lt;/code>数据库&lt;/p>
-&lt;p>&lt;code>ctags&lt;/code>只能进行单方向的搜索，无法搜索调用的函数； 无法输出调用该函数的函数；无法输出该函数调用的函数。&lt;code>cscope&lt;/code>与&lt;code>ctags&lt;/code>十分相似，但是补充了&lt;code>ctags&lt;/code>的不足。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-12">12&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ make cscope &lt;span style="color:#bb60d5">ARCH&lt;/span>&lt;span style="color:#666">=&lt;/span>arm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GEN cscope
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ls cscope* -lh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 449K Nov &lt;span style="color:#40a070">14&lt;/span> 16:39 cscope.files
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 178M Nov &lt;span style="color:#40a070">14&lt;/span> 16:39 cscope.out
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 34M Nov &lt;span style="color:#40a070">14&lt;/span> 16:39 cscope.out.in
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-rw-r-- &lt;span style="color:#40a070">1&lt;/span> kevin kevin 258M Nov &lt;span style="color:#40a070">14&lt;/span> 16:39 cscope.out.po
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># 生成的四个文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># cscope.files 含有要分析的代码文件列表的文件&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># cscope.out 针对函数位置、函数调用、宏、变量、预处理符号的符号交叉引用文件，是实际的数据库&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># cscope.out.in 用-q选项生成数据库时生成的文件，用于提高符号搜索速度的反向索引&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># cscope.out.po 用-q选项生成数据库时生成的文件，作用同cscope.in&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;ol start="4">
-&lt;li>
-&lt;p>vim下插件配置&lt;/p>
-&lt;p>&lt;code>Source Explorer&lt;/code> : 当光标停留在变量名或者函数名时，会显示此变量或者函数所在的文件列表；&lt;/p>
-&lt;p>&lt;code>NERDTree&lt;/code> : 显示源码目录树；&lt;/p>
-&lt;p>&lt;code>Tag List&lt;/code> : 显示文件中的符号列表；&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>​ vim的插件可以到&lt;a href="https://www.vim.org/">vim官网&lt;/a>下载，点击左侧&amp;quot;Scripts&amp;quot; -&amp;gt; &amp;ldquo;Browse all&amp;quot;在下方出现的搜索窗口中依次搜索需要的插件并下载。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-4">4&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ mkdir -p ~/.vim/plugin
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ mv srcexpl.vim ~/.vim/plugin/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ mv NERD_tree.zip ~/.vim/ &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> unzip NERD_tree.zip
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ mv taglist_45.zip ~/.vim/ &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> unzip taglist_45.zip
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>配置vim插件&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-29">29&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-30">30&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-31">31&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-32">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-32">32&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-33">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-33">33&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-34">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-34">34&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-35">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-35">35&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-36">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-36">36&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-37">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-37">37&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-38">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-38">38&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-39">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-39">39&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-40">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-40">40&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-41">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-41">41&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-42">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-42">42&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-43">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-43">43&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-44">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-44">44&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-45">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-45">45&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-46">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-46">46&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-47">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-47">47&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-48">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-48">48&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-49">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-49">49&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-50">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-50">50&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-51">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-51">51&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ vim ~/.vimrc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;ctags database path&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> &lt;span style="color:#bb60d5">tags&lt;/span>&lt;span style="color:#666">=&lt;/span>xxxxxx/tags &lt;span style="color:#4070a0">&amp;#34;ctags DB位置&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;cscope database path&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> &lt;span style="color:#bb60d5">csprg&lt;/span>&lt;span style="color:#666">=&lt;/span>/usr/bin/cscope &lt;span style="color:#4070a0">&amp;#34;cscope可执行程序的路径&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> &lt;span style="color:#bb60d5">csto&lt;/span>&lt;span style="color:#666">=&lt;/span>0 &lt;span style="color:#4070a0">&amp;#34;cscope DS search first&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> cst &lt;span style="color:#4070a0">&amp;#34;cscope D tag DB search&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> nocsverb &lt;span style="color:#4070a0">&amp;#34;verbose off&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cs add /home/xxxx/cscope.out /home/code/linux-2.6.30.4
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">set&lt;/span> csverb
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;Tag List&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>filetype on
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;F7&amp;gt; :TlistToggle&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">Tlist_Ctags_Cmd&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#4070a0">&amp;#34;/usr/bin/ctags&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">Tlist_Inc_Winwidth&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">0&lt;/span> &lt;span style="color:#4070a0">&amp;#34;window width change off&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">Tlist_Exit_OnlyWindow&lt;/span> &lt;span style="color:#666">=&lt;/span> 0 &lt;span style="color:#4070a0">&amp;#34;tag/file完成选择时taglist window close = off&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">Tlist_Auto_Open&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">Tlist_Use_Right_Window&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;Source Explore&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;F8&amp;gt; :SrcExplToggle&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;C-H&amp;gt; &amp;lt;C-W&amp;gt;h &lt;span style="color:#4070a0">&amp;#34;向左侧窗口移动&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;C-J&amp;gt; &amp;lt;C-W&amp;gt;j &lt;span style="color:#4070a0">&amp;#34;向下侧窗口移动&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;C-K&amp;gt; &amp;lt;C-W&amp;gt;k &lt;span style="color:#4070a0">&amp;#34;向上侧窗口移动&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;C-L&amp;gt; &amp;lt;C-W&amp;gt;l &lt;span style="color:#4070a0">&amp;#34;向右侧窗口移动&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> g:SrcExpl_winHeight &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">8&lt;/span> &lt;span style="color:#4070a0">&amp;#34;指定SrcExpl Windows高度&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> g:SrcExpl_refreshTime &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">100&lt;/span> &lt;span style="color:#4070a0">&amp;#34;100ms&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> g:SrcExpl_jumpKey &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#4070a0">&amp;#34;&amp;lt;Enter&amp;gt;&amp;#34;&lt;/span> &lt;span style="color:#4070a0">&amp;#34;按Enter跳转到相应的defineition&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> g:SrcExpl_gobackKey &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#4070a0">&amp;#34;&amp;lt;SPACE&amp;gt;&amp;#34;&lt;/span> &lt;span style="color:#4070a0">&amp;#34;back&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> g:SrcExpl_isUpdateTags &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#40a070">0&lt;/span> &lt;span style="color:#4070a0">&amp;#34;tag file update = off&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;NERD Tree&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#4070a0">&amp;#34;------------------------------------------------&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">let&lt;/span> &lt;span style="color:#bb60d5">NERDTreeWinPos&lt;/span> &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#4070a0">&amp;#34;left&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nmap &amp;lt;F2&amp;gt; :NERDTreeToggle&amp;lt;CR&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>打开&lt;code>vim&lt;/code>，按&lt;code>F2&lt;/code>在左侧出现&lt;code>NERDTree&lt;/code>源码目录树，选择&lt;code>./init/main.c&lt;/code>。按&lt;code>Enter&lt;/code>打开源码文件， 按&lt;code>F8 F9&lt;/code>打开&lt;code>TagList&lt;/code>和&lt;code>Source Explorer&lt;/code>窗口。&lt;/p>
-&lt;p>将光标移动到右侧的&lt;code>TagList&lt;/code>窗口后，进入vim的ex模式(按Esc)后，输入&lt;code>:/start_kernel&lt;/code>， &lt;code>TagList&lt;/code>窗口会自动跳转到&lt;code>start_kernel&lt;/code>符号处，再按&lt;code>Enter&lt;/code>，则代码文件窗口会显示定义&lt;code>start_kernel&lt;/code>的位置。&lt;/p>
-&lt;p>在代码窗口移动光标到函数或者变量名上时，在下方的&lt;code>Source Explorer&lt;/code>窗口会显示定义相应符号的文件目录。将光标移动到下方&lt;code>Source Explorer&lt;/code>窗口,上下选择要浏览的文件，按&lt;code>Enter&lt;/code>上方代码浏览窗口会显示相应的文件内容， 按&lt;code>SPACE&lt;/code>会回退。&lt;/p>
-&lt;p>常用ctags命令&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>命令&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>ctrl+]&lt;/td>
-&lt;td>移动到定义函数的位置&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>ctrl+t&lt;/td>
-&lt;td>回退到跳转前的位置&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>cscope命令格式&lt;code>: cs find &amp;lt;querytype&amp;gt; &amp;lt;name&amp;gt;&lt;/code>&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>querytype&lt;/th>
-&lt;th>说明&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>0 or s&lt;/td>
-&lt;td>查找c符号&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>1 or g&lt;/td>
-&lt;td>查找定义（definition）&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>2 or d&lt;/td>
-&lt;td>查找被该函数调用（called）的函数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>3 or c&lt;/td>
-&lt;td>查找调用该函数的（calling）函数&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>4 or t&lt;/td>
-&lt;td>查找文本字符串(text string)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>6 or e&lt;/td>
-&lt;td>查找egrep范式&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>7 or f&lt;/td>
-&lt;td>查找文件&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>8 or i&lt;/td>
-&lt;td>查找用#include包含该文件的文件&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>&lt;code>：hellp cscope&lt;/code>可以查看更详细的指令用法。&lt;/p>
-&lt;h2 id="参考文献">参考文献&lt;/h2>
-&lt;p>&lt;a href="http://cscope.sourceforge.net/">cscope官网&lt;/a>&lt;br>
-&lt;a href="https://blog.csdn.net/dengxiayehu/article/details/6330200">Cscope的使用（领略Vim + Cscope的强大魅力）&lt;/a>&lt;br>
-&lt;a href="http://ctags.sourceforge.net/">ctags&lt;/a>&lt;br>
-&lt;a href="https://blog.csdn.net/w_linux/article/details/72784989">Ubuntu下查看Linux内核源码(vim+ctags) &lt;/a>
-&lt;a href="https://blog.csdn.net/G_BrightBoy/article/details/16830395">vim插件ctags的安装和使用 &lt;/a>
-[&lt;a href="https://www.cnblogs.com/linux-sir/p/4675919.html">VIM使用(二) 浏览内核源代码&lt;/a> ](&lt;a href="https://www.cnblogs.com/linux-sir/p/4675919.html">https://www.cnblogs.com/linux-sir/p/4675919.html&lt;/a>)
-&lt;a href="http://biancheng.dnbcw.net/linux/347492.html">定义cscope快捷键&lt;/a>&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ctags on Yuanye Ma's Blog</title><link>/tags/ctags/</link><description>Recent content in Ctags on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Thu, 08 Oct 2020 16:01:23 +0800</lastBuildDate><atom:link href="/tags/ctags/index.xml" rel="self" type="application/rss+xml"/><item><title>vim ctags cscope</title><link>/post/os/linux-kernel/2020-10-08-vim-ctags-cscope/</link><pubDate>Thu, 08 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/2020-10-08-vim-ctags-cscope/</guid><description>&lt;h1 id="vim-ctags-cscope"&gt;vim ctags cscope&lt;/h1&gt;
+&lt;h2 id="ctags-or-cscope"&gt;ctags or cscope&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.itranslater.com/qa/details/2131655261931701248"&gt;为什么要同时用ctags和cscope&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ctags启用了两个功能：允许您从函数调用跳转到其定义，以及omni完成。&lt;/p&gt;
+&lt;p&gt;​ 第一个功能意味着当您调用方法时，按&lt;code&gt;cscope_gen.sh&lt;/code&gt;或&lt;code&gt;g]&lt;/code&gt;将跳转到定义或实现该方法的位置。&lt;/p&gt;
+&lt;p&gt;​ 第二个功能意味着当您键入&lt;code&gt;foo.&lt;/code&gt;或&lt;code&gt;foo-&amp;gt;&lt;/code&gt;时，如果foo是结构，则将显示具有字段完成的弹出菜单。&lt;/p&gt;
+&lt;p&gt;cscope也有第一个功能 - 使用&lt;code&gt;cscope_gen.sh&lt;/code&gt; 。 但是，cscope还增加了跳转到调用函数的任何地方的能力。&lt;/p&gt;
+&lt;p&gt;因此，就跳转代码库而言，ctags只会引导您前往实现函数的位置，而cscope也可以向您显示调用函数的位置。&lt;/p&gt;
+&lt;p&gt;ctags更容易设置，运行速度更快，如果你只关心单向跳跃，它会显示更少的线条。 您只需运行&lt;code&gt;cscope_gen.sh&lt;/code&gt;和&lt;code&gt;g]&lt;/code&gt;即可。 它还可以实现全方位的完整。&lt;/p&gt;
+&lt;p&gt;Cscope非常适合更大，未知的代码库。 设置很痛苦，因为cscope需要一个包含要解析的文件名列表的文件。 同样在vim中，默认情况下没有设置键绑定 - 您需要手动运行&lt;code&gt;cscope_gen.sh&lt;/code&gt;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="安装"&gt;安装&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install ctags
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt-get install cscope
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="ctags"&gt;ctags&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;生成tags&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;cd&lt;/span&gt; linux/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ctags -R ./
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 在当前目录生成了tags文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;kevin→ $ ls -lh tags
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 392M 10月 &lt;span style="color:#40a070"&gt;8&lt;/span&gt; 20:50 tags
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;将tags添加到vimrc中&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ vim ~/.vimrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;tag&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; /home/kevin/linux/tags
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;简单使用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;光标停留在符号上按&lt;code&gt;ctrl+]&lt;/code&gt;自动跳转到定义处， &lt;code&gt;ctrl+t&lt;/code&gt;跳转回调用处。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;vim -t start_kernel&lt;/code&gt; 会自动打开打开并跳转。&lt;/li&gt;
+&lt;li&gt;vim中输入&lt;code&gt;tselect tag&lt;/code&gt;会列出tag的表单，输入数字选择跳转到哪一处&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;HOW TO USE WITH VI&lt;/p&gt;
+&lt;p&gt;Vi will, by default, expect a tag file by the name &amp;ldquo;tags&amp;rdquo; in the current directory. Once the tag file is built, the following commands exercise the tag indexing feature:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;vi −t tag&lt;/strong&gt; Start vi and position the cursor at the file and line where &amp;ldquo;tag&amp;rdquo; is defined.
+&lt;strong&gt;:ta tag&lt;/strong&gt; Find a tag.&lt;br&gt;
+&lt;strong&gt;Ctrl-]&lt;/strong&gt; Find the tag under the cursor.
+&lt;strong&gt;Ctrl-T&lt;/strong&gt; Return to previous location before jump to tag (not widely implemented).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="cscope"&gt;cscope&lt;/h2&gt;
+&lt;p&gt;配置&lt;code&gt;cscope&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;在vim中输入&lt;code&gt;:help cscope-suggestions&lt;/code&gt;可以查看帮助&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ vim ~/.vimrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 写入以下内容&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;if&lt;/span&gt; has&lt;span style="color:#666"&gt;(&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;cscope&amp;#34;&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020"&gt;set&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;csprg&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/usr/bin/cscope &lt;span style="color:#4070a0"&gt;&amp;#34;指定用来执行 cscope 的命令
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt; set csto=0
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt; set cst &amp;#34;&lt;/span&gt;使用|:cstag|&lt;span style="color:#666"&gt;(&lt;/span&gt;:cs find g&lt;span style="color:#666"&gt;)&lt;/span&gt;，而不是缺省的:tag
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020"&gt;set&lt;/span&gt; nocsverb &lt;span style="color:#4070a0"&gt;&amp;#34;不显示添加数据库是否成功
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt; &amp;#34;&lt;/span&gt; add any database in current directory
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;if&lt;/span&gt; filereadable&lt;span style="color:#666"&gt;(&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;cscope.out&amp;#34;&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cs add cscope.out &lt;span style="color:#4070a0"&gt;&amp;#34;添加cscope数据库
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt; &amp;#34;&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;else&lt;/span&gt; add database pointed to by environment
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; elseif &lt;span style="color:#bb60d5"&gt;$CSCOPE_DB&lt;/span&gt; !&lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cs add &lt;span style="color:#bb60d5"&gt;$CSCOPE_DB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; endif
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020"&gt;set&lt;/span&gt; csverb &lt;span style="color:#4070a0"&gt;&amp;#34;显示添加成功与否
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;生成符号数据库&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;cd&lt;/span&gt; linux
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ make cscope
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#使用下面的命令生成代码的符号索引文件：&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ cscope -Rbkq
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#这个命令会生成三个文件：cscope.out, cscope.in.out, cscope.po.out。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#其中cscope.out是基本的符号索引，后两个文件是使用&amp;#34;-q&amp;#34;选项生成的，可以加快cscope的索引速度。上面命令的参数含义如下：&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -R: 在生成索引文件时，搜索子目录树中的代码&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -b: 只生成索引文件，不进入cscope的界面&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -d: 只调出cscope gui界面，不跟新cscope.out&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -k: 在生成索引文件时，不搜索/usr/include目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -q: 生成cscope.in.out和cscope.po.out文件，加快cscope的索引速度&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -i: 如果保存文件列表的文件名不是cscope.files时，需要加此选项告诉cscope到哪儿去找源文件列表。可以使用&amp;#34;-&amp;#34;，表示由标准输入获得文件列表。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -I dir: 在-I选项指出的目录中查找头文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -u: 扫描所有文件，重新生成交叉索引文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -C: 在搜索时忽略大小写&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# -P path: 在以相对路径表示的文件前加上的path，这样，你不用切换到你数据库文件所在的目录也可以使用它了。 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;#在缺省情况下，cscope在生成数据库后就会进入它自己的查询界面，一般不用这个界面，所以使用了&amp;#34;-b&amp;#34;选项。如果已经进入了这个界面，按CTRL-D退出。 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;cscope&lt;/code&gt;的，命令格式如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cscope 命令:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;add ：添加一个新的数据库 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： add file|dir &lt;span style="color:#666"&gt;[&lt;/span&gt;pre-path&lt;span style="color:#666"&gt;]&lt;/span&gt; &lt;span style="color:#666"&gt;[&lt;/span&gt;flags&lt;span style="color:#666"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;find ：查询一个模式 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： find a|c|d|e|f|g|i|s|t name&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; a: Find assignments to this symbol
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; c: Find functions calling this &lt;span style="color:#007020;font-weight:bold"&gt;function&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; d: Find functions called by this &lt;span style="color:#007020;font-weight:bold"&gt;function&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; e: Find this egrep pattern
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; f: Find this file
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; g: Find this definition
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; i: Find files &lt;span style="color:#60a0b0;font-style:italic"&gt;#including this file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; s: Find this C symbol
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; t: Find this text string
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;help&lt;/span&gt; ：显示此信息 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： &lt;span style="color:#007020"&gt;help&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;kill&lt;/span&gt; ：结束一个连接 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： &lt;span style="color:#007020"&gt;kill&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;reset：重置所有连接 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： reset&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;show ：显示连接 &lt;span style="color:#666"&gt;(&lt;/span&gt;用法： show&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;说一下里边的键map映射&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;如： nmap &amp;lt;C-&lt;span style="color:#4070a0;font-weight:bold"&gt;\&amp;gt;&lt;/span&gt;s :cs find s &amp;lt;C-R&amp;gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;expand&lt;span style="color:#666"&gt;(&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&amp;lt;cword&amp;gt;&amp;#34;&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap 表示在vim的普通模式下，即相对于：编辑模块和可视模式，以下是几种模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :map 普通，可视模式及操作符等待模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :vmap 可视模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :omap 操作符等待模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :map! 插入和命令行模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :imap 插入模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; :cmap 命令行模式
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;C-&lt;span style="color:#4070a0;font-weight:bold"&gt;\&amp;gt;&lt;/span&gt;表示：Ctrl+&lt;span style="color:#4070a0;font-weight:bold"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0;font-weight:bold"&gt;&lt;/span&gt;s表示输入&lt;span style="color:#666"&gt;(&lt;/span&gt;即按：s&lt;span style="color:#666"&gt;)&lt;/span&gt;s
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;: 表示输入&lt;span style="color:#4070a0"&gt;&amp;#39;:&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;“cs find s&lt;span style="color:#4070a0"&gt;&amp;#34;表示输入&amp;#34;&lt;/span&gt;cs find s&lt;span style="color:#4070a0"&gt;&amp;#34;也即是要输入的命令
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;cword&lt;span style="color:#4070a0"&gt;&amp;#34;)总体是为了得到：光标下的变量或函数。\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;cword 表示：cursor word, 类似的还有：cfile表示光标所在处的文件名
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;将下面的内容添加到~/.vimrc中, 并重启vim:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;s :cs find s &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;g :cs find g &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;c :cs find c &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;t :cs find t &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;e :cs find e &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;f :cs find f &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cfile&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;i :cs find i ^&amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cfile&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&lt;/span&gt;$&lt;span style="color:#4070a0"&gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;nmap &amp;lt;C-_&amp;gt;d :cs find d &amp;lt;C-R&amp;gt;=expand(&amp;#34;&lt;/span&gt;&amp;lt;cword&amp;gt;&lt;span style="color:#4070a0"&gt;&amp;#34;)&amp;lt;CR&amp;gt;&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;当光标停在某个你要查找的词上时, 按下&amp;lt;C-_&amp;gt;g, 就是查找该对象的定义, 其他的同理.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id="搭建阅读内核环境的一些补充"&gt;搭建阅读内核环境的一些补充&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本节内容摘自《ARM Linux源码剖析》&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;下载解压内核&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;安装&lt;code&gt;ctages&lt;/code&gt; 和 &lt;code&gt;cscope&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo apt install ctags cscope
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;生成标签&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ctags&lt;/code&gt;程序通过程序代码生成标签，用以生成函数、变量、类成员、宏等的索引，以管理数据库。&lt;/p&gt;
+&lt;p&gt;使用&lt;code&gt;ctags&lt;/code&gt;生成标签的命令是&lt;code&gt;ctags -R&lt;/code&gt;。内核源码树中提供了用于生成各种架构&lt;code&gt;ctags&lt;/code&gt;标签的脚本&lt;code&gt;./scripts/tags.sh&lt;/code&gt;, 使用命令 &lt;code&gt;make tags ARCH=arm&lt;/code&gt;可以生成&lt;code&gt;arm&lt;/code&gt;架构的内核源码标签。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls ./scripts/tags.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./scripts/tags.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ make tags &lt;span style="color:#bb60d5"&gt;ARCH&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;arm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GEN tags
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls -lah tags
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 89M Nov &lt;span style="color:#40a070"&gt;14&lt;/span&gt; 16:36 ./tags &lt;span style="color:#60a0b0;font-style:italic"&gt;# 生成的89MB的tags文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;tags&lt;/code&gt;文件结构&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-8"&gt;8&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tart_kernel include/linux/start_kernel.h /^extern asmlinkage void __init start_kernel&lt;span style="color:#666"&gt;(&lt;/span&gt;void&lt;span style="color:#666"&gt;)&lt;/span&gt;;$/;&lt;span style="color:#4070a0"&gt;&amp;#34; p
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;start_kernel init/main.c /^asmlinkage void __init start_kernel(void)&lt;/span&gt;$&lt;span style="color:#4070a0"&gt;/;&amp;#34;&lt;/span&gt; f
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tags_name&amp;lt;TAB&amp;gt;file_name&amp;lt;TAB&amp;gt;ex_cmd;&amp;lt;TAB&amp;gt;extension_fields
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# tags_name 符号名 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# file_name 符号所在的文件名 &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# ex_cmd 在文件中查找符号时，使用vim的ex模式，在此模式中搜索范式的正则表达式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# extension_field 符号类型 f=普通C函数， c=类， d=已定义的值&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;生成&lt;code&gt;cscope&lt;/code&gt;数据库&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ctags&lt;/code&gt;只能进行单方向的搜索，无法搜索调用的函数； 无法输出调用该函数的函数；无法输出该函数调用的函数。&lt;code&gt;cscope&lt;/code&gt;与&lt;code&gt;ctags&lt;/code&gt;十分相似，但是补充了&lt;code&gt;ctags&lt;/code&gt;的不足。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ make cscope &lt;span style="color:#bb60d5"&gt;ARCH&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;arm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GEN cscope
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ ls cscope* -lh
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 449K Nov &lt;span style="color:#40a070"&gt;14&lt;/span&gt; 16:39 cscope.files
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 178M Nov &lt;span style="color:#40a070"&gt;14&lt;/span&gt; 16:39 cscope.out
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 34M Nov &lt;span style="color:#40a070"&gt;14&lt;/span&gt; 16:39 cscope.out.in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;-rw-rw-r-- &lt;span style="color:#40a070"&gt;1&lt;/span&gt; kevin kevin 258M Nov &lt;span style="color:#40a070"&gt;14&lt;/span&gt; 16:39 cscope.out.po
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# 生成的四个文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# cscope.files 含有要分析的代码文件列表的文件&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# cscope.out 针对函数位置、函数调用、宏、变量、预处理符号的符号交叉引用文件，是实际的数据库&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# cscope.out.in 用-q选项生成数据库时生成的文件，用于提高符号搜索速度的反向索引&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# cscope.out.po 用-q选项生成数据库时生成的文件，作用同cscope.in&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start="4"&gt;
+&lt;li&gt;
+&lt;p&gt;vim下插件配置&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Source Explorer&lt;/code&gt; : 当光标停留在变量名或者函数名时，会显示此变量或者函数所在的文件列表；&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;NERDTree&lt;/code&gt; : 显示源码目录树；&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Tag List&lt;/code&gt; : 显示文件中的符号列表；&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;​ vim的插件可以到&lt;a href="https://www.vim.org/"&gt;vim官网&lt;/a&gt;下载，点击左侧&amp;quot;Scripts&amp;quot; -&amp;gt; &amp;ldquo;Browse all&amp;quot;在下方出现的搜索窗口中依次搜索需要的插件并下载。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mkdir -p ~/.vim/plugin
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mv srcexpl.vim ~/.vim/plugin/
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mv NERD_tree.zip ~/.vim/ &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; unzip NERD_tree.zip
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ mv taglist_45.zip ~/.vim/ &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; unzip taglist_45.zip
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;配置vim插件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-29"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-29"&gt;29&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-30"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-30"&gt;30&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-31"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-31"&gt;31&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-32"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-32"&gt;32&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-33"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-33"&gt;33&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-34"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-34"&gt;34&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-35"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-35"&gt;35&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-36"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-36"&gt;36&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-37"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-37"&gt;37&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-38"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-38"&gt;38&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-39"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-39"&gt;39&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-40"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-40"&gt;40&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-41"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-41"&gt;41&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-42"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-42"&gt;42&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-43"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-43"&gt;43&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-44"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-44"&gt;44&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-45"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-45"&gt;45&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-46"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-46"&gt;46&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-47"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-47"&gt;47&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-48"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-48"&gt;48&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-49"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-49"&gt;49&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-50"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-50"&gt;50&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-51"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-51"&gt;51&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ vim ~/.vimrc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;ctags database path&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;tags&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;xxxxxx/tags &lt;span style="color:#4070a0"&gt;&amp;#34;ctags DB位置&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;cscope database path&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;csprg&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/usr/bin/cscope &lt;span style="color:#4070a0"&gt;&amp;#34;cscope可执行程序的路径&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;csto&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;0 &lt;span style="color:#4070a0"&gt;&amp;#34;cscope DS search first&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; cst &lt;span style="color:#4070a0"&gt;&amp;#34;cscope D tag DB search&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; nocsverb &lt;span style="color:#4070a0"&gt;&amp;#34;verbose off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cs add /home/xxxx/cscope.out /home/code/linux-2.6.30.4
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;set&lt;/span&gt; csverb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;Tag List&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;filetype on
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;F7&amp;gt; :TlistToggle&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;Tlist_Ctags_Cmd&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;/usr/bin/ctags&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;Tlist_Inc_Winwidth&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;window width change off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;Tlist_Exit_OnlyWindow&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; 0 &lt;span style="color:#4070a0"&gt;&amp;#34;tag/file完成选择时taglist window close = off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;Tlist_Auto_Open&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;Tlist_Use_Right_Window&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;Source Explore&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;F8&amp;gt; :SrcExplToggle&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;C-H&amp;gt; &amp;lt;C-W&amp;gt;h &lt;span style="color:#4070a0"&gt;&amp;#34;向左侧窗口移动&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;C-J&amp;gt; &amp;lt;C-W&amp;gt;j &lt;span style="color:#4070a0"&gt;&amp;#34;向下侧窗口移动&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;C-K&amp;gt; &amp;lt;C-W&amp;gt;k &lt;span style="color:#4070a0"&gt;&amp;#34;向上侧窗口移动&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;C-L&amp;gt; &amp;lt;C-W&amp;gt;l &lt;span style="color:#4070a0"&gt;&amp;#34;向右侧窗口移动&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; g:SrcExpl_winHeight &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;8&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;指定SrcExpl Windows高度&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; g:SrcExpl_refreshTime &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;100&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;100ms&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; g:SrcExpl_jumpKey &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;&amp;lt;Enter&amp;gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;按Enter跳转到相应的defineition&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; g:SrcExpl_gobackKey &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;&amp;lt;SPACE&amp;gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;back&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; g:SrcExpl_isUpdateTags &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;tag file update = off&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;NERD Tree&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;------------------------------------------------&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;let&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;NERDTreeWinPos&lt;/span&gt; &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;left&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nmap &amp;lt;F2&amp;gt; :NERDTreeToggle&amp;lt;CR&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;打开&lt;code&gt;vim&lt;/code&gt;，按&lt;code&gt;F2&lt;/code&gt;在左侧出现&lt;code&gt;NERDTree&lt;/code&gt;源码目录树，选择&lt;code&gt;./init/main.c&lt;/code&gt;。按&lt;code&gt;Enter&lt;/code&gt;打开源码文件， 按&lt;code&gt;F8 F9&lt;/code&gt;打开&lt;code&gt;TagList&lt;/code&gt;和&lt;code&gt;Source Explorer&lt;/code&gt;窗口。&lt;/p&gt;
+&lt;p&gt;将光标移动到右侧的&lt;code&gt;TagList&lt;/code&gt;窗口后，进入vim的ex模式(按Esc)后，输入&lt;code&gt;:/start_kernel&lt;/code&gt;， &lt;code&gt;TagList&lt;/code&gt;窗口会自动跳转到&lt;code&gt;start_kernel&lt;/code&gt;符号处，再按&lt;code&gt;Enter&lt;/code&gt;，则代码文件窗口会显示定义&lt;code&gt;start_kernel&lt;/code&gt;的位置。&lt;/p&gt;
+&lt;p&gt;在代码窗口移动光标到函数或者变量名上时，在下方的&lt;code&gt;Source Explorer&lt;/code&gt;窗口会显示定义相应符号的文件目录。将光标移动到下方&lt;code&gt;Source Explorer&lt;/code&gt;窗口,上下选择要浏览的文件，按&lt;code&gt;Enter&lt;/code&gt;上方代码浏览窗口会显示相应的文件内容， 按&lt;code&gt;SPACE&lt;/code&gt;会回退。&lt;/p&gt;
+&lt;p&gt;常用ctags命令&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;命令&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;ctrl+]&lt;/td&gt;
+&lt;td&gt;移动到定义函数的位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ctrl+t&lt;/td&gt;
+&lt;td&gt;回退到跳转前的位置&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;cscope命令格式&lt;code&gt;: cs find &amp;lt;querytype&amp;gt; &amp;lt;name&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;querytype&lt;/th&gt;
+&lt;th&gt;说明&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0 or s&lt;/td&gt;
+&lt;td&gt;查找c符号&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1 or g&lt;/td&gt;
+&lt;td&gt;查找定义（definition）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2 or d&lt;/td&gt;
+&lt;td&gt;查找被该函数调用（called）的函数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3 or c&lt;/td&gt;
+&lt;td&gt;查找调用该函数的（calling）函数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;4 or t&lt;/td&gt;
+&lt;td&gt;查找文本字符串(text string)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;6 or e&lt;/td&gt;
+&lt;td&gt;查找egrep范式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;7 or f&lt;/td&gt;
+&lt;td&gt;查找文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;8 or i&lt;/td&gt;
+&lt;td&gt;查找用#include包含该文件的文件&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;code&gt;：hellp cscope&lt;/code&gt;可以查看更详细的指令用法。&lt;/p&gt;
+&lt;h2 id="参考文献"&gt;参考文献&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://cscope.sourceforge.net/"&gt;cscope官网&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://blog.csdn.net/dengxiayehu/article/details/6330200"&gt;Cscope的使用（领略Vim + Cscope的强大魅力）&lt;/a&gt;&lt;br&gt;
+&lt;a href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;&lt;br&gt;
+&lt;a href="https://blog.csdn.net/w_linux/article/details/72784989"&gt;Ubuntu下查看Linux内核源码(vim+ctags) &lt;/a&gt;
+&lt;a href="https://blog.csdn.net/G_BrightBoy/article/details/16830395"&gt;vim插件ctags的安装和使用 &lt;/a&gt;
+[&lt;a href="https://www.cnblogs.com/linux-sir/p/4675919.html"&gt;VIM使用(二) 浏览内核源代码&lt;/a&gt; ](&lt;a href="https://www.cnblogs.com/linux-sir/p/4675919.html"&gt;https://www.cnblogs.com/linux-sir/p/4675919.html&lt;/a&gt;)
+&lt;a href="http://biancheng.dnbcw.net/linux/347492.html"&gt;定义cscope快捷键&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

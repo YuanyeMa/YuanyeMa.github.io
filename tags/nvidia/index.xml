@@ -1,103 +1,105 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NVIDIA on Yuanye Ma's Blog</title><link>/tags/nvidia/</link><description>Recent content in NVIDIA on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/nvidia/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次NVIDIA driver/cuda/cudnn升级</title><link>/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</guid><description>&lt;h1 id="记一次nvidia-drivercudacudnn升级">记一次NVIDIA driver/cuda/cudnn升级&lt;/h1>
-&lt;p>系统环境：Ubuntu 18.04 / NVIDIA_Driver version:390 / cuda 9.0 / cudnn 7.1&lt;/p>
-&lt;p>目标： 升级NVIDIA_Driver version :410.104 /cuda 10.0 / cudnn 7.6&lt;/p>
-&lt;h2 id="nvidia-driver">NVIDIA Driver&lt;/h2>
-&lt;p>首先关闭桌面系统&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo init &lt;span style="color:#40a070">3&lt;/span> &lt;span style="color:#60a0b0;font-style:italic"># 表示以字符界面启动&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>然后屏幕黑了，左上角有个光标在闪烁，没有出来&lt;code>login&lt;/code>的提示符，这是因为当前窗口是&lt;code>init 5&lt;/code>即图形界面终端。同时按键盘&lt;code>Ctrl+Alt+F1&lt;/code>三个按键，进入一个其他终端，然后会出现&lt;code>login&lt;/code>提示符，输入用户名密码登陆。 因为后续很多操作需要&lt;code>root&lt;/code>权限，所以可以直接以&lt;code>root&lt;/code>身份登陆，或者以普通用户身份登陆后用&lt;code>sudo -i &lt;/code>切换为&lt;code>root&lt;/code>身份。&lt;/p>
-&lt;p>由于我之前安装的390驱动需要gcc-5支持，但是410驱动需要gcc-7，因此需要切换会gcc-7.&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 70&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;blockquote>
-&lt;p>如果不知道当前gcc是什么版本，可以使用gcc -v命令查看&lt;/p>
-&lt;p>update-alternatives 是Debian系系统中用于管理不同软件版本的工具。本质上是通过修改软链接的指向来确定使用哪个版本的命令。&lt;/p>
-&lt;p>基本用法如下：&lt;/p>
-&lt;p>​ update-alternatives &amp;ndash;display &lt;name> # 显示&lt;name>组的情况&lt;/p>
-&lt;p>​ update-alternatives &amp;ndash;remove &lt;name> &lt;path> # 从&lt;name>组中删除&lt;path>&lt;/p>
-&lt;p>​ update-alternatives &amp;ndash;remove-all &lt;name> # 删除整个&lt;name>组&lt;/p>
-&lt;p>​ update-alternatives &amp;ndash;install &lt;link> &lt;name> &lt;path> &lt;priority> # 向&lt;name>组中添加一个路径&lt;/p>
-&lt;p>​ update-alternatives &amp;ndash;config &lt;name> # 选择一个当前使用的路径&lt;/p>
-&lt;p>其中&lt;link>是软连接的位置，对应上边命令中的/usr/bin/gcc； &lt;name> 命令组的名字，可以随便写，对应上边命令中的gcc； &lt;path> 是确切要执行的命令的路径，对应上边命令中的 /usr/bin/gcc-7 ；最后的70是优先级。&lt;/p>
-&lt;p>因此上边命令的意思就是创建一个软连接/usr/bin/gcc指向/usr/bin/gcc-7。当执行gcc时调用的是/usr/bin/gcc-7,也就是7.4版本的gcc.&lt;/p>&lt;/blockquote>
-&lt;p>先卸载NVIDIA-390，然后安装NVIDIA-410.&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># apt purge nvidia* &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>进入到驱动安装脚本保存的位置执行安装命令
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"># ./NVIDIA-Linux-x86_64-410.104.run&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>根据提示下一步就好，其中有一步问是否开启Xorg支持，要选“是”，不然的话，安装完驱动，返回桌面的时候会失败。&lt;/p>
-&lt;p>安装完成后通过&lt;code>init 5&lt;/code>命令启动桌面环境。进入桌面环境后可以通过&lt;code>nvidia-smi&lt;/code>命令查看驱动安装是否正确。&lt;/p>
-&lt;h2 id="cuda-90-升级cuda-100">CUDA 9.0 升级CUDA 10.0&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">$sudo&lt;/span> cuda_10.0.130_410.48_linux.run
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>接受用户协议，不安装驱动，安装路径默认，安装samples，完成。&lt;/p>
-&lt;p>设置动态连接库的路径&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo vim /etc/ld.so.conf.d/cuda-10.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>写入
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/usr/local/cuda-10.0/lib64
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo ldconfig
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;blockquote>
-&lt;p>cuda-9.0不用卸载 /usr/local/cuda也是一个软连接安装cuda 10.0的时候已经自动修改指向了cuda-10.0.&lt;/p>&lt;/blockquote>
-&lt;h2 id="安装cudnn">安装cudnn&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ sudo dpkg -i libcudnn7_7.6.4.38-1+cuda10.0_amd64.deb
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo dpkg -i libcudnn7-dev_7.6.4.38-1+cuda10.0_amd64.deb
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ sudo dpkg -i libcudnn7-doc_7.6.4.38-1+cuda10.0_amd64.deb
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="测试">测试&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">import&lt;/span> &lt;span style="color:#0e84b5;font-weight:bold">tensorflow&lt;/span> &lt;span style="color:#007020;font-weight:bold">as&lt;/span> &lt;span style="color:#0e84b5;font-weight:bold">tf&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tf&lt;span style="color:#666">.&lt;/span>test&lt;span style="color:#666">.&lt;/span>gpu_device_name()
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>NVIDIA on Yuanye Ma's Blog</title><link>/tags/nvidia/</link><description>Recent content in NVIDIA on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/nvidia/index.xml" rel="self" type="application/rss+xml"/><item><title>记一次NVIDIA driver/cuda/cudnn升级</title><link>/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/service/2019-11-05-%E8%AE%B0%E4%B8%80%E6%AC%A1nvidia-driver-cuda%E5%8D%87%E7%BA%A7/</guid><description>&lt;h1 id="记一次nvidia-drivercudacudnn升级"&gt;记一次NVIDIA driver/cuda/cudnn升级&lt;/h1&gt;
+&lt;p&gt;系统环境：Ubuntu 18.04 / NVIDIA_Driver version:390 / cuda 9.0 / cudnn 7.1&lt;/p&gt;
+&lt;p&gt;目标： 升级NVIDIA_Driver version :410.104 /cuda 10.0 / cudnn 7.6&lt;/p&gt;
+&lt;h2 id="nvidia-driver"&gt;NVIDIA Driver&lt;/h2&gt;
+&lt;p&gt;首先关闭桌面系统&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo init &lt;span style="color:#40a070"&gt;3&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;# 表示以字符界面启动&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;然后屏幕黑了，左上角有个光标在闪烁，没有出来&lt;code&gt;login&lt;/code&gt;的提示符，这是因为当前窗口是&lt;code&gt;init 5&lt;/code&gt;即图形界面终端。同时按键盘&lt;code&gt;Ctrl+Alt+F1&lt;/code&gt;三个按键，进入一个其他终端，然后会出现&lt;code&gt;login&lt;/code&gt;提示符，输入用户名密码登陆。 因为后续很多操作需要&lt;code&gt;root&lt;/code&gt;权限，所以可以直接以&lt;code&gt;root&lt;/code&gt;身份登陆，或者以普通用户身份登陆后用&lt;code&gt;sudo -i &lt;/code&gt;切换为&lt;code&gt;root&lt;/code&gt;身份。&lt;/p&gt;
+&lt;p&gt;由于我之前安装的390驱动需要gcc-5支持，但是410驱动需要gcc-7，因此需要切换会gcc-7.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 70&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;如果不知道当前gcc是什么版本，可以使用gcc -v命令查看&lt;/p&gt;
+&lt;p&gt;update-alternatives 是Debian系系统中用于管理不同软件版本的工具。本质上是通过修改软链接的指向来确定使用哪个版本的命令。&lt;/p&gt;
+&lt;p&gt;基本用法如下：&lt;/p&gt;
+&lt;p&gt;​ update-alternatives &amp;ndash;display &lt;name&gt; # 显示&lt;name&gt;组的情况&lt;/p&gt;
+&lt;p&gt;​ update-alternatives &amp;ndash;remove &lt;name&gt; &lt;path&gt; # 从&lt;name&gt;组中删除&lt;path&gt;&lt;/p&gt;
+&lt;p&gt;​ update-alternatives &amp;ndash;remove-all &lt;name&gt; # 删除整个&lt;name&gt;组&lt;/p&gt;
+&lt;p&gt;​ update-alternatives &amp;ndash;install &lt;link&gt; &lt;name&gt; &lt;path&gt; &lt;priority&gt; # 向&lt;name&gt;组中添加一个路径&lt;/p&gt;
+&lt;p&gt;​ update-alternatives &amp;ndash;config &lt;name&gt; # 选择一个当前使用的路径&lt;/p&gt;
+&lt;p&gt;其中&lt;link&gt;是软连接的位置，对应上边命令中的/usr/bin/gcc； &lt;name&gt; 命令组的名字，可以随便写，对应上边命令中的gcc； &lt;path&gt; 是确切要执行的命令的路径，对应上边命令中的 /usr/bin/gcc-7 ；最后的70是优先级。&lt;/p&gt;
+&lt;p&gt;因此上边命令的意思就是创建一个软连接/usr/bin/gcc指向/usr/bin/gcc-7。当执行gcc时调用的是/usr/bin/gcc-7,也就是7.4版本的gcc.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;先卸载NVIDIA-390，然后安装NVIDIA-410.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# apt purge nvidia* &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;进入到驱动安装脚本保存的位置执行安装命令
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;# ./NVIDIA-Linux-x86_64-410.104.run&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;根据提示下一步就好，其中有一步问是否开启Xorg支持，要选“是”，不然的话，安装完驱动，返回桌面的时候会失败。&lt;/p&gt;
+&lt;p&gt;安装完成后通过&lt;code&gt;init 5&lt;/code&gt;命令启动桌面环境。进入桌面环境后可以通过&lt;code&gt;nvidia-smi&lt;/code&gt;命令查看驱动安装是否正确。&lt;/p&gt;
+&lt;h2 id="cuda-90-升级cuda-100"&gt;CUDA 9.0 升级CUDA 10.0&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;$sudo&lt;/span&gt; cuda_10.0.130_410.48_linux.run
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;接受用户协议，不安装驱动，安装路径默认，安装samples，完成。&lt;/p&gt;
+&lt;p&gt;设置动态连接库的路径&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo vim /etc/ld.so.conf.d/cuda-10.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;写入
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/local/cuda-10.0/lib64
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo ldconfig
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;cuda-9.0不用卸载 /usr/local/cuda也是一个软连接安装cuda 10.0的时候已经自动修改指向了cuda-10.0.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="安装cudnn"&gt;安装cudnn&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dpkg -i libcudnn7_7.6.4.38-1+cuda10.0_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dpkg -i libcudnn7-dev_7.6.4.38-1+cuda10.0_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ sudo dpkg -i libcudnn7-doc_7.6.4.38-1+cuda10.0_amd64.deb
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="测试"&gt;测试&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;import&lt;/span&gt; &lt;span style="color:#0e84b5;font-weight:bold"&gt;tensorflow&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;as&lt;/span&gt; &lt;span style="color:#0e84b5;font-weight:bold"&gt;tf&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tf&lt;span style="color:#666"&gt;.&lt;/span&gt;test&lt;span style="color:#666"&gt;.&lt;/span&gt;gpu_device_name()
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

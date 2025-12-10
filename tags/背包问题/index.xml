@@ -1,410 +1,411 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>背包问题 on Yuanye Ma's Blog</title><link>/tags/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</link><description>Recent content in 背包问题 on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/index.xml" rel="self" type="application/rss+xml"/><item><title>背包问题答题模板</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-29-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%AD%94%E9%A2%98%E6%A8%A1%E6%9D%BF/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-29-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%AD%94%E9%A2%98%E6%A8%A1%E6%9D%BF/</guid><description>&lt;h1 id="背包问题答题模板">背包问题答题模板&lt;/h1>
-&lt;h2 id="0-1背包">0-1背包&lt;/h2>
-&lt;p>每件商品只能拿一件或者不拿。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">// 假设
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> m; &lt;span style="color:#60a0b0;font-style:italic">// 背包容量
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> n; &lt;span style="color:#60a0b0;font-style:italic">// 商品数量
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> v[n]; &lt;span style="color:#60a0b0;font-style:italic">// 商品的价值列表
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> w[n]; &lt;span style="color:#60a0b0;font-style:italic">// 商品的重量（cost）列表
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> dp[n][m];
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="朴素二维数组方式">朴素二维数组方式&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7">7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8">8&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> &lt;span style="">（&lt;/span>&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>&lt;span style="">）&lt;/span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; j&lt;span style="color:#666">&amp;lt;=&lt;/span>m; j&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">if&lt;/span> (j&lt;span style="color:#666">&amp;gt;=&lt;/span>v[i])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[i][j] &lt;span style="color:#666">=&lt;/span> max(dp[i&lt;span style="color:#666">-&lt;/span>&lt;span style="color:#40a070">1&lt;/span>][j], dp[i&lt;span style="color:#666">-&lt;/span>&lt;span style="color:#40a070">1&lt;/span>][j&lt;span style="color:#666">-&lt;/span>w[i]]&lt;span style="color:#666">+&lt;/span>v[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[i][j] &lt;span style="color:#666">=&lt;/span> dp[i&lt;span style="color:#666">-&lt;/span>&lt;span style="color:#40a070">1&lt;/span>][j];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">return&lt;/span> dp[m]; &lt;span style="color:#60a0b0;font-style:italic">// dp数组的最后一个元素即为最优解。
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="滚动数组方式优化">滚动数组方式优化&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5">5&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>m; j&lt;span style="color:#666">&amp;gt;=&lt;/span>w[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>w[i]]&lt;span style="color:#666">+&lt;/span>v[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一个AC的例程&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-25">25&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#include&lt;/span> &lt;span style="color:#007020">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">using&lt;/span> &lt;span style="color:#007020;font-weight:bold">namespace&lt;/span> std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> v[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> w[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> dp[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> &lt;span style="color:#06287e">main&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> n,m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>n&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>w[i];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>m; j&lt;span style="color:#666">&amp;gt;=&lt;/span>v[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>v[i]]&lt;span style="color:#666">+&lt;/span>w[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>dp[m]&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">return&lt;/span> &lt;span style="color:#40a070">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="关于dp数组的初始化">关于dp数组的初始化&lt;/h2>
-&lt;p>要求&lt;strong>恰好装满背包&lt;/strong>时，初始时&lt;code>dp[0]=0&lt;/code>，其他的&lt;code>dp[1...m]=负无穷&lt;/code>。这样就可以保证最终得到的&lt;code>dp[m]&lt;/code>是一种恰好装满背包的最优解。&lt;/p>
-&lt;p>如果&lt;strong>没有恰好装满背包的要求&lt;/strong>而只是希望价格尽量大时，初始化时应该将&lt;code>dp[0...m]=0&lt;/code>。&lt;/p>
-&lt;blockquote>
-&lt;p>初始化时dp数组就是在没有任何物品放入背包时的合法状态。如果要求背包恰好装满，那么此时只有容量为0的背包可以在什么都不装且价值为0的情况下被&amp;quot;恰好装满&amp;quot;，其他容量的背包均没有合法的解，属于未定义的状态，应该被赋值为负无穷。&lt;/p>
-&lt;p>如果背包并非必须装满，那么任何容量的背包都有一个合法解”什么都不装“，这个解的价值为0，所以初始时状态的值也就全部为0.&lt;/p>&lt;/blockquote>
-&lt;h2 id="完全背包">完全背包&lt;/h2>
-&lt;p>每件商品可以拿无数件。&lt;/p>
-&lt;h3 id="滚动数组">滚动数组&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>m; j&lt;span style="color:#666">&amp;gt;=&lt;/span>w[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> k&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">0&lt;/span>; k&lt;span style="color:#666">*&lt;/span>w[i]&lt;span style="color:#666">&amp;lt;=&lt;/span>j; k&lt;span style="color:#666">++&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>k&lt;span style="color:#666">*&lt;/span>w[i]]&lt;span style="color:#666">+&lt;/span>k&lt;span style="color:#666">*&lt;/span>v[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="优化">优化&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5">5&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>w[i]; j&lt;span style="color:#666">&amp;lt;=&lt;/span>m; j&lt;span style="color:#666">++&lt;/span>) { &lt;span style="color:#60a0b0;font-style:italic">// 放一件之后 还能放下 就继续放
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>w[i]]&lt;span style="color:#666">+&lt;/span>v[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一个AC的例程。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-25">25&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#include&lt;/span> &lt;span style="color:#007020">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">using&lt;/span> &lt;span style="color:#007020;font-weight:bold">namespace&lt;/span> std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> dp[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> &lt;span style="color:#06287e">main&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> n,m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>n&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> v[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> w[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>w[i];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>v[i]; j&lt;span style="color:#666">&amp;lt;=&lt;/span>m; j&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>v[i]]&lt;span style="color:#666">+&lt;/span>w[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>dp[m]&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">return&lt;/span> &lt;span style="color:#40a070">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="多重背包">多重背包&lt;/h2>
-&lt;p>每件物品只能拿固定次。&lt;/p>
-&lt;h3 id="朴素做法">朴素做法&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7">7&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>m; j&lt;span style="color:#666">&amp;gt;=&lt;/span>&lt;span style="color:#40a070">0&lt;/span>; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> k&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; k&lt;span style="color:#666">&amp;lt;=&lt;/span>s[i] &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> k&lt;span style="color:#666">*&lt;/span>w[i]&lt;span style="color:#666">&amp;lt;=&lt;/span>j; k&lt;span style="color:#666">++&lt;/span>) { &lt;span style="color:#60a0b0;font-style:italic">// s[i] 指第i件商品一共有多少件
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>k&lt;span style="color:#666">*&lt;/span>w[i]]&lt;span style="color:#666">+&lt;/span>k&lt;span style="color:#666">*&lt;/span>v[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一个AC的例程。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-29">29&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#include&lt;/span> &lt;span style="color:#007020">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">using&lt;/span> &lt;span style="color:#007020;font-weight:bold">namespace&lt;/span> std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> dp[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> &lt;span style="color:#06287e">main&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> n,m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>n&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> v[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> w[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> c[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>w[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>c[i];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>m; j&lt;span style="color:#666">&amp;gt;=&lt;/span>v[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> k&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; k&lt;span style="color:#666">&amp;lt;=&lt;/span>c[i] &lt;span style="color:#666">&amp;amp;&amp;amp;&lt;/span> k&lt;span style="color:#666">*&lt;/span>v[i]&lt;span style="color:#666">&amp;lt;=&lt;/span>j; k&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j] &lt;span style="color:#666">=&lt;/span> max(dp[j], dp[j&lt;span style="color:#666">-&lt;/span>v[i]&lt;span style="color:#666">*&lt;/span>k]&lt;span style="color:#666">+&lt;/span>w[i]&lt;span style="color:#666">*&lt;/span>k);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>dp[m]&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">return&lt;/span> &lt;span style="color:#40a070">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="二进制优化">二进制优化&lt;/h3>
-&lt;h3 id="另一种优化">另一种优化&lt;/h3>
-&lt;p>这两种优化方式暂时没弄懂&lt;/p>
-&lt;h2 id="混合背包">混合背包&lt;/h2>
-&lt;h2 id="二维费用的背包问题">二维费用的背包问题&lt;/h2>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-14">14&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> n; &lt;span style="color:#60a0b0;font-style:italic">// 商品数目
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> v; &lt;span style="color:#60a0b0;font-style:italic">// 约束1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> m; &lt;span style="color:#60a0b0;font-style:italic">// 约束2
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> c_v[n]; &lt;span style="color:#60a0b0;font-style:italic">// 约束1的cost
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>&lt;span style="color:#902000">int&lt;/span> c_m[n]; &lt;span style="color:#60a0b0;font-style:italic">// 约束2的cost
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>v; j&lt;span style="color:#666">&amp;gt;=&lt;/span>c_v[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> k&lt;span style="color:#666">=&lt;/span>m; k&lt;span style="color:#666">&amp;gt;=&lt;/span>c_m[i]; k&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> f[j][k] &lt;span style="color:#666">=&lt;/span> max(f[j][k], f[j&lt;span style="color:#666">-&lt;/span>c_v[i]][l&lt;span style="color:#666">-&lt;/span>v_m[i]]&lt;span style="color:#666">+&lt;/span>c);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>下边是一道题的AC代码&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-28">28&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c++" data-lang="c++">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#include&lt;/span> &lt;span style="color:#007020">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>&lt;span style="color:#007020;font-weight:bold">using&lt;/span> &lt;span style="color:#007020;font-weight:bold">namespace&lt;/span> std;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> v_v[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> v_m[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> w[&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> dp[&lt;span style="color:#40a070">1005&lt;/span>][&lt;span style="color:#40a070">1005&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#902000">int&lt;/span> &lt;span style="color:#06287e">main&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#902000">int&lt;/span> n, v, m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>n&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>m;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cin&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v_v[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>v_m[i]&lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span>w[i];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> i&lt;span style="color:#666">=&lt;/span>&lt;span style="color:#40a070">1&lt;/span>; i&lt;span style="color:#666">&amp;lt;=&lt;/span>n; i&lt;span style="color:#666">++&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> j&lt;span style="color:#666">=&lt;/span>v; j&lt;span style="color:#666">&amp;gt;=&lt;/span>v_v[i]; j&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">for&lt;/span> (&lt;span style="color:#902000">int&lt;/span> k&lt;span style="color:#666">=&lt;/span>m; k&lt;span style="color:#666">&amp;gt;=&lt;/span>v_m[i]; k&lt;span style="color:#666">--&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dp[j][k] &lt;span style="color:#666">=&lt;/span> max(dp[j][k], dp[j&lt;span style="color:#666">-&lt;/span>v_v[i]][k&lt;span style="color:#666">-&lt;/span>v_m[i]]&lt;span style="color:#666">+&lt;/span>w[i]);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cout&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>dp[v][m]&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>endl;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020;font-weight:bold">return&lt;/span> &lt;span style="color:#40a070">0&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>背包问题 on Yuanye Ma's Blog</title><link>/tags/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</link><description>Recent content in 背包问题 on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/index.xml" rel="self" type="application/rss+xml"/><item><title>背包问题答题模板</title><link>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-29-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%AD%94%E9%A2%98%E6%A8%A1%E6%9D%BF/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/%E7%AC%94%E8%AF%95%E9%A2%98/2019-08-29-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%AD%94%E9%A2%98%E6%A8%A1%E6%9D%BF/</guid><description>&lt;h1 id="背包问题答题模板"&gt;背包问题答题模板&lt;/h1&gt;
+&lt;h2 id="0-1背包"&gt;0-1背包&lt;/h2&gt;
+&lt;p&gt;每件商品只能拿一件或者不拿。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;// 假设
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; m; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 背包容量
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; n; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 商品数量
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; v[n]; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 商品的价值列表
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; w[n]; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 商品的重量（cost）列表
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; dp[n][m];
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="朴素二维数组方式"&gt;朴素二维数组方式&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"&gt;8&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; &lt;span style=""&gt;（&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;&lt;span style=""&gt;）&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; j&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;if&lt;/span&gt; (j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;v[i])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[i][j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[i&lt;span style="color:#666"&gt;-&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;][j], dp[i&lt;span style="color:#666"&gt;-&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;][j&lt;span style="color:#666"&gt;-&lt;/span&gt;w[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;v[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[i][j] &lt;span style="color:#666"&gt;=&lt;/span&gt; dp[i&lt;span style="color:#666"&gt;-&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;][j];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;return&lt;/span&gt; dp[m]; &lt;span style="color:#60a0b0;font-style:italic"&gt;// dp数组的最后一个元素即为最优解。
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="滚动数组方式优化"&gt;滚动数组方式优化&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;w[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;w[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;v[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一个AC的例程&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#include&lt;/span&gt; &lt;span style="color:#007020"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;using&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;namespace&lt;/span&gt; std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; v[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; w[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; dp[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; &lt;span style="color:#06287e"&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; n,m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;n&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;w[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;v[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;v[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;w[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;dp[m]&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;return&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="关于dp数组的初始化"&gt;关于dp数组的初始化&lt;/h2&gt;
+&lt;p&gt;要求&lt;strong&gt;恰好装满背包&lt;/strong&gt;时，初始时&lt;code&gt;dp[0]=0&lt;/code&gt;，其他的&lt;code&gt;dp[1...m]=负无穷&lt;/code&gt;。这样就可以保证最终得到的&lt;code&gt;dp[m]&lt;/code&gt;是一种恰好装满背包的最优解。&lt;/p&gt;
+&lt;p&gt;如果&lt;strong&gt;没有恰好装满背包的要求&lt;/strong&gt;而只是希望价格尽量大时，初始化时应该将&lt;code&gt;dp[0...m]=0&lt;/code&gt;。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;初始化时dp数组就是在没有任何物品放入背包时的合法状态。如果要求背包恰好装满，那么此时只有容量为0的背包可以在什么都不装且价值为0的情况下被&amp;quot;恰好装满&amp;quot;，其他容量的背包均没有合法的解，属于未定义的状态，应该被赋值为负无穷。&lt;/p&gt;
+&lt;p&gt;如果背包并非必须装满，那么任何容量的背包都有一个合法解”什么都不装“，这个解的价值为0，所以初始时状态的值也就全部为0.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="完全背包"&gt;完全背包&lt;/h2&gt;
+&lt;p&gt;每件商品可以拿无数件。&lt;/p&gt;
+&lt;h3 id="滚动数组"&gt;滚动数组&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;w[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; k&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;0&lt;/span&gt;; k&lt;span style="color:#666"&gt;*&lt;/span&gt;w[i]&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;j; k&lt;span style="color:#666"&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;k&lt;span style="color:#666"&gt;*&lt;/span&gt;w[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;k&lt;span style="color:#666"&gt;*&lt;/span&gt;v[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="优化"&gt;优化&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;w[i]; j&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;++&lt;/span&gt;) { &lt;span style="color:#60a0b0;font-style:italic"&gt;// 放一件之后 还能放下 就继续放
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;w[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;v[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一个AC的例程。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#include&lt;/span&gt; &lt;span style="color:#007020"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;using&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;namespace&lt;/span&gt; std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; dp[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; &lt;span style="color:#06287e"&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; n,m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;n&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; v[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; w[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;w[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;v[i]; j&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;v[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;w[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;dp[m]&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;return&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="多重背包"&gt;多重背包&lt;/h2&gt;
+&lt;p&gt;每件物品只能拿固定次。&lt;/p&gt;
+&lt;h3 id="朴素做法"&gt;朴素做法&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;0&lt;/span&gt;; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; k&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; k&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;s[i] &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; k&lt;span style="color:#666"&gt;*&lt;/span&gt;w[i]&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;j; k&lt;span style="color:#666"&gt;++&lt;/span&gt;) { &lt;span style="color:#60a0b0;font-style:italic"&gt;// s[i] 指第i件商品一共有多少件
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;k&lt;span style="color:#666"&gt;*&lt;/span&gt;w[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;k&lt;span style="color:#666"&gt;*&lt;/span&gt;v[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一个AC的例程。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-29"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-29"&gt;29&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#include&lt;/span&gt; &lt;span style="color:#007020"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;using&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;namespace&lt;/span&gt; std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; dp[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; &lt;span style="color:#06287e"&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; n,m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;n&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; v[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; w[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; c[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;w[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;c[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;m; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;v[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; k&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; k&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;c[i] &lt;span style="color:#666"&gt;&amp;amp;&amp;amp;&lt;/span&gt; k&lt;span style="color:#666"&gt;*&lt;/span&gt;v[i]&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;j; k&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;v[i]&lt;span style="color:#666"&gt;*&lt;/span&gt;k]&lt;span style="color:#666"&gt;+&lt;/span&gt;w[i]&lt;span style="color:#666"&gt;*&lt;/span&gt;k);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;dp[m]&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;return&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="二进制优化"&gt;二进制优化&lt;/h3&gt;
+&lt;h3 id="另一种优化"&gt;另一种优化&lt;/h3&gt;
+&lt;p&gt;这两种优化方式暂时没弄懂&lt;/p&gt;
+&lt;h2 id="混合背包"&gt;混合背包&lt;/h2&gt;
+&lt;h2 id="二维费用的背包问题"&gt;二维费用的背包问题&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; n; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 商品数目
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; v; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 约束1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; m; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 约束2
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; c_v[n]; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 约束1的cost
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; c_m[n]; &lt;span style="color:#60a0b0;font-style:italic"&gt;// 约束2的cost
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;v; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;c_v[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; k&lt;span style="color:#666"&gt;=&lt;/span&gt;m; k&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;c_m[i]; k&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; f[j][k] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(f[j][k], f[j&lt;span style="color:#666"&gt;-&lt;/span&gt;c_v[i]][l&lt;span style="color:#666"&gt;-&lt;/span&gt;v_m[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;c);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;下边是一道题的AC代码&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c++" data-lang="c++"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#include&lt;/span&gt; &lt;span style="color:#007020"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;using&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;namespace&lt;/span&gt; std;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; v_v[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; v_m[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; w[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; dp[&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;][&lt;span style="color:#40a070"&gt;1005&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#902000"&gt;int&lt;/span&gt; &lt;span style="color:#06287e"&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#902000"&gt;int&lt;/span&gt; n, v, m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;n&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;m;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cin&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v_v[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;v_m[i]&lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt;w[i];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; i&lt;span style="color:#666"&gt;=&lt;/span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;; i&lt;span style="color:#666"&gt;&amp;lt;=&lt;/span&gt;n; i&lt;span style="color:#666"&gt;++&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; j&lt;span style="color:#666"&gt;=&lt;/span&gt;v; j&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;v_v[i]; j&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;for&lt;/span&gt; (&lt;span style="color:#902000"&gt;int&lt;/span&gt; k&lt;span style="color:#666"&gt;=&lt;/span&gt;m; k&lt;span style="color:#666"&gt;&amp;gt;=&lt;/span&gt;v_m[i]; k&lt;span style="color:#666"&gt;--&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; dp[j][k] &lt;span style="color:#666"&gt;=&lt;/span&gt; max(dp[j][k], dp[j&lt;span style="color:#666"&gt;-&lt;/span&gt;v_v[i]][k&lt;span style="color:#666"&gt;-&lt;/span&gt;v_m[i]]&lt;span style="color:#666"&gt;+&lt;/span&gt;w[i]);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cout&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;dp[v][m]&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;endl;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;return&lt;/span&gt; &lt;span style="color:#40a070"&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

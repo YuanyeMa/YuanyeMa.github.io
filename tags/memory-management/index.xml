@@ -1,508 +1,511 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Memory Management on Yuanye Ma's Blog</title><link>/tags/memory-management/</link><description>Recent content in Memory Management on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sat, 31 Oct 2020 16:01:23 +0800</lastBuildDate><atom:link href="/tags/memory-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核临时页表初始化</title><link>/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</link><pubDate>Sat, 31 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</guid><description>&lt;h1 id="linux-内核临时页表初始化">Linux 内核临时页表初始化&lt;/h1>
-&lt;blockquote>
-&lt;p>基于 linux 2.6.30.4分析x86平台相关代码&lt;/p>&lt;/blockquote>
-&lt;ul>
-&lt;li>&lt;strong>64位系统：&lt;/strong> 使用四级分页或三级分页，跟硬件有关。&lt;/li>
-&lt;li>&lt;strong>未开启PAE(物理地址扩展)的32位系统：&lt;/strong> 只使用二级分页，页上级目录和页中间目录里的值全为0。&lt;/li>
-&lt;li>&lt;strong>开启PAE的32位系统：&lt;/strong> 使用三级分页，这种情况下被排除在外的是页上级目录，也就是页上级目录中所有值都为0。&lt;/li>
-&lt;/ul>
-&lt;h2 id="表项">表项&lt;/h2>
-&lt;p>实际上页全局目录、页上级目录、页中间目录、页表都是保存在一个一个页框中，我们知道常规情况下页框大小为4K(特殊情况有2MB、1GB)，也就是页框的布局都是以4K倍数的地址进行排列的，要寻址一个页框，只需要20位地址就足够了。这些目录和页表中保存的都是表项，页全局目录保存的是页全局目录项，页中间目录保存的是页中间目录项，在32位系统中这些项都是32位(20位是所指页框的基地址，12位是标志位)的，在开启PAE后会变成64位，这些项保存着很多标志，我们罗列几个重要的：&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>Present&lt;/code>标志：为1，所指的页在内存中，为0，不在。&lt;/li>
-&lt;li>所指的页框基地址：占20位。&lt;/li>
-&lt;li>&lt;code>Accessed&lt;/code>标志：每当分页单元对相应页框进行寻址时设置。&lt;/li>
-&lt;li>&lt;code>Dirty&lt;/code>标志：只用于页表项，每次对一个页框进行写操作时设置。&lt;/li>
-&lt;li>&lt;code>Read/Write&lt;/code>标志：读写权限标志。&lt;/li>
-&lt;li>&lt;code>User/Supervisor&lt;/code>标志：所指的页的特权级(进程能否访问)。&lt;/li>
-&lt;li>&lt;code>Page size&lt;/code>标志：为1表示指的是2MB或4MB的页框。也就是页表是2MB或者4MB。&lt;/li>
-&lt;/ul>
-&lt;p>　　在这些里面，最重要的或许就是所指页框基地址了，一个页中间目录项保存的页框基地址就是对应的页表的基地址，而页表项中保存的页框基地址，就是页(用于保存数据)的地址。而Present标志是用于判断是否发生缺页异常处理的标志。由于这些标志加上所指的页框基地址一共32位，一个4K的页框就能够保存1024个表项。&lt;/p>
-&lt;h2 id="物理地址扩展pae">物理地址扩展(PAE)&lt;/h2>
-&lt;p>　　这个技术是用于X86_32位体系下的，因为32位线性地址最多能表示4GB大小的空间，而PAE技术将物理地址线扩大到36条，也就是CPU能够寻址64GB大小的物理内存。但是物理地址线扩大到36条，但是线性地址还是使用32位，这时候没办法用32位的线性地址去表示64GB大小的物理内存。实际上PAE做的就是让内核有多个“主内核页全局目录”，第一个主内核页全局目录寻址0&lt;del>4GB的地址，第二个寻址5&lt;/del>8GB的地址，所以当寻址不同区域的地址时，只需要将不同的“主内核页全局目录”基地址存入cr3中。这些多个主内核页全局目录被称为&lt;strong>页目录指针表(PDPT)&lt;/strong>。&lt;/p>
-&lt;p>　　开启PAE后，32位系统寻址方式将大大改变：&lt;/p>
-&lt;ul>
-&lt;li>二级分页会变成三级分页&lt;/li>
-&lt;li>表项的大小也由原来的32位变成了64位(原来是12位标志+20位页框基地址，变成12位标志+24位页框基地址)。&lt;/li>
-&lt;li>页框大小将可选择4K或者2MB，通过修改表项中的Page size标志即可指定所指页框大小。&lt;/li>
-&lt;li>线性地址表示也变成如下：
-&lt;ul>
-&lt;li>当把线性地址映射为4KB的页时（页目录项中的PS标志清零），32位线性地址按以下方式解释：
-&lt;ul>
-&lt;li>cr3 : 指向一个PDPT；&lt;/li>
-&lt;li>位31-30 ： 指向PDPT中4项中的一个；&lt;/li>
-&lt;li>位29-21 ： 指向页目录中512个项中的一个；&lt;/li>
-&lt;li>位20-12 ： 指向页表中512个项中的一个；&lt;/li>
-&lt;li>位 11 - 0： 4KB页中的偏移量；&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>当把线性地址映射为2MB的页（页目录项中的PS标志置1）时，32位线性地址按下列方式解释：
-&lt;ul>
-&lt;li>cr3 : 指向一个PDPT；&lt;/li>
-&lt;li>位31-30 ： 指向PDPT中4项中的一个；&lt;/li>
-&lt;li>位29-21 ： 指向页目录中512个项中的一个；&lt;/li>
-&lt;li>位 20 - 0： 2MB页中的偏移量；&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="临时内核页表的构造">临时内核页表的构造&lt;/h2>
-&lt;p>x86系统刚刚启动的时候，运行在实模式下，这个时候线性地址就是物理地址。为了进入32位保护模式，首先就要启用分页。这就要求我们构建一个页表：这张页表把线性地址映射转换为物理地址。&lt;/p>
-&lt;p>为了解决构造页表时鸡生蛋 蛋生鸡的问题，Linux使用了一个临时的内核页表。它只有两个页表项（这里指用来索引页框的最后一级页表）。在不启用PAE(Page Addression Extension) 和 PSE (Page Size Extension)的情况下，一个页表可以指向 &lt;code>2^10 = 1024&lt;/code>个内存页，一个内存页 4k ， 所以两个页表允许索引8M的内存。&lt;/p>
-&lt;h3 id="swapper_pg_dir">&lt;code>swapper_pg_dir&lt;/code>&lt;/h3>
-&lt;p>顶层的页目录 (page directory) 使用全局变量 &lt;code>swapper_pg_dir&lt;/code>定义。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-26">26&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* 在 arch/x86/include/asm/pgtable_32.h 中声明为外部全局变量 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">extern&lt;/span> &lt;span style="color:#902000">pgd_t&lt;/span> swapper_pg_dir[&lt;span style="color:#40a070">1024&lt;/span>];
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* 其中pgd_t的定义如下 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">typedef&lt;/span> &lt;span style="color:#007020;font-weight:bold">struct&lt;/span> { &lt;span style="color:#902000">pgdval_t&lt;/span> pgd; } &lt;span style="color:#902000">pgd_t&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020;font-weight:bold">typedef&lt;/span> &lt;span style="color:#902000">unsigned&lt;/span> &lt;span style="color:#902000">long&lt;/span> &lt;span style="color:#902000">pgdval_t&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* 即，swapper_pg_dir 是unsigned long类型的数组，数组大小为1024 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* 在 arch/x86/kernel/head_32.S 中定义此变量 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * BSS section
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.section &lt;span style="color:#4070a0">&amp;#34;.bss.page_aligned&amp;#34;&lt;/span>,&lt;span style="color:#4070a0">&amp;#34;wa&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .align PAGE_SIZE_asm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#ifdef CONFIG_X86_PAE
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>&lt;span style="color:#002070;font-weight:bold">swapper_pg_pmd&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .fill &lt;span style="color:#40a070">1024&lt;/span>&lt;span style="color:#666">*&lt;/span>KPMDS,&lt;span style="color:#40a070">4&lt;/span>,&lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#else
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>&lt;span style="color:#06287e">ENTRY&lt;/span>(swapper_pg_dir)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .fill &lt;span style="color:#40a070">1024&lt;/span>,&lt;span style="color:#40a070">4&lt;/span>,&lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>&lt;span style="color:#002070;font-weight:bold">swapper_pg_fixmap&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .fill &lt;span style="color:#40a070">1024&lt;/span>,&lt;span style="color:#40a070">4&lt;/span>,&lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#06287e">ENTRY&lt;/span>(empty_zero_page)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .fill &lt;span style="color:#40a070">4096&lt;/span>,&lt;span style="color:#40a070">1&lt;/span>,&lt;span style="color:#40a070">0&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>.fill 1024, 4, 0&lt;/code> 表示用0填充1024个 4 byte 长度的内存（一个页目录项 page table entry 的大小是32bits 即 4Byte）。&lt;/p>
-&lt;h3 id="pg0">pg0&lt;/h3>
-&lt;p>ULK3 P74 原文 ： 临时页全局目录放在 swapper_pg_dir地址处，临时页表在pg0地址处，紧接在内核bss段之后。在linux 2.6.30.4中没有找到pg0变量。在分析代码时发现，应该是替换为了变量 &lt;code>__brk_base&lt;/code>&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-18">18&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* __brk_base 定义在 arch/x86/kernel/vmlinux_32.lds.S 中*/&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .&lt;span style="color:#002070;font-weight:bold">bss&lt;/span> : &lt;span style="color:#06287e">AT&lt;/span>(&lt;span style="color:#06287e">ADDR&lt;/span>(.bss) &lt;span style="color:#666">-&lt;/span> LOAD_OFFSET) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __init_end &lt;span style="color:#666">=&lt;/span> .;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __bss_start &lt;span style="color:#666">=&lt;/span> .; &lt;span style="color:#60a0b0;font-style:italic">/* BSS */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">*&lt;/span>(.bss.page_aligned)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">*&lt;/span>(.bss)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> . &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#06287e">ALIGN&lt;/span>(&lt;span style="color:#40a070">4&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __bss_stop &lt;span style="color:#666">=&lt;/span> .;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .&lt;span style="color:#002070;font-weight:bold">brk&lt;/span> : &lt;span style="color:#06287e">AT&lt;/span>(&lt;span style="color:#06287e">ADDR&lt;/span>(.brk) &lt;span style="color:#666">-&lt;/span> LOAD_OFFSET) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> . &lt;span style="color:#666">=&lt;/span> &lt;span style="color:#06287e">ALIGN&lt;/span>(PAGE_SIZE);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __brk_base &lt;span style="color:#666">=&lt;/span> . ;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> . &lt;span style="color:#666">+=&lt;/span> &lt;span style="color:#40a070">64&lt;/span> &lt;span style="color:#666">*&lt;/span> &lt;span style="color:#40a070">1024&lt;/span> ; &lt;span style="color:#60a0b0;font-style:italic">/* 64k alignment slop space */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#666">*&lt;/span>(.brk_reservation) &lt;span style="color:#60a0b0;font-style:italic">/* areas brk users have reserved */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __brk_limit &lt;span style="color:#666">=&lt;/span> . ;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> _end &lt;span style="color:#666">=&lt;/span> . ;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="初始化过程">初始化过程&lt;/h3>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-25">25&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-26">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-26">26&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-27">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-27">27&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-28">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-28">28&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-29">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-29">29&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-30">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-30">30&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-31">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-31">31&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-32">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-32">32&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-33">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-33">33&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-34">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-34">34&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-35">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-35">35&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-36">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-36">36&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-37">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-37">37&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-38">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-38">38&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-39">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-39">39&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-40">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-40">40&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-41">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-41">41&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-42">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-42">42&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-43">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-43">43&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-44">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-44">44&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-45">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-45">45&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-46">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-46">46&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-47">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-47">47&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-48">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-48">48&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-49">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-49">49&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-50">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-50">50&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-51">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-51">51&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-52">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-52">52&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * Initialize page tables. This creates a PDE and a set of page
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * tables, which are located immediately beyond __brk_base. The variable
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * _brk_end is set up to point to the first &amp;#34;safe&amp;#34; location.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * Mappings are created both at virtual address 0 (identity mapping)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * and PAGE_OFFSET for up to _end.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * Note that the stack is not yet set up!
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#002070;font-weight:bold">default_entry&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#ifdef CONFIG_X86_PAE
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/* 暂时不看 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#else &lt;/span>&lt;span style="color:#60a0b0;font-style:italic">/* Not PAE */&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>page_pde_offset &lt;span style="color:#666">=&lt;/span> (__PAGE_OFFSET &lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#40a070">20&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/* 其中 __PAGE_OFFSET = 0xC000 0000 所以 page_pde_offset = 0xC00 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(__brk_base), &lt;span style="color:#666">%&lt;/span>edi
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(swapper_pg_dir), &lt;span style="color:#666">%&lt;/span>edx
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> /* Physical address */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#007020">#define pa(X) ((X) - __PAGE_OFFSET)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span> &lt;span style="">*/&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>PTE_IDENT_ATTR, &lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">10&lt;/span>&lt;span style="color:#666">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> leal &lt;span style="color:#06287e">PDE_IDENT_ATTR&lt;/span>(&lt;span style="color:#666">%&lt;/span>edi),&lt;span style="color:#666">%&lt;/span>ecx &lt;span style="color:#60a0b0;font-style:italic">/* Create PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>ecx,(&lt;span style="color:#666">%&lt;/span>edx) &lt;span style="color:#60a0b0;font-style:italic">/* Store identity PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>ecx,&lt;span style="color:#06287e">page_pde_offset&lt;/span>(&lt;span style="color:#666">%&lt;/span>edx) &lt;span style="color:#60a0b0;font-style:italic">/* Store kernel PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> addl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">4&lt;/span>,&lt;span style="color:#666">%&lt;/span>edx
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">1024&lt;/span>, &lt;span style="color:#666">%&lt;/span>ecx
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">11&lt;/span>&lt;span style="color:#666">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> stosl
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> addl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">0x1000&lt;/span>,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> loop &lt;span style="color:#40a070">11&lt;/span>b
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * End condition: we must map up to the end + MAPPING_BEYOND_END.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(_end) &lt;span style="color:#666">+&lt;/span> MAPPING_BEYOND_END &lt;span style="color:#666">+&lt;/span> PTE_IDENT_ATTR, &lt;span style="color:#666">%&lt;/span>ebp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cmpl &lt;span style="color:#666">%&lt;/span>ebp,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> jb &lt;span style="color:#40a070">10&lt;/span>b
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> addl &lt;span style="">$&lt;/span>__PAGE_OFFSET, &lt;span style="color:#666">%&lt;/span>edi
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>edi, &lt;span style="color:#06287e">pa&lt;/span>(_brk_end)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> shrl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">12&lt;/span>, &lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>eax, &lt;span style="color:#06287e">pa&lt;/span>(max_pfn_mapped)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/* Do early initialization of the fixmap area */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(swapper_pg_fixmap)&lt;span style="color:#666">+&lt;/span>PDE_IDENT_ATTR,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>eax,&lt;span style="color:#06287e">pa&lt;/span>(swapper_pg_dir&lt;span style="color:#666">+&lt;/span>&lt;span style="color:#40a070">0xffc&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span> jmp &lt;span style="color:#40a070">3f&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;blockquote>
-&lt;p>stosl 指令 ： 相当于将eax中的值保存到 ES:EDI 所指向的地址中，若设置了EFLAGS中的方向位，则EDI自减4否则自增4。&lt;/p>
-&lt;p>loop 指令 : 借助ECX寄存器作为计数实现循环，每轮循环先将ECX减一，再判断ECX的值，循环直到ECX为0时止。&lt;/p>
-&lt;p>leal 指令 ：load effective address 功能是取偏移地址&lt;/p>
-&lt;p>​ mov 是将数据从源传到目的； lea是将源目的地址传到目的&lt;/p>
-&lt;p>​ 例如&lt;/p>
-&lt;p>​ movl 18(%eax), %ebx # 将内存中 %eax+18内存处的内容，传递到 %ebx中；&lt;/p>
-&lt;p>​ leal 18(%eax), %ebx # 将（18+%eax中内容）的值，传入%ebx;&lt;/p>&lt;/blockquote>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17">17&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* PTE_IDENT_ATTR和PDE_IDENT_ATTR 定义在arch/x86/include/asm/pgtable_types.h中 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * early identity mapping pte attrib macros.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#ifdef CONFIG_X86_64
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define __PAGE_KERNEL_IDENT_LARGE_EXEC __PAGE_KERNEL_LARGE_EXEC
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#else
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * For PDE_IDENT_ATTR include USER bit. As the PDE and PTE protection
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * bits are combined, this will alow user to access the high address mapped
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * VDSO in the presence of CONFIG_COMPAT_VDSO
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define PTE_IDENT_ATTR 0x003 &lt;/span>&lt;span style="color:#60a0b0;font-style:italic">/* PRESENT+RW */&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define PDE_IDENT_ATTR 0x067 &lt;/span>&lt;span style="color:#60a0b0;font-style:italic">/* PRESENT+RW+USER+DIRTY+ACCESSED */&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define PGD_IDENT_ATTR 0x001 &lt;/span>&lt;span style="color:#60a0b0;font-style:italic">/* PRESENT (no other attributes) */&lt;/span>&lt;span style="color:#007020">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>分步骤来看&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>初始化变量&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>page_pde_offset &lt;span style="color:#666">=&lt;/span> (__PAGE_OFFSET &lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#40a070">20&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/* 其中 __PAGE_OFFSET = 0xC000 0000 所以 page_pde_offset = 0xC00 */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(__brk_base), &lt;span style="color:#666">%&lt;/span>edi &lt;span style="">#&lt;/span> &lt;span style="">将&lt;/span>pg0的物理地址存储到 &lt;span style="color:#666">%&lt;/span>edi寄存器中
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(swapper_pg_dir), &lt;span style="color:#666">%&lt;/span>edx &lt;span style="">#&lt;/span> &lt;span style="">将页全局目录&lt;/span>swapper_pg_dir的地址存到寄存器&lt;span style="color:#666">%&lt;/span>edx中
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>PTE_IDENT_ATTR, &lt;span style="color:#666">%&lt;/span>eax &lt;span style="">#&lt;/span> &lt;span style="">存储&lt;/span>PTE的属性 PRESENT&lt;span style="color:#666">+&lt;/span>RW &lt;span style="">到&lt;/span>&lt;span style="color:#666">%&lt;/span>eax中
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;li>
-&lt;p>设置页全局目录&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">10&lt;/span>&lt;span style="color:#666">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> leal &lt;span style="color:#06287e">PDE_IDENT_ATTR&lt;/span>(&lt;span style="color:#666">%&lt;/span>edi),&lt;span style="color:#666">%&lt;/span>ecx &lt;span style="color:#60a0b0;font-style:italic">/* Create PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>ecx,(&lt;span style="color:#666">%&lt;/span>edx) &lt;span style="color:#60a0b0;font-style:italic">/* Store identity PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>ecx,&lt;span style="color:#06287e">page_pde_offset&lt;/span>(&lt;span style="color:#666">%&lt;/span>edx) &lt;span style="color:#60a0b0;font-style:italic">/* Store kernel PDE entry */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> addl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">4&lt;/span>,&lt;span style="color:#666">%&lt;/span>edx
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#40a070">1024&lt;/span>, &lt;span style="color:#666">%&lt;/span>ecx
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;blockquote>
-&lt;p>pde ： page directory entry 页目录表&lt;/p>&lt;/blockquote>
-&lt;ul>
-&lt;li>
-&lt;p>先将&lt;code>pg0&lt;/code>的物理地址&lt;code>+PDE_IDENT_ATTR -&amp;gt; %ecx&lt;/code>； 即将页表的地址加上页表的属性写入到&lt;code>%ECX&lt;/code>;&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>%ecx -&amp;gt; swapper_pg_dir&lt;/code>的物理地址；即将页表的地址写入到页目录中；&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>%ecx -&amp;gt; swapper_pg_dir&lt;/code>的物理地址&lt;code>+page_pde_offset&lt;/code>；将页表地址写入到内核页表所在位置；&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;code>4+%edx&lt;/code> ; 即将指针往后移动四个字节，指向第二个页目录项，为初始化第二个页表做准备；&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>最后将1024写入&lt;code>%ecx&lt;/code>， 作为初始化页表时的循环变量。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>初始化页表&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;pre>&lt;code>```c
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Memory Management on Yuanye Ma's Blog</title><link>/tags/memory-management/</link><description>Recent content in Memory Management on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Sat, 31 Oct 2020 16:01:23 +0800</lastBuildDate><atom:link href="/tags/memory-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 内核临时页表初始化</title><link>/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</link><pubDate>Sat, 31 Oct 2020 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-%E5%86%85%E6%A0%B8%E4%B8%B4%E6%97%B6%E9%A1%B5%E8%A1%A8%E5%88%9D%E5%A7%8B%E5%8C%96/</guid><description>&lt;h1 id="linux-内核临时页表初始化"&gt;Linux 内核临时页表初始化&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;基于 linux 2.6.30.4分析x86平台相关代码&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;64位系统：&lt;/strong&gt; 使用四级分页或三级分页，跟硬件有关。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;未开启PAE(物理地址扩展)的32位系统：&lt;/strong&gt; 只使用二级分页，页上级目录和页中间目录里的值全为0。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;开启PAE的32位系统：&lt;/strong&gt; 使用三级分页，这种情况下被排除在外的是页上级目录，也就是页上级目录中所有值都为0。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="表项"&gt;表项&lt;/h2&gt;
+&lt;p&gt;实际上页全局目录、页上级目录、页中间目录、页表都是保存在一个一个页框中，我们知道常规情况下页框大小为4K(特殊情况有2MB、1GB)，也就是页框的布局都是以4K倍数的地址进行排列的，要寻址一个页框，只需要20位地址就足够了。这些目录和页表中保存的都是表项，页全局目录保存的是页全局目录项，页中间目录保存的是页中间目录项，在32位系统中这些项都是32位(20位是所指页框的基地址，12位是标志位)的，在开启PAE后会变成64位，这些项保存着很多标志，我们罗列几个重要的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Present&lt;/code&gt;标志：为1，所指的页在内存中，为0，不在。&lt;/li&gt;
+&lt;li&gt;所指的页框基地址：占20位。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Accessed&lt;/code&gt;标志：每当分页单元对相应页框进行寻址时设置。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Dirty&lt;/code&gt;标志：只用于页表项，每次对一个页框进行写操作时设置。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Read/Write&lt;/code&gt;标志：读写权限标志。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;User/Supervisor&lt;/code&gt;标志：所指的页的特权级(进程能否访问)。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Page size&lt;/code&gt;标志：为1表示指的是2MB或4MB的页框。也就是页表是2MB或者4MB。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;　　在这些里面，最重要的或许就是所指页框基地址了，一个页中间目录项保存的页框基地址就是对应的页表的基地址，而页表项中保存的页框基地址，就是页(用于保存数据)的地址。而Present标志是用于判断是否发生缺页异常处理的标志。由于这些标志加上所指的页框基地址一共32位，一个4K的页框就能够保存1024个表项。&lt;/p&gt;
+&lt;h2 id="物理地址扩展pae"&gt;物理地址扩展(PAE)&lt;/h2&gt;
+&lt;p&gt;　　这个技术是用于X86_32位体系下的，因为32位线性地址最多能表示4GB大小的空间，而PAE技术将物理地址线扩大到36条，也就是CPU能够寻址64GB大小的物理内存。但是物理地址线扩大到36条，但是线性地址还是使用32位，这时候没办法用32位的线性地址去表示64GB大小的物理内存。实际上PAE做的就是让内核有多个“主内核页全局目录”，第一个主内核页全局目录寻址0&lt;del&gt;4GB的地址，第二个寻址5&lt;/del&gt;8GB的地址，所以当寻址不同区域的地址时，只需要将不同的“主内核页全局目录”基地址存入cr3中。这些多个主内核页全局目录被称为&lt;strong&gt;页目录指针表(PDPT)&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;　　开启PAE后，32位系统寻址方式将大大改变：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;二级分页会变成三级分页&lt;/li&gt;
+&lt;li&gt;表项的大小也由原来的32位变成了64位(原来是12位标志+20位页框基地址，变成12位标志+24位页框基地址)。&lt;/li&gt;
+&lt;li&gt;页框大小将可选择4K或者2MB，通过修改表项中的Page size标志即可指定所指页框大小。&lt;/li&gt;
+&lt;li&gt;线性地址表示也变成如下：
+&lt;ul&gt;
+&lt;li&gt;当把线性地址映射为4KB的页时（页目录项中的PS标志清零），32位线性地址按以下方式解释：
+&lt;ul&gt;
+&lt;li&gt;cr3 : 指向一个PDPT；&lt;/li&gt;
+&lt;li&gt;位31-30 ： 指向PDPT中4项中的一个；&lt;/li&gt;
+&lt;li&gt;位29-21 ： 指向页目录中512个项中的一个；&lt;/li&gt;
+&lt;li&gt;位20-12 ： 指向页表中512个项中的一个；&lt;/li&gt;
+&lt;li&gt;位 11 - 0： 4KB页中的偏移量；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;当把线性地址映射为2MB的页（页目录项中的PS标志置1）时，32位线性地址按下列方式解释：
+&lt;ul&gt;
+&lt;li&gt;cr3 : 指向一个PDPT；&lt;/li&gt;
+&lt;li&gt;位31-30 ： 指向PDPT中4项中的一个；&lt;/li&gt;
+&lt;li&gt;位29-21 ： 指向页目录中512个项中的一个；&lt;/li&gt;
+&lt;li&gt;位 20 - 0： 2MB页中的偏移量；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="临时内核页表的构造"&gt;临时内核页表的构造&lt;/h2&gt;
+&lt;p&gt;x86系统刚刚启动的时候，运行在实模式下，这个时候线性地址就是物理地址。为了进入32位保护模式，首先就要启用分页。这就要求我们构建一个页表：这张页表把线性地址映射转换为物理地址。&lt;/p&gt;
+&lt;p&gt;为了解决构造页表时鸡生蛋 蛋生鸡的问题，Linux使用了一个临时的内核页表。它只有两个页表项（这里指用来索引页框的最后一级页表）。在不启用PAE(Page Addression Extension) 和 PSE (Page Size Extension)的情况下，一个页表可以指向 &lt;code&gt;2^10 = 1024&lt;/code&gt;个内存页，一个内存页 4k ， 所以两个页表允许索引8M的内存。&lt;/p&gt;
+&lt;h3 id="swapper_pg_dir"&gt;&lt;code&gt;swapper_pg_dir&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;顶层的页目录 (page directory) 使用全局变量 &lt;code&gt;swapper_pg_dir&lt;/code&gt;定义。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* 在 arch/x86/include/asm/pgtable_32.h 中声明为外部全局变量 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;extern&lt;/span&gt; &lt;span style="color:#902000"&gt;pgd_t&lt;/span&gt; swapper_pg_dir[&lt;span style="color:#40a070"&gt;1024&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* 其中pgd_t的定义如下 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;typedef&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;struct&lt;/span&gt; { &lt;span style="color:#902000"&gt;pgdval_t&lt;/span&gt; pgd; } &lt;span style="color:#902000"&gt;pgd_t&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;typedef&lt;/span&gt; &lt;span style="color:#902000"&gt;unsigned&lt;/span&gt; &lt;span style="color:#902000"&gt;long&lt;/span&gt; &lt;span style="color:#902000"&gt;pgdval_t&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* 即，swapper_pg_dir 是unsigned long类型的数组，数组大小为1024 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* 在 arch/x86/kernel/head_32.S 中定义此变量 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * BSS section
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;.section &lt;span style="color:#4070a0"&gt;&amp;#34;.bss.page_aligned&amp;#34;&lt;/span&gt;,&lt;span style="color:#4070a0"&gt;&amp;#34;wa&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .align PAGE_SIZE_asm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#ifdef CONFIG_X86_PAE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;&lt;span style="color:#002070;font-weight:bold"&gt;swapper_pg_pmd&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .fill &lt;span style="color:#40a070"&gt;1024&lt;/span&gt;&lt;span style="color:#666"&gt;*&lt;/span&gt;KPMDS,&lt;span style="color:#40a070"&gt;4&lt;/span&gt;,&lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;&lt;span style="color:#06287e"&gt;ENTRY&lt;/span&gt;(swapper_pg_dir)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .fill &lt;span style="color:#40a070"&gt;1024&lt;/span&gt;,&lt;span style="color:#40a070"&gt;4&lt;/span&gt;,&lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;&lt;span style="color:#002070;font-weight:bold"&gt;swapper_pg_fixmap&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .fill &lt;span style="color:#40a070"&gt;1024&lt;/span&gt;,&lt;span style="color:#40a070"&gt;4&lt;/span&gt;,&lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#06287e"&gt;ENTRY&lt;/span&gt;(empty_zero_page)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .fill &lt;span style="color:#40a070"&gt;4096&lt;/span&gt;,&lt;span style="color:#40a070"&gt;1&lt;/span&gt;,&lt;span style="color:#40a070"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;.fill 1024, 4, 0&lt;/code&gt; 表示用0填充1024个 4 byte 长度的内存（一个页目录项 page table entry 的大小是32bits 即 4Byte）。&lt;/p&gt;
+&lt;h3 id="pg0"&gt;pg0&lt;/h3&gt;
+&lt;p&gt;ULK3 P74 原文 ： 临时页全局目录放在 swapper_pg_dir地址处，临时页表在pg0地址处，紧接在内核bss段之后。在linux 2.6.30.4中没有找到pg0变量。在分析代码时发现，应该是替换为了变量 &lt;code&gt;__brk_base&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* __brk_base 定义在 arch/x86/kernel/vmlinux_32.lds.S 中*/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#002070;font-weight:bold"&gt;bss&lt;/span&gt; : &lt;span style="color:#06287e"&gt;AT&lt;/span&gt;(&lt;span style="color:#06287e"&gt;ADDR&lt;/span&gt;(.bss) &lt;span style="color:#666"&gt;-&lt;/span&gt; LOAD_OFFSET) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; __init_end &lt;span style="color:#666"&gt;=&lt;/span&gt; .;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; __bss_start &lt;span style="color:#666"&gt;=&lt;/span&gt; .; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* BSS */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;*&lt;/span&gt;(.bss.page_aligned)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;*&lt;/span&gt;(.bss)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; . &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#06287e"&gt;ALIGN&lt;/span&gt;(&lt;span style="color:#40a070"&gt;4&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; __bss_stop &lt;span style="color:#666"&gt;=&lt;/span&gt; .;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; .&lt;span style="color:#002070;font-weight:bold"&gt;brk&lt;/span&gt; : &lt;span style="color:#06287e"&gt;AT&lt;/span&gt;(&lt;span style="color:#06287e"&gt;ADDR&lt;/span&gt;(.brk) &lt;span style="color:#666"&gt;-&lt;/span&gt; LOAD_OFFSET) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; . &lt;span style="color:#666"&gt;=&lt;/span&gt; &lt;span style="color:#06287e"&gt;ALIGN&lt;/span&gt;(PAGE_SIZE);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; __brk_base &lt;span style="color:#666"&gt;=&lt;/span&gt; . ;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; . &lt;span style="color:#666"&gt;+=&lt;/span&gt; &lt;span style="color:#40a070"&gt;64&lt;/span&gt; &lt;span style="color:#666"&gt;*&lt;/span&gt; &lt;span style="color:#40a070"&gt;1024&lt;/span&gt; ; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* 64k alignment slop space */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#666"&gt;*&lt;/span&gt;(.brk_reservation) &lt;span style="color:#60a0b0;font-style:italic"&gt;/* areas brk users have reserved */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; __brk_limit &lt;span style="color:#666"&gt;=&lt;/span&gt; . ;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; _end &lt;span style="color:#666"&gt;=&lt;/span&gt; . ;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="初始化过程"&gt;初始化过程&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-26"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-26"&gt;26&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-27"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-27"&gt;27&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-28"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-28"&gt;28&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-29"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-29"&gt;29&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-30"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-30"&gt;30&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-31"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-31"&gt;31&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-32"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-32"&gt;32&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-33"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-33"&gt;33&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-34"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-34"&gt;34&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-35"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-35"&gt;35&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-36"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-36"&gt;36&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-37"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-37"&gt;37&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-38"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-38"&gt;38&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-39"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-39"&gt;39&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-40"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-40"&gt;40&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-41"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-41"&gt;41&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-42"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-42"&gt;42&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-43"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-43"&gt;43&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-44"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-44"&gt;44&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-45"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-45"&gt;45&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-46"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-46"&gt;46&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-47"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-47"&gt;47&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-48"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-48"&gt;48&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-49"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-49"&gt;49&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-50"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-50"&gt;50&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-51"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-51"&gt;51&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-52"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-52"&gt;52&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * Initialize page tables. This creates a PDE and a set of page
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * tables, which are located immediately beyond __brk_base. The variable
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * _brk_end is set up to point to the first &amp;#34;safe&amp;#34; location.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * Mappings are created both at virtual address 0 (identity mapping)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * and PAGE_OFFSET for up to _end.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * Note that the stack is not yet set up!
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#002070;font-weight:bold"&gt;default_entry&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#ifdef CONFIG_X86_PAE
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* 暂时不看 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#else &lt;/span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* Not PAE */&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;page_pde_offset &lt;span style="color:#666"&gt;=&lt;/span&gt; (__PAGE_OFFSET &lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#40a070"&gt;20&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* 其中 __PAGE_OFFSET = 0xC000 0000 所以 page_pde_offset = 0xC00 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(__brk_base), &lt;span style="color:#666"&gt;%&lt;/span&gt;edi
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(swapper_pg_dir), &lt;span style="color:#666"&gt;%&lt;/span&gt;edx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; /* Physical address */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#007020"&gt;#define pa(X) ((X) - __PAGE_OFFSET)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt; &lt;span style=""&gt;*/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;PTE_IDENT_ATTR, &lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;10&lt;/span&gt;&lt;span style="color:#666"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; leal &lt;span style="color:#06287e"&gt;PDE_IDENT_ATTR&lt;/span&gt;(&lt;span style="color:#666"&gt;%&lt;/span&gt;edi),&lt;span style="color:#666"&gt;%&lt;/span&gt;ecx &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Create PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx,(&lt;span style="color:#666"&gt;%&lt;/span&gt;edx) &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Store identity PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx,&lt;span style="color:#06287e"&gt;page_pde_offset&lt;/span&gt;(&lt;span style="color:#666"&gt;%&lt;/span&gt;edx) &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Store kernel PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; addl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;4&lt;/span&gt;,&lt;span style="color:#666"&gt;%&lt;/span&gt;edx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;1024&lt;/span&gt;, &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;11&lt;/span&gt;&lt;span style="color:#666"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; stosl
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; addl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;0x1000&lt;/span&gt;,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; loop &lt;span style="color:#40a070"&gt;11&lt;/span&gt;b
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * End condition: we must map up to the end + MAPPING_BEYOND_END.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(_end) &lt;span style="color:#666"&gt;+&lt;/span&gt; MAPPING_BEYOND_END &lt;span style="color:#666"&gt;+&lt;/span&gt; PTE_IDENT_ATTR, &lt;span style="color:#666"&gt;%&lt;/span&gt;ebp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cmpl &lt;span style="color:#666"&gt;%&lt;/span&gt;ebp,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; jb &lt;span style="color:#40a070"&gt;10&lt;/span&gt;b
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; addl &lt;span style=""&gt;$&lt;/span&gt;__PAGE_OFFSET, &lt;span style="color:#666"&gt;%&lt;/span&gt;edi
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;edi, &lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(_brk_end)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; shrl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;12&lt;/span&gt;, &lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;eax, &lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(max_pfn_mapped)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Do early initialization of the fixmap area */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(swapper_pg_fixmap)&lt;span style="color:#666"&gt;+&lt;/span&gt;PDE_IDENT_ATTR,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;eax,&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(swapper_pg_dir&lt;span style="color:#666"&gt;+&lt;/span&gt;&lt;span style="color:#40a070"&gt;0xffc&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt; jmp &lt;span style="color:#40a070"&gt;3f&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;stosl 指令 ： 相当于将eax中的值保存到 ES:EDI 所指向的地址中，若设置了EFLAGS中的方向位，则EDI自减4否则自增4。&lt;/p&gt;
+&lt;p&gt;loop 指令 : 借助ECX寄存器作为计数实现循环，每轮循环先将ECX减一，再判断ECX的值，循环直到ECX为0时止。&lt;/p&gt;
+&lt;p&gt;leal 指令 ：load effective address 功能是取偏移地址&lt;/p&gt;
+&lt;p&gt;​ mov 是将数据从源传到目的； lea是将源目的地址传到目的&lt;/p&gt;
+&lt;p&gt;​ 例如&lt;/p&gt;
+&lt;p&gt;​ movl 18(%eax), %ebx # 将内存中 %eax+18内存处的内容，传递到 %ebx中；&lt;/p&gt;
+&lt;p&gt;​ leal 18(%eax), %ebx # 将（18+%eax中内容）的值，传入%ebx;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* PTE_IDENT_ATTR和PDE_IDENT_ATTR 定义在arch/x86/include/asm/pgtable_types.h中 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * early identity mapping pte attrib macros.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#ifdef CONFIG_X86_64
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define __PAGE_KERNEL_IDENT_LARGE_EXEC __PAGE_KERNEL_LARGE_EXEC
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * For PDE_IDENT_ATTR include USER bit. As the PDE and PTE protection
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * bits are combined, this will alow user to access the high address mapped
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * VDSO in the presence of CONFIG_COMPAT_VDSO
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define PTE_IDENT_ATTR 0x003 &lt;/span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* PRESENT+RW */&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define PDE_IDENT_ATTR 0x067 &lt;/span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* PRESENT+RW+USER+DIRTY+ACCESSED */&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define PGD_IDENT_ATTR 0x001 &lt;/span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* PRESENT (no other attributes) */&lt;/span&gt;&lt;span style="color:#007020"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;分步骤来看&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;初始化变量&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;page_pde_offset &lt;span style="color:#666"&gt;=&lt;/span&gt; (__PAGE_OFFSET &lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span style="color:#40a070"&gt;20&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* 其中 __PAGE_OFFSET = 0xC000 0000 所以 page_pde_offset = 0xC00 */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(__brk_base), &lt;span style="color:#666"&gt;%&lt;/span&gt;edi &lt;span style=""&gt;#&lt;/span&gt; &lt;span style=""&gt;将&lt;/span&gt;pg0的物理地址存储到 &lt;span style="color:#666"&gt;%&lt;/span&gt;edi寄存器中
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(swapper_pg_dir), &lt;span style="color:#666"&gt;%&lt;/span&gt;edx &lt;span style=""&gt;#&lt;/span&gt; &lt;span style=""&gt;将页全局目录&lt;/span&gt;swapper_pg_dir的地址存到寄存器&lt;span style="color:#666"&gt;%&lt;/span&gt;edx中
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;PTE_IDENT_ATTR, &lt;span style="color:#666"&gt;%&lt;/span&gt;eax &lt;span style=""&gt;#&lt;/span&gt; &lt;span style=""&gt;存储&lt;/span&gt;PTE的属性 PRESENT&lt;span style="color:#666"&gt;+&lt;/span&gt;RW &lt;span style=""&gt;到&lt;/span&gt;&lt;span style="color:#666"&gt;%&lt;/span&gt;eax中
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;设置页全局目录&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;10&lt;/span&gt;&lt;span style="color:#666"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; leal &lt;span style="color:#06287e"&gt;PDE_IDENT_ATTR&lt;/span&gt;(&lt;span style="color:#666"&gt;%&lt;/span&gt;edi),&lt;span style="color:#666"&gt;%&lt;/span&gt;ecx &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Create PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx,(&lt;span style="color:#666"&gt;%&lt;/span&gt;edx) &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Store identity PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx,&lt;span style="color:#06287e"&gt;page_pde_offset&lt;/span&gt;(&lt;span style="color:#666"&gt;%&lt;/span&gt;edx) &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Store kernel PDE entry */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; addl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;4&lt;/span&gt;,&lt;span style="color:#666"&gt;%&lt;/span&gt;edx
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;1024&lt;/span&gt;, &lt;span style="color:#666"&gt;%&lt;/span&gt;ecx
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;pde ： page directory entry 页目录表&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;先将&lt;code&gt;pg0&lt;/code&gt;的物理地址&lt;code&gt;+PDE_IDENT_ATTR -&amp;gt; %ecx&lt;/code&gt;； 即将页表的地址加上页表的属性写入到&lt;code&gt;%ECX&lt;/code&gt;;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;%ecx -&amp;gt; swapper_pg_dir&lt;/code&gt;的物理地址；即将页表的地址写入到页目录中；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;%ecx -&amp;gt; swapper_pg_dir&lt;/code&gt;的物理地址&lt;code&gt;+page_pde_offset&lt;/code&gt;；将页表地址写入到内核页表所在位置；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;4+%edx&lt;/code&gt; ; 即将指针往后移动四个字节，指向第二个页目录项，为初始化第二个页表做准备；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;最后将1024写入&lt;code&gt;%ecx&lt;/code&gt;， 作为初始化页表时的循环变量。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;初始化页表&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;```c
 11:
 stosl ;将%eax的内容(0+PRESENT+RW)复制到 %es:%edi ，即pg0第一个表项处，并%edi+4 ;
 addl $0x1000,%eax ; %eax+0x1000, 即 %eax+4K,
 loop 11b ; %ecx-=1, 若%ecx!=0, 跳转到标号11处，继续执行，即循环1024次。
 ```
-&lt;/code>&lt;/pre>
-&lt;ol start="4">
-&lt;li>
-&lt;p>初始化剩下的页表&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * End condition: we must map up to the end + MAPPING_BEYOND_END.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(_end) &lt;span style="color:#666">+&lt;/span> MAPPING_BEYOND_END &lt;span style="color:#666">+&lt;/span> PTE_IDENT_ATTR, &lt;span style="color:#666">%&lt;/span>ebp
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cmpl &lt;span style="color:#666">%&lt;/span>ebp,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> jb &lt;span style="color:#40a070">10&lt;/span>b
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>其中 &lt;code>_end&lt;/code>在前边连接器脚本中定义，&lt;code>MAPPING_BEYOND_END&lt;/code>定义如下，&lt;code>PTE_IDENT_ATTR&lt;/code>为页表的属性。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-19">19&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-20">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-20">20&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-21">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-21">21&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-22">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-22">22&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-23">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-23">23&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-24">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-24">24&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-25">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-25">25&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * This is how much memory in addition to the memory covered up to
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * and including _end we need mapped initially.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * We need:
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * (KERNEL_IMAGE_SIZE/4096) / 1024 pages (worst case, non PAE)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * (KERNEL_IMAGE_SIZE/4096) / 512 + 4 pages (worst case for PAE)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * Modulo rounding, each megabyte assigned here requires a kilobyte of
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * memory, which is currently unreclaimed.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * This should be a multiple of a page.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> *
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * KERNEL_IMAGE_SIZE should be greater than pa(_end)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * and small than max_low_pfn, otherwise will waste some page table entries
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#if PTRS_PER_PMD &amp;gt; 1
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define PAGE_TABLE_SIZE(pages) (((pages) / PTRS_PER_PMD) + PTRS_PER_PGD)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#else
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#endif
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/* Enough space to fit pagetables for the low memory linear map */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>MAPPING_BEYOND_END &lt;span style="color:#666">=&lt;/span> \
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#06287e">PAGE_TABLE_SIZE&lt;/span>(((&lt;span style="color:#40a070">1&lt;/span>&lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span>&lt;span style="color:#40a070">32&lt;/span>) &lt;span style="color:#666">-&lt;/span> __PAGE_OFFSET) &lt;span style="color:#666">&amp;gt;&amp;gt;&lt;/span> PAGE_SHIFT) &lt;span style="color:#666">&amp;lt;&amp;lt;&lt;/span> PAGE_SHIFT
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;/li>
-&lt;/ol>
-&lt;h3 id="启用分页">启用分页&lt;/h3>
-&lt;p>初始化过程的最后执行了&lt;code> jmp 3f&lt;/code> , 标号3处执行PAE相关的判断和操作，最后跳转到了标号6处执行。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-14">14&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span>&lt;span style="color:#666">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic">/*
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> * Enable paging
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#60a0b0;font-style:italic"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="">$&lt;/span>&lt;span style="color:#06287e">pa&lt;/span>(swapper_pg_dir),&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>eax,&lt;span style="color:#666">%&lt;/span>cr3 &lt;span style="color:#60a0b0;font-style:italic">/* set the page table pointer.. */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>cr0,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> orl &lt;span style="">$&lt;/span>X86_CR0_PG,&lt;span style="color:#666">%&lt;/span>eax
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> movl &lt;span style="color:#666">%&lt;/span>eax,&lt;span style="color:#666">%&lt;/span>cr0 &lt;span style="color:#60a0b0;font-style:italic">/* ..and set paging (PG) bit */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ljmp &lt;span style="">$&lt;/span>__BOOT_CS,&lt;span style="">$&lt;/span>&lt;span style="color:#40a070">1f&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">/* Clear prefetch and normalize %eip */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">1&lt;/span>&lt;span style="color:#666">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#60a0b0;font-style:italic">/* Set up the stack pointer */&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> lss stack_start,&lt;span style="color:#666">%&lt;/span>esp
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="参考">参考&lt;/h2>
-&lt;p>&lt;a href="https://www.cnblogs.com/tolimit/p/4585803.html">linux内存源码分析 - 页表的初始化&lt;/a>&lt;/p></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start="4"&gt;
+&lt;li&gt;
+&lt;p&gt;初始化剩下的页表&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * End condition: we must map up to the end + MAPPING_BEYOND_END.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(_end) &lt;span style="color:#666"&gt;+&lt;/span&gt; MAPPING_BEYOND_END &lt;span style="color:#666"&gt;+&lt;/span&gt; PTE_IDENT_ATTR, &lt;span style="color:#666"&gt;%&lt;/span&gt;ebp
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; cmpl &lt;span style="color:#666"&gt;%&lt;/span&gt;ebp,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; jb &lt;span style="color:#40a070"&gt;10&lt;/span&gt;b
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中 &lt;code&gt;_end&lt;/code&gt;在前边连接器脚本中定义，&lt;code&gt;MAPPING_BEYOND_END&lt;/code&gt;定义如下，&lt;code&gt;PTE_IDENT_ATTR&lt;/code&gt;为页表的属性。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-20"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-20"&gt;20&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-21"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-21"&gt;21&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-22"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-22"&gt;22&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-23"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-23"&gt;23&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-24"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-24"&gt;24&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-25"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-25"&gt;25&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * This is how much memory in addition to the memory covered up to
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * and including _end we need mapped initially.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * We need:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * (KERNEL_IMAGE_SIZE/4096) / 1024 pages (worst case, non PAE)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * (KERNEL_IMAGE_SIZE/4096) / 512 + 4 pages (worst case for PAE)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * Modulo rounding, each megabyte assigned here requires a kilobyte of
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * memory, which is currently unreclaimed.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * This should be a multiple of a page.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; *
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * KERNEL_IMAGE_SIZE should be greater than pa(_end)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * and small than max_low_pfn, otherwise will waste some page table entries
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#if PTRS_PER_PMD &amp;gt; 1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define PAGE_TABLE_SIZE(pages) (((pages) / PTRS_PER_PMD) + PTRS_PER_PGD)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#else
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#endif
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/* Enough space to fit pagetables for the low memory linear map */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MAPPING_BEYOND_END &lt;span style="color:#666"&gt;=&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#06287e"&gt;PAGE_TABLE_SIZE&lt;/span&gt;(((&lt;span style="color:#40a070"&gt;1&lt;/span&gt;&lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span style="color:#40a070"&gt;32&lt;/span&gt;) &lt;span style="color:#666"&gt;-&lt;/span&gt; __PAGE_OFFSET) &lt;span style="color:#666"&gt;&amp;gt;&amp;gt;&lt;/span&gt; PAGE_SHIFT) &lt;span style="color:#666"&gt;&amp;lt;&amp;lt;&lt;/span&gt; PAGE_SHIFT
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="启用分页"&gt;启用分页&lt;/h3&gt;
+&lt;p&gt;初始化过程的最后执行了&lt;code&gt; jmp 3f&lt;/code&gt; , 标号3处执行PAE相关的判断和操作，最后跳转到了标号6处执行。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;6&lt;/span&gt;&lt;span style="color:#666"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; * Enable paging
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#60a0b0;font-style:italic"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#06287e"&gt;pa&lt;/span&gt;(swapper_pg_dir),&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;eax,&lt;span style="color:#666"&gt;%&lt;/span&gt;cr3 &lt;span style="color:#60a0b0;font-style:italic"&gt;/* set the page table pointer.. */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;cr0,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; orl &lt;span style=""&gt;$&lt;/span&gt;X86_CR0_PG,&lt;span style="color:#666"&gt;%&lt;/span&gt;eax
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; movl &lt;span style="color:#666"&gt;%&lt;/span&gt;eax,&lt;span style="color:#666"&gt;%&lt;/span&gt;cr0 &lt;span style="color:#60a0b0;font-style:italic"&gt;/* ..and set paging (PG) bit */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ljmp &lt;span style=""&gt;$&lt;/span&gt;__BOOT_CS,&lt;span style=""&gt;$&lt;/span&gt;&lt;span style="color:#40a070"&gt;1f&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Clear prefetch and normalize %eip */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;&lt;span style="color:#666"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;/* Set up the stack pointer */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; lss stack_start,&lt;span style="color:#666"&gt;%&lt;/span&gt;esp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="参考"&gt;参考&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.cnblogs.com/tolimit/p/4585803.html"&gt;linux内存源码分析 - 页表的初始化&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>

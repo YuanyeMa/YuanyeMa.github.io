@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kernel Makefiles on Yuanye Ma's Blog</title><link>/tags/kernel-makefiles/</link><description>Recent content in Kernel Makefiles on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/kernel-makefiles/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux Kernel Makefiles</title><link>/post/os/linux-kernel/linux-kernel-makefiles/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel-makefiles/</guid><description>&lt;p>======================&lt;/p>
-&lt;h1 id="linux-kernel-makefiles">Linux Kernel Makefiles&lt;/h1>
-&lt;p>这个文档介绍了&lt;code>Linux kernel Makefiles&lt;/code>。&lt;/p>
-&lt;p>.. 目录&lt;/p>
-&lt;pre>&lt;code> === 1 Overview
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kernel Makefiles on Yuanye Ma's Blog</title><link>/tags/kernel-makefiles/</link><description>Recent content in Kernel Makefiles on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/kernel-makefiles/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux Kernel Makefiles</title><link>/post/os/linux-kernel/linux-kernel-makefiles/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/linux-kernel-makefiles/</guid><description>&lt;p&gt;======================&lt;/p&gt;
+&lt;h1 id="linux-kernel-makefiles"&gt;Linux Kernel Makefiles&lt;/h1&gt;
+&lt;p&gt;这个文档介绍了&lt;code&gt;Linux kernel Makefiles&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;.. 目录&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; === 1 Overview
 === 2 Who does what
 === 3 The kbuild files
 --- 3.1 目标定义(Goal definitions)
@@ -51,59 +51,59 @@
 === 10 Makefile language
 === 11 Credits
 === 12 TODO
-&lt;/code>&lt;/pre>
-&lt;h1 id="1-overview">1 Overview&lt;/h1>
-&lt;p>内核的Makefiles由五部分组成::&lt;/p>
-&lt;pre>&lt;code> Makefile 顶层Makefile,即内核目录树根目录下的Makefile文件。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id="1-overview"&gt;1 Overview&lt;/h1&gt;
+&lt;p&gt;内核的Makefiles由五部分组成::&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Makefile 顶层Makefile,即内核目录树根目录下的Makefile文件。
 .config 内核的配置文件。
 arch/$(ARCH)/Makefile 体系结构相关的Makefle文件。
 scripts/Makefile.* kbuild Makefiles通用的规则文件。
 kbuild Makefiles 大约500多个kbuild Makefile文件。
-&lt;/code>&lt;/pre>
-&lt;p>顶层&lt;code>Makefile&lt;/code>读取内核配置阶段生成的&lt;code>.config&lt;/code>文件。&lt;/p>
-&lt;p>顶层&lt;code>Makefile&lt;/code>负责构建两个主要的东西：vmlinux（常驻内核镜像）和modules（所有的内核模块）。它通过递归进入内核源码树的子目录来构建这些目标。&lt;/p>
-&lt;p>被访问的子目录列表取决于内核配置，顶层&lt;code>Makefile&lt;/code>文件包含了一个名字叫做&lt;code>arch/$(ARCH)/Makefile&lt;/code>的体系结构相关的&lt;code>Makefile&lt;/code>文件，这个体系结构相关的&lt;code>Makefile&lt;/code>文件为顶层&lt;code>Makefile&lt;/code>文件提供体系结构相关的信息。&lt;/p>
-&lt;p>每个子目录都有一个&lt;code>kbuild Makefile&lt;/code>，该文件执行上层&lt;code>Makefile&lt;/code>传递下来的命令。&lt;code>kbuild Makefile&lt;/code>使用&lt;code>.config&lt;/code>文件中的信息来生成一个&lt;code>kbuild&lt;/code>使用的文件列表，该文件列表被&lt;code>kbuild&lt;/code>用于构建要编译进内核的目标(&lt;code>built-in&lt;/code>)或内核模块。&lt;/p>
-&lt;p>scripts / Makefile.* 包含所有的变量定义/编译规则等，这些变量和规则被&lt;code>kbuild&lt;/code>用于构建内核。&lt;/p>
-&lt;h1 id="2-who-does-what">2 Who does what&lt;/h1>
-&lt;p>People have four different relationships with the kernel Makefiles.
-有四种人会关心内核&lt;code>Makefiles&lt;/code>文件。&lt;/p>
-&lt;p>&lt;em>Users&lt;/em> 需要自己构建内核的人，这些人需要执行&amp;quot;make menuconfig&amp;quot; 和 &amp;ldquo;make&amp;quot;命令，通常不会阅读或者修改内核的&lt;code>Makefiles&lt;/code>文件（或者不需要修改内核的任何源文件）。&lt;/p>
-&lt;p>&lt;em>Normal developers&lt;/em> 指从事诸如设备驱动、文件系统或者网络协议栈等开发维护的人。这些人需要维护自己所关注的子系统使用的&lt;code>kbuild Makefile&lt;/code>文件。为了更好地完成维护或者开发工作，他们需要对内核&lt;code>Makefile&lt;/code>,以及有关&lt;code>kbuild&lt;/code>公用接口有较为全面的了解。&lt;/p>
-&lt;p>&lt;em>Arch developers&lt;/em> 指从事特定体系结构比如ia64等相关开发的人员。体系结构相关的开发人员需要对&lt;code>arch/$(ARCH)/Makefile&lt;/code>和&lt;code>kbuild Makefiles&lt;/code>有一定的了解。&lt;/p>
-&lt;p>&lt;em>Kbuild developers&lt;/em> 指开发或者维护内核构建系统本身的人，他们需要对内核中所有的&lt;code>Makefile&lt;/code>文件都有比较深入的认识。&lt;/p>
-&lt;p>这个文档适用于&lt;code>normal developers&lt;/code>和&lt;code>arch developers&lt;/code>，也即从事设备驱动、文件系统等相关内核子系统维护或者开发，以及从事体系结构相关开发工作的工程师们。&lt;/p>
-&lt;h1 id="3-the-kbuild-files">3 The kbuild files&lt;/h1>
-&lt;p>内核中的大部分&lt;code>Makefile&lt;/code>文件都是&lt;code>kbuild Makefiles&lt;/code>。本章介绍&lt;code>kbuild makefiles&lt;/code>的语法。&lt;/p>
-&lt;p>The preferred name for the kbuild files are &amp;lsquo;Makefile&amp;rsquo; but &amp;lsquo;Kbuild&amp;rsquo; can
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;顶层&lt;code&gt;Makefile&lt;/code&gt;读取内核配置阶段生成的&lt;code&gt;.config&lt;/code&gt;文件。&lt;/p&gt;
+&lt;p&gt;顶层&lt;code&gt;Makefile&lt;/code&gt;负责构建两个主要的东西：vmlinux（常驻内核镜像）和modules（所有的内核模块）。它通过递归进入内核源码树的子目录来构建这些目标。&lt;/p&gt;
+&lt;p&gt;被访问的子目录列表取决于内核配置，顶层&lt;code&gt;Makefile&lt;/code&gt;文件包含了一个名字叫做&lt;code&gt;arch/$(ARCH)/Makefile&lt;/code&gt;的体系结构相关的&lt;code&gt;Makefile&lt;/code&gt;文件，这个体系结构相关的&lt;code&gt;Makefile&lt;/code&gt;文件为顶层&lt;code&gt;Makefile&lt;/code&gt;文件提供体系结构相关的信息。&lt;/p&gt;
+&lt;p&gt;每个子目录都有一个&lt;code&gt;kbuild Makefile&lt;/code&gt;，该文件执行上层&lt;code&gt;Makefile&lt;/code&gt;传递下来的命令。&lt;code&gt;kbuild Makefile&lt;/code&gt;使用&lt;code&gt;.config&lt;/code&gt;文件中的信息来生成一个&lt;code&gt;kbuild&lt;/code&gt;使用的文件列表，该文件列表被&lt;code&gt;kbuild&lt;/code&gt;用于构建要编译进内核的目标(&lt;code&gt;built-in&lt;/code&gt;)或内核模块。&lt;/p&gt;
+&lt;p&gt;scripts / Makefile.* 包含所有的变量定义/编译规则等，这些变量和规则被&lt;code&gt;kbuild&lt;/code&gt;用于构建内核。&lt;/p&gt;
+&lt;h1 id="2-who-does-what"&gt;2 Who does what&lt;/h1&gt;
+&lt;p&gt;People have four different relationships with the kernel Makefiles.
+有四种人会关心内核&lt;code&gt;Makefiles&lt;/code&gt;文件。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Users&lt;/em&gt; 需要自己构建内核的人，这些人需要执行&amp;quot;make menuconfig&amp;quot; 和 &amp;ldquo;make&amp;quot;命令，通常不会阅读或者修改内核的&lt;code&gt;Makefiles&lt;/code&gt;文件（或者不需要修改内核的任何源文件）。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Normal developers&lt;/em&gt; 指从事诸如设备驱动、文件系统或者网络协议栈等开发维护的人。这些人需要维护自己所关注的子系统使用的&lt;code&gt;kbuild Makefile&lt;/code&gt;文件。为了更好地完成维护或者开发工作，他们需要对内核&lt;code&gt;Makefile&lt;/code&gt;,以及有关&lt;code&gt;kbuild&lt;/code&gt;公用接口有较为全面的了解。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Arch developers&lt;/em&gt; 指从事特定体系结构比如ia64等相关开发的人员。体系结构相关的开发人员需要对&lt;code&gt;arch/$(ARCH)/Makefile&lt;/code&gt;和&lt;code&gt;kbuild Makefiles&lt;/code&gt;有一定的了解。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Kbuild developers&lt;/em&gt; 指开发或者维护内核构建系统本身的人，他们需要对内核中所有的&lt;code&gt;Makefile&lt;/code&gt;文件都有比较深入的认识。&lt;/p&gt;
+&lt;p&gt;这个文档适用于&lt;code&gt;normal developers&lt;/code&gt;和&lt;code&gt;arch developers&lt;/code&gt;，也即从事设备驱动、文件系统等相关内核子系统维护或者开发，以及从事体系结构相关开发工作的工程师们。&lt;/p&gt;
+&lt;h1 id="3-the-kbuild-files"&gt;3 The kbuild files&lt;/h1&gt;
+&lt;p&gt;内核中的大部分&lt;code&gt;Makefile&lt;/code&gt;文件都是&lt;code&gt;kbuild Makefiles&lt;/code&gt;。本章介绍&lt;code&gt;kbuild makefiles&lt;/code&gt;的语法。&lt;/p&gt;
+&lt;p&gt;The preferred name for the kbuild files are &amp;lsquo;Makefile&amp;rsquo; but &amp;lsquo;Kbuild&amp;rsquo; can
 be used and if both a &amp;lsquo;Makefile&amp;rsquo; and a &amp;lsquo;Kbuild&amp;rsquo; file exists, then the &amp;lsquo;Kbuild&amp;rsquo; file will be used.
-&lt;code>kbuild&lt;/code>文件的首选名称是“Makefile”，但“Kbuild”可以使用，如果同时存在“ Makefile”和“ Kbuild”文件，则将使用“Kbuild”文件。&lt;/p>
-&lt;h2 id="31-goal-definitions">3.1 节“目标定义” (&amp;ldquo;Goal definitions&amp;rdquo; )是一个快速的大概介绍；后边的章节将给出更多细节以及实际的例子。
-3.1 Goal definitions&lt;/h2>
-&lt;pre>&lt;code> Goal definitions are the main part (heart) of the kbuild Makefile.
+&lt;code&gt;kbuild&lt;/code&gt;文件的首选名称是“Makefile”，但“Kbuild”可以使用，如果同时存在“ Makefile”和“ Kbuild”文件，则将使用“Kbuild”文件。&lt;/p&gt;
+&lt;h2 id="31-goal-definitions"&gt;3.1 节“目标定义” (&amp;ldquo;Goal definitions&amp;rdquo; )是一个快速的大概介绍；后边的章节将给出更多细节以及实际的例子。
+3.1 Goal definitions&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; Goal definitions are the main part (heart) of the kbuild Makefile.
 These lines define the files to be built, any special compilation
 options, and any subdirectories to be entered recursively.
 The most simple kbuild makefile contains one line:
-&lt;/code>&lt;/pre>
-&lt;p>目标定义是&lt;code>kbuild Makefile&lt;/code>的主要部分（核心）。这些行定义了要构建的文件、特殊的编译选项以及要递归编译的所有子目录。&lt;/p>
-&lt;p>最简单的kbuild makefile包含一行：&lt;/p>
-&lt;pre>&lt;code> Example::
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;目标定义是&lt;code&gt;kbuild Makefile&lt;/code&gt;的主要部分（核心）。这些行定义了要构建的文件、特殊的编译选项以及要递归编译的所有子目录。&lt;/p&gt;
+&lt;p&gt;最简单的kbuild makefile包含一行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Example::
 obj-y += foo.o
 This tells kbuild that there is one object in that directory, named foo.o. foo.o will be built from foo.c or foo.S.
 这告诉`kbuild`当前目录有一个名字叫做`foo.o`的目标，`foo.o`可能是从`foo.c`或者`foo.S`编译而来的。
 If foo.o shall be built as a module, the variable obj-m is used.
 Therefore the following pattern is often used:
-&lt;/code>&lt;/pre>
-&lt;p>如果要将&lt;code>foo.o&lt;/code>编译为内核模块，则将使用&lt;code>obj-m&lt;/code>来定义，因此经常使用下边的形式：&lt;/p>
-&lt;pre>&lt;code> Example::
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;如果要将&lt;code&gt;foo.o&lt;/code&gt;编译为内核模块，则将使用&lt;code&gt;obj-m&lt;/code&gt;来定义，因此经常使用下边的形式：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Example::
 obj-$(CONFIG_FOO) += foo.o
 `$(CONFIG_FOO)` evaluates to either y (for built-in) or m (for module).
 `$(CONFIG_FOO)`的值可以是`y`(编译进内核)或者`m`（编译成模块）.
 If CONFIG_FOO is neither y nor m, then the file will not be compiled nor linked.
 如果`CONFIG_FOO`既不是`y`也不是`m`，则该文件将不会被编译或链接。
-&lt;/code>&lt;/pre>
-&lt;h2 id="32-built-in-object-goals---obj-y">3.2 Built-in object goals - obj-y&lt;/h2>
-&lt;pre>&lt;code> The kbuild Makefile specifies object files for vmlinux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="32-built-in-object-goals---obj-y"&gt;3.2 Built-in object goals - obj-y&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; The kbuild Makefile specifies object files for vmlinux
 in the $(obj-y) lists. These lists depend on the kernel
 configuration.
 `kbuild Makefile`在`$(obj-y)`中指定构建`vmlinux`所需要的目标文件列表。文件列表取决于内核的配置。
@@ -115,25 +115,25 @@ linked into vmlinux by scripts/link-vmlinux.sh
 The order of files in $(obj-y) is significant. Duplicates in
 the lists are allowed: the first instance will be linked into
 built-in.a and succeeding instances will be ignored.
-&lt;/code>&lt;/pre>
-&lt;p>&lt;code>$(obj-y)&lt;/code>列表中文件的顺序是重要的，列表中的文件是可以重复的，同一个文件第一次出现在列表中时将被连接进&lt;code>built-in.a&lt;/code>，其他重复的文件名将被忽略。
-Link order is significant, because certain functions&lt;/p>
-&lt;pre>&lt;code> (module_init() / __initcall) will be called during boot in the
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;$(obj-y)&lt;/code&gt;列表中文件的顺序是重要的，列表中的文件是可以重复的，同一个文件第一次出现在列表中时将被连接进&lt;code&gt;built-in.a&lt;/code&gt;，其他重复的文件名将被忽略。
+Link order is significant, because certain functions&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; (module_init() / __initcall) will be called during boot in the
 order they appear. So keep in mind that changing the link
 order may e.g. change the order in which your SCSI
 controllers are detected, and thus your disks are renumbered.
-&lt;/code>&lt;/pre>
-&lt;p>链接顺序很重要，因为某些功能（module_init（）/ __initcall）将在引导过程中按它们出现的顺序被调用。 因此请记住，更改链接顺序可能例如 更改检测SCSI控制器的顺序，从而对磁盘重新编号。&lt;/p>
-&lt;pre>&lt;code> Example::
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;链接顺序很重要，因为某些功能（module_init（）/ __initcall）将在引导过程中按它们出现的顺序被调用。 因此请记住，更改链接顺序可能例如 更改检测SCSI控制器的顺序，从而对磁盘重新编号。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Example::
 #drivers/isdn/i4l/Makefile
 # Makefile for the kernel ISDN subsystem and device drivers.
 # Each configuration option enables a list of files.
 obj-$(CONFIG_ISDN_I4L) += isdn.o
 obj-$(CONFIG_ISDN_PPP_BSDCOMP) += isdn_bsdcomp.o
-&lt;/code>&lt;/pre>
-&lt;h2 id="可加载模块目标---obj-m">3.3 Loadable module goals - obj-m
-可加载模块目标 - obj-m&lt;/h2>
-&lt;pre>&lt;code> $(obj-m) specifies object files which are built as loadable
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="可加载模块目标---obj-m"&gt;3.3 Loadable module goals - obj-m
+可加载模块目标 - obj-m&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; $(obj-m) specifies object files which are built as loadable
 kernel modules.
 `$(obj-m)`定义可以编译为可加载模块的目标文件。
 A module may be built from one source file or several source
@@ -167,16 +167,16 @@ In this example, xattr.o, xattr_user.o and xattr_trusted.o are only part of the 
 在此例中，如果`$(CONFIG_EXT2_FS_XATTR) `定义为'y'，`xattr.o`, `xattr_user.o` 和 `xattr_trusted.o`只是复合对象`ext2.o`的一部分。
 Note: Of course, when you are building objects into the kernel, the syntax above will also work. So, if you have CONFIG_EXT2_FS=y, kbuild will build an ext2.o file for you out of the individual parts and then link this into built-in.a, as you would expect.
 注意：当然，当您将对象构建到内核中时，以上语法也将起作用。因此如果定义了 `CONFIG_EXT2_FS=y`,`kbuild`将根据各个部分为您构建一个ext2.o文件，然后将其链接到Built-in.a中。
-&lt;/code>&lt;/pre>
-&lt;h2 id="导出符号的目标">3.4 Objects which export symbols
-导出符号的目标&lt;/h2>
-&lt;pre>&lt;code> No special notation is required in the makefiles for
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="导出符号的目标"&gt;3.4 Objects which export symbols
+导出符号的目标&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; No special notation is required in the makefiles for
 modules exporting symbols.
 对于导出符号的模块，makefile中不需要特殊的符号。
-&lt;/code>&lt;/pre>
-&lt;h2 id="库文件目标---lib-y">3.5 Library file goals - lib-y
-库文件目标 - lib-y&lt;/h2>
-&lt;pre>&lt;code> Objects listed with obj-* are used for modules, or
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="库文件目标---lib-y"&gt;3.5 Library file goals - lib-y
+库文件目标 - lib-y&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; Objects listed with obj-* are used for modules, or
 combined in a built-in.a for that specific directory.
 There is also the possibility to list objects that will
 be included in a library, lib.a.
@@ -193,9 +193,9 @@ For consistency, objects listed in lib-m will be included in lib.a.
 Note that the same kbuild makefile may list files to be built-in
 and to be part of a library. Therefore the same directory
 may contain both a built-in.a and a lib.a file.
-&lt;/code>&lt;/pre>
-&lt;p>请注意，相同的kbuild makefile可能会列出要built-in的文件并成为库的一部分。 因此，同一目录可能同时包含一个built-in.a和一个lib.a文件。&lt;/p>
-&lt;pre>&lt;code> Example::
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;请注意，相同的kbuild makefile可能会列出要built-in的文件并成为库的一部分。 因此，同一目录可能同时包含一个built-in.a和一个lib.a文件。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Example::
 #arch/x86/lib/Makefile
 lib-y := delay.o
 This will create a library lib.a based on delay.o. For kbuild to
@@ -206,16 +206,16 @@ See also &amp;quot;6.4 List directories to visit when descending&amp;quot;.
 参见&amp;quot;6.4 List directories to visit when descending&amp;quot;
 Use of lib-y is normally restricted to `lib/` and `arch/*/lib`.
 lib-y的使用通常仅限于`lib /`和`arch / * / lib`。
-&lt;/code>&lt;/pre>
-&lt;h2 id="36-descending-down-in-directories">3.6 Descending down in directories&lt;/h2>
-&lt;pre>&lt;code> A Makefile is only responsible for building objects in its own
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="36-descending-down-in-directories"&gt;3.6 Descending down in directories&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt; A Makefile is only responsible for building objects in its own
 directory. Files in subdirectories should be taken care of by
 Makefiles in these subdirs. The build system will automatically
 invoke make recursively in subdirectories, provided you let it know of
 them.
-&lt;/code>&lt;/pre>
-&lt;p>Makefile仅负责在其自己的目录中构建对象。 子目录中的文件应由这些子目录中的Makefile处理。 构建系统将自动在子目录中递归调用make，前提是让makefile知道需要编译的文件。&lt;/p>
-&lt;pre>&lt;code> To do so, obj-y and obj-m are used.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Makefile仅负责在其自己的目录中构建对象。 子目录中的文件应由这些子目录中的Makefile处理。 构建系统将自动在子目录中递归调用make，前提是让makefile知道需要编译的文件。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; To do so, obj-y and obj-m are used.
 为此，使用obj-y和obj-m。
 ext2 lives in a separate directory, and the Makefile present in fs/
 tells kbuild to descend down using the following assignment.
@@ -235,10 +235,10 @@ It is very likely a bug of the Makefile or of dependencies in Kconfig.
 很可能是Makefile或Kconfig中的依赖项的错误。
 It is good practice to use a `CONFIG_` variable when assigning directory names. This allows kbuild to totally skip the directory if the corresponding `CONFIG_` option is neither 'y' nor 'm'.
 分配目录名称时，最好使用`CONFIG_`变量。 如果相应的CONFIG_选项既不是'y'也不是'm'，这将使kbuild完全跳过目录。
-&lt;/code>&lt;/pre>
-&lt;h2 id="编译选项">3.7 Compilation flags
-编译选项&lt;/h2>
-&lt;pre>&lt;code>ccflags-y, asflags-y and ldflags-y
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="编译选项"&gt;3.7 Compilation flags
+编译选项&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;ccflags-y, asflags-y and ldflags-y
 These three flags apply only to the kbuild makefile in which they are assigned. They are used for all the normal cc, as and ld invocations happening during a recursive build.
 Note: Flags with the same behaviour were previously named:
 EXTRA_CFLAGS, EXTRA_AFLAGS and EXTRA_LDFLAGS.
@@ -265,4 +265,4 @@ The difference is that the subdir- variants have effect for the kbuild
 file where they are present and all subdirectories.
 Options specified using subdir-* are added to the commandline before
 the options specified using the non-subdir variants.
-&lt;/code>&lt;/pre></description></item></channel></rss>
+&lt;/code&gt;&lt;/pre&gt;</description></item></channel></rss>

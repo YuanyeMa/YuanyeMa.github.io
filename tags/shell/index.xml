@@ -1,409 +1,417 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shell on Yuanye Ma's Blog</title><link>/tags/shell/</link><description>Recent content in Shell on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/shell/index.xml" rel="self" type="application/rss+xml"/><item><title>shell中fork、exec和source的区别</title><link>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</guid><description>&lt;h1 id="shell中forkexec和source的区别">shell中fork、exec和source的区别&lt;/h1>
-&lt;h2 id="前言">前言&lt;/h2>
-&lt;p>在脚本中引用其他脚本有多种方式，直接执行./xx.sh，source xx.sh或者exec xx.sh,但是三种方式的本质是不通的。学过linux高级编程 或者对linux进程创建方式比较熟悉的理解起来可能比较容易一些。&lt;/p>
-&lt;h2 id="简介">简介&lt;/h2>
-&lt;h3 id="xxsh">./xx.sh&lt;/h3>
-&lt;p>fork 创建一个子进程（sub-shell），然后在子进程中运行调用的脚本，子进程继承父进程的资源（环境变量等等），在子进程中修改父进程的环境变量后，子进程退出后，并不影响父进程。写脚本的时候直接./xx.sh就是采用这种方式。&lt;/p>
-&lt;h3 id="-xxsh-或者-source-xxsh">. ./xx.sh 或者 source xx.sh&lt;/h3>
-&lt;p>source 让 script 在当前 shell 内执行、 而不是产生一个 sub-shell 来执行。因此source执行的脚本中可以更改父进程的环境变量。&lt;/p>
-&lt;h3 id="exec-xxsh">exec ./xx.sh&lt;/h3>
-&lt;p>exec 也是在原有进程中执行，但是，原有进程被终止。exec是用子进程替换父进程进行运行，所有父进程中exec后边的程序得不到运行。&lt;/p>
-&lt;h2 id="注意">注意&lt;/h2>
-&lt;p>source和exec区别在于，原有进程是否被终止&lt;/p>
-&lt;h2 id="实例分析">实例分析&lt;/h2>
-&lt;p>&lt;code>vim 1.sh&lt;/code> 写入以下内容&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"> 1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"> 2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"> 3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"> 4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"> 5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"> 6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"> 7&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"> 8&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"> 9&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10">10&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11">11&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12">12&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13">13&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14">14&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15">15&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16">16&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-17">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-17">17&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-18">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-18">18&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-19">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-19">19&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>1#!/bin/bash
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">2&lt;/span> &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>B
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">3&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 1.sh before exec/source/fork:&lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">4&lt;/span> &lt;span style="color:#007020">export&lt;/span> A
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">5&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;1.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span> &lt;span style="color:#007020;font-weight:bold">case&lt;/span> &lt;span style="color:#bb60d5">$1&lt;/span> in
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">7&lt;/span> &lt;span style="color:#007020">exec&lt;/span>&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">8&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using exec...&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">9&lt;/span> &lt;span style="color:#007020">exec&lt;/span> ./2.sh ;;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">10&lt;/span> &lt;span style="color:#007020">source&lt;/span>&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">11&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using source...&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">12&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#. ./2.sh ;;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">13&lt;/span> &lt;span style="color:#007020">source&lt;/span> ./2.sh;;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">14&lt;/span> *&lt;span style="color:#666">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">15&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;using fork by default...&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">16&lt;/span> ./2.sh ;;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">17&lt;/span> &lt;span style="color:#007020;font-weight:bold">esac&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">18&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 1.sh after exec/source/fork:&lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">19&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;1.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>vim 2.sh&lt;/code> 写入以下内容&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6">6&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">1&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#!/bin/bash &lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">2&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;PID for 2.sh: &lt;/span>&lt;span style="color:#bb60d5">$$&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">3&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;2.sh get \$A=&lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0"> from 1.sh&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">4&lt;/span> &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>C
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">5&lt;/span> &lt;span style="color:#007020">export&lt;/span> A
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span> &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;2.sh: \$A is &lt;/span>&lt;span style="color:#bb60d5">$A&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>分别运行&lt;br>
-&lt;code>./1.sh fork&lt;/code>&lt;br>
-&lt;code>./1.sh source&lt;/code>&lt;br>
-&lt;code>./1.sh exec&lt;/code>&lt;br>
-运行结果&lt;/p>
-&lt;blockquote>
-&lt;p>* ~/dep/selfcode *&lt;br>
-root→ # ./1.sh fork &lt;br>
-PID for 1.sh before exec/source/fork:31099&lt;br>
-1.sh: $A is B&lt;br>
-using fork by default&amp;hellip;&lt;br>
-PID for 2.sh: 31100&lt;br>
-2.sh get $A=B from 1.sh&lt;br>
-2.sh: $A is C&lt;br>
-PID for 1.sh after exec/source/fork:31099&lt;br>
-1.sh: $A is B&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>* ~/dep/selfcode *&lt;br>
-root→ # ./1.sh source&lt;br>
-PID for 1.sh before exec/source/fork:31105&lt;br>
-1.sh: $A is B&lt;br>
-using source&amp;hellip;&lt;br>
-PID for 2.sh: 31105&lt;br>
-2.sh get $A=B from 1.sh&lt;br>
-2.sh: $A is C&lt;br>
-PID for 1.sh after exec/source/fork:31105&lt;br>
-1.sh: $A is C&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>* ~/dep/selfcode *&lt;br>
-root→ # ./1.sh exec&lt;br>
-PID for 1.sh before exec/source/fork:31110&lt;br>
-1.sh: $A is B&lt;br>
-using exec&amp;hellip;&lt;br>
-PID for 2.sh: 31110&lt;br>
-2.sh get $A=B from 1.sh&lt;br>
-2.sh: $A is C &lt;br>
-注意：父进程后边的代码没有运行&lt;/p>&lt;/blockquote>
-&lt;p>以上除了fork，父进程和子进程的PID不同外，source和exec父进程和子进程的PID相同，&lt;br>
-但是，source相当于在父进程执行过程中插入了一段子进程的代码运行，&lt;br>
-而exec是用子进程的代码替换掉了父进程的空间。&lt;/p></description></item><item><title>Shell编程中$(())与$()还有${}的区别</title><link>/post/programing/2019-01-04-shell%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E6%96%B9%E6%B3%95/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-01-04-shell%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E6%96%B9%E6%B3%95/</guid><description>&lt;h1 id="shell编程中与还有的区别">Shell编程中$(())与$()还有${}的区别&lt;/h1>
-&lt;h2 id="先来看">先来看$()&lt;/h2>
-&lt;p>在bash shell中, $()与``(反引号)都是用来做命令替换(command substitution)的。
-例如&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> the last sunday is &lt;span style="color:#007020;font-weight:bold">$(&lt;/span>date -d &lt;span style="color:#4070a0">&amp;#34;last sunday&amp;#34;&lt;/span> +%Y-%m-%d&lt;span style="color:#007020;font-weight:bold">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在操作上， 用$()或``都无所谓,但在使用时有一些需要注意的地方。&lt;/p>
-&lt;p>反引号在多命令复合的时候需要加额外的转义，&lt;/p>
-&lt;blockquote>
-&lt;p>即 command1 `command2 \`command3\` `&lt;/p>&lt;/blockquote>
-&lt;p>要不然换成$()就没有问题了&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>command1 &lt;span style="color:#007020;font-weight:bold">$(&lt;/span>commmand2 &lt;span style="color:#007020;font-weight:bold">$(&lt;/span>command3&lt;span style="color:#007020;font-weight:bold">))&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>做多少层的替换都没有问题&lt;/p>
-&lt;h2 id="heading">$&lt;/h2>
-&lt;p>接下来，再让我们看看${}吧&amp;hellip;它其实就是用来做 变量替换用的啦。 一般情况下，$var与${var}并没有啥不一样。 但是用${}会比较精准的界定变量名称的范围，比方说:&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>B
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#bb60d5">$AB&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>原本是打算先将$A的结果替换出来， 然后在其后补一个字母B； 但命令行上， 真正的结果却是替换变量名称为AB的值出来&amp;hellip; 若使用${}就没有问题了：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>B
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#70a0d0">}&lt;/span>B &lt;span style="color:#60a0b0;font-style:italic">#输出就是BB&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>例&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7">7&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#666">=&lt;/span>B
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#bb60d5">$A&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#bb60d5">$AB&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#007020;font-weight:bold">$(&lt;/span>A&lt;span style="color:#007020;font-weight:bold">)&lt;/span>B
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>&lt;span style="color:#70a0d0">}&lt;/span>b
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>输出如下：&lt;/p>
-&lt;blockquote>
-&lt;p>B&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>./test.sh: line 6: A: command not found&lt;br>
-B&lt;br>
-Bb&lt;/p>&lt;/blockquote>
-&lt;p>此外${}还有更强大的功能&lt;/p>
-&lt;h3 id="可以用分别替换获得不同的值">可以用${}分别替换获得不同的值&lt;/h3>
-&lt;p>首先定义：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">file&lt;/span>&lt;span style="color:#666">=&lt;/span>/dir1/dir2/dir3/my.file.txt
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h4 id="shell-字符串的非贪婪最小匹配左删除">shell 字符串的非贪婪(最小匹配)左删除&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>#*/&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：dir1/dir2/dir3/my.file.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉第一个&lt;code>/&lt;/code>及其左边的字符串，其结果为：&lt;code> dir1/dir2/dir3/my.file.txt&lt;/code> 。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>#*.&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：file.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉第一个&lt;code>.&lt;/code>及其左边的字符串，其结果为： &lt;code>file.txt &lt;/code>。&lt;/p>
-&lt;h4 id="shell-字符串的贪婪最大匹配左删除">shell 字符串的贪婪(最大匹配)左删除&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>##*/&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：my.file.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉最后一个&lt;code>/&lt;/code>及其左边的字符串，其结果为：&lt;code> my.file.txt&lt;/code> 。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>##*.&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉最后一个&lt;code>.&lt;/code>及其左边的字符串，其结果为： &lt;code>txt &lt;/code>。&lt;/p>
-&lt;h4 id="shell-字符串的非贪婪最小匹配右删除">shell 字符串的非贪婪(最小匹配)右删除&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>%/*&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：/dir1/dir2/dir3&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉最后一个&lt;code>/&lt;/code>及其右边的字符串，其结果为： &lt;code>/dir1/dir2/dir3&lt;/code>。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>%.*&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：/dir1/dir2/dir3/my.file&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉最后一个&lt;code>.&lt;/code>及其右边的字符串，其结果为： &lt;code>/dir1/dir2/dir3/my.file&lt;/code>。&lt;/p>
-&lt;h4 id="shell-字符串的贪婪最大匹配右删除">shell 字符串的贪婪(最大匹配)右删除&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>%%/*&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：其值为空。&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉第一个&lt;code>/&lt;/code>及其右边的字符串，其结果为： 空串。&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>%%.*&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为：/dir1/dir2/dir3/my。&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>拿掉第一个&lt;code>.&lt;/code>及其右边的字符串，其结果为： &lt;code>/dir1/dir2/dir3/my&lt;/code>。&lt;/p>
-&lt;h4 id="shell-字符串取子串">shell 字符串取子串&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>:&lt;span style="color:#bb60d5">0&lt;/span>:&lt;span style="color:#bb60d5">5&lt;/span>&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#提取最左边的5个字符：/dir1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>:&lt;span style="color:#bb60d5">5&lt;/span>:&lt;span style="color:#bb60d5">5&lt;/span>&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#提取第5个字符及其右边的5个字符:/dir2&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>shell 字符串取子串的格式：${s:pos:length}, 取字符串 s 的子串：从 pos 位置开始的字符(包括该字符)的长度为 length 的的子串； 其中pos为子串的首字符，在 s 中位置； length为子串的长度；&lt;/p>
-&lt;blockquote>
-&lt;p>Note: 字符串中字符的起始编号为0&lt;/p>&lt;/blockquote>
-&lt;h4 id="shell-字符串变量值的替换">shell 字符串变量值的替换&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>/dir/path&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#将第一个dir替换为path：/path1/dir2/dir3/my.file.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>//dir/path&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#将全部的dir替换为path：/path1/path2/path3/my.file.txt&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>shell 字符串变量值的替换格式：&lt;/p>
-&lt;p>首次替换： &lt;code>${s/src_pattern/dst_pattern}&lt;/code> 将字符串s中的第一个src_pattern替换为dst_pattern。&lt;br>
-全部替换： &lt;code>${s//src_pattern/dst_pattern}&lt;/code> 将字符串s中的所有出现的src_pattern替换为dst_pattern.&lt;/p>
-&lt;h4 id="计算-shell-字符串变量的长度">计算 shell 字符串变量的长度&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-16-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-16-1">1&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${#&lt;/span>&lt;span style="color:#bb60d5">file&lt;/span>&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#其值为27, 因为/dir1/dir2/dir3/my.file.txt刚好为27个字符。&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="bash-数组array的处理方法">bash 数组(array)的处理方法&lt;/h3>
-&lt;p>一般而言, &lt;code>A=&amp;quot;a b c def&amp;quot;&lt;/code> 这样的变量只是将&lt;code>$A&lt;/code>替换为一个字符串， 但是改为 &lt;code>A=(a b c def)&lt;/code>, 则是将&lt;code>$A&lt;/code>定义为数组&amp;hellip;.&lt;/p>
-&lt;p>数组替换方法可参考如下方法&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>[@]&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#方法一&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>[*]&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#方法二&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>以上两种方法均可以得到：a b c def, 即数组的全部元素。&lt;/p>
-&lt;h4 id="访问数组的成员">访问数组的成员&lt;/h4>
-&lt;p>&lt;code>${A[0]}&lt;/code>其中，&lt;code>${A[0]}&lt;/code>可得到&lt;code>a&lt;/code>, 即数组&lt;code>A&lt;/code>的第一个元素， 而 &lt;code>${A[1]}&lt;/code>则为数组&lt;code>A&lt;/code>的第二元素，依次类推。&lt;/p>
-&lt;h4 id="数组的-length">数组的 length&lt;/h4>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-2">2&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${#&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>[@]&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#方法一&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#70a0d0">${#&lt;/span>&lt;span style="color:#bb60d5">A&lt;/span>[*]&lt;span style="color:#70a0d0">}&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#方法二&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>以上两种方法均可以得到数组的长度: 4, 即数组的所有元素的个数。&lt;/p>
-&lt;p>回忆一下，针对字符串的长度计算，使用&lt;code>${#str_var}&lt;/code>； 我们同样可以将该方法应用于数组的成员:&lt;/p>
-&lt;p>&lt;code>${#A[0]}&lt;/code>其中，&lt;code>${#A[0]}&lt;/code>可以得到：1，即数组A的第一个元素(a)的长度； 同理，&lt;code>${#A[3]}&lt;/code>可以得到: 3, 即数组A的第4个元素(def)的长度。&lt;/p>
-&lt;h4 id="数组元素的重新赋值">数组元素的重新赋值&lt;/h4>
-&lt;p>&lt;code>A[3]=xyz&lt;/code>&lt;/p>
-&lt;h2 id="作用">$(())作用&lt;/h2>
-&lt;p>$(())是用来作整数运算的。&lt;/p>
-&lt;p>在bash中， $(())的整数运算符号大致有这些：&lt;/p>
-&lt;ul>
-&lt;li>+- * / #分别为&amp;quot;加、减、乘、除&amp;quot;。&lt;/li>
-&lt;li>% #余数运算,(模数运算)&lt;/li>
-&lt;li>&amp;amp; | ^ ! #分别为&amp;quot;AND、OR、XOR、NOT&amp;quot;运算。&lt;/li>
-&lt;/ul>
-&lt;p>例如：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-3">3&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-4">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-4">4&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-5">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-5">5&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-6">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-6">6&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-7">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-7">7&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#bb60d5">a&lt;/span>&lt;span style="color:#666">=&lt;/span>5; &lt;span style="color:#bb60d5">b&lt;/span>&lt;span style="color:#666">=&lt;/span>7; &lt;span style="color:#bb60d5">c&lt;/span>&lt;span style="color:#666">=&lt;/span>2;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#007020;font-weight:bold">$((&lt;/span> a &lt;span style="color:#666">+&lt;/span> b &lt;span style="color:#666">*&lt;/span> c &lt;span style="color:#007020;font-weight:bold">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">19&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#007020;font-weight:bold">$((&lt;/span> &lt;span style="color:#666">(&lt;/span>a &lt;span style="color:#666">+&lt;/span> b&lt;span style="color:#666">)/&lt;/span>c &lt;span style="color:#007020;font-weight:bold">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">6&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#007020;font-weight:bold">$((&lt;/span> &lt;span style="color:#666">(&lt;/span>a &lt;span style="color:#666">*&lt;/span> b&lt;span style="color:#666">)&lt;/span> &lt;span style="color:#666">%&lt;/span> c &lt;span style="color:#007020;font-weight:bold">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">1&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在$(())中的变量名称， 可以在其前面加 $符号来替换， 也可以不用，如： &lt;code>$(( $a + $b * $c ))&lt;/code> 也可以得到19的结果。&lt;/p>
-&lt;p>此外，$(())还可作不同进制(如二进制、八进制、十六进制)的运算， 只是输出结果均为十进制的。&lt;/p>
-&lt;p>&lt;code>echo $(( 16#2a ))&lt;/code> 输出结果为：42，(16进制的2a)
-以一个实用的例子来看看吧 : 假如当前的umask是022,那么新建文件的权限即为：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">umask&lt;/span> &lt;span style="color:#40a070">022&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#007020">echo&lt;/span> &lt;span style="color:#4070a0">&amp;#34;obase=8; &lt;/span>&lt;span style="color:#007020;font-weight:bold">$((&lt;/span> &lt;span style="color:#40a070">8#666&lt;/span> &lt;span style="color:#666">&amp;amp;&lt;/span> &lt;span style="color:#666">(&lt;/span>&lt;span style="color:#40a070">8#777&lt;/span> &lt;span style="color:#666">^&lt;/span> &lt;span style="color:#40a070">8#&lt;/span>&lt;span style="color:#007020;font-weight:bold">$(&lt;/span>&lt;span style="color:#007020">umask&lt;/span>&lt;span style="color:#007020;font-weight:bold">)&lt;/span>&lt;span style="color:#666">)&lt;/span> &lt;span style="color:#007020;font-weight:bold">))&lt;/span>&lt;span style="color:#4070a0">&amp;#34;&lt;/span> | bc
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#40a070">644&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>事实上，单纯用(())也可以重定义变量值，或作 testing：&lt;/p>
-&lt;div class="highlight">&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-1">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-1">1&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-2">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-2">2&lt;/a>
-&lt;/span>&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-3">&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-3">3&lt;/a>
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">a&lt;/span>&lt;span style="color:#666">=&lt;/span>5; &lt;span style="color:#666">((&lt;/span>a++&lt;span style="color:#666">))&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#可将$a 重定义为6&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">a&lt;/span>&lt;span style="color:#666">=&lt;/span>5; &lt;span style="color:#666">((&lt;/span>a--&lt;span style="color:#666">))&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#可将$a 重定义为4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bb60d5">a&lt;/span>&lt;span style="color:#666">=&lt;/span>5; &lt;span style="color:#bb60d5">b&lt;/span>&lt;span style="color:#666">=&lt;/span>7; &lt;span style="color:#666">((&lt;/span>a&amp;lt; b&lt;span style="color:#666">))&lt;/span> &lt;span style="color:#60a0b0;font-style:italic">#会得到0 (true)返回值。&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;blockquote>
-&lt;p>Note:使用(())作整数测试时， 请不要跟[]的整数测试搞混乱了。&lt;/p>&lt;/blockquote></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shell on Yuanye Ma's Blog</title><link>/tags/shell/</link><description>Recent content in Shell on Yuanye Ma's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>yuanye.ma@qq.com (Yuanye Ma)</managingEditor><webMaster>yuanye.ma@qq.com (Yuanye Ma)</webMaster><lastBuildDate>Mon, 15 Apr 2019 16:01:23 +0800</lastBuildDate><atom:link href="/tags/shell/index.xml" rel="self" type="application/rss+xml"/><item><title>shell中fork、exec和source的区别</title><link>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-01-04-shell%E4%B8%AD%E7%9A%84source/</guid><description>&lt;h1 id="shell中forkexec和source的区别"&gt;shell中fork、exec和source的区别&lt;/h1&gt;
+&lt;h2 id="前言"&gt;前言&lt;/h2&gt;
+&lt;p&gt;在脚本中引用其他脚本有多种方式，直接执行./xx.sh，source xx.sh或者exec xx.sh,但是三种方式的本质是不通的。学过linux高级编程 或者对linux进程创建方式比较熟悉的理解起来可能比较容易一些。&lt;/p&gt;
+&lt;h2 id="简介"&gt;简介&lt;/h2&gt;
+&lt;h3 id="xxsh"&gt;./xx.sh&lt;/h3&gt;
+&lt;p&gt;fork 创建一个子进程（sub-shell），然后在子进程中运行调用的脚本，子进程继承父进程的资源（环境变量等等），在子进程中修改父进程的环境变量后，子进程退出后，并不影响父进程。写脚本的时候直接./xx.sh就是采用这种方式。&lt;/p&gt;
+&lt;h3 id="-xxsh-或者-source-xxsh"&gt;. ./xx.sh 或者 source xx.sh&lt;/h3&gt;
+&lt;p&gt;source 让 script 在当前 shell 内执行、 而不是产生一个 sub-shell 来执行。因此source执行的脚本中可以更改父进程的环境变量。&lt;/p&gt;
+&lt;h3 id="exec-xxsh"&gt;exec ./xx.sh&lt;/h3&gt;
+&lt;p&gt;exec 也是在原有进程中执行，但是，原有进程被终止。exec是用子进程替换父进程进行运行，所有父进程中exec后边的程序得不到运行。&lt;/p&gt;
+&lt;h2 id="注意"&gt;注意&lt;/h2&gt;
+&lt;p&gt;source和exec区别在于，原有进程是否被终止&lt;/p&gt;
+&lt;h2 id="实例分析"&gt;实例分析&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;vim 1.sh&lt;/code&gt; 写入以下内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt; 1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt; 2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt; 3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt; 4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt; 5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-6"&gt; 6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-7"&gt; 7&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-8"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-8"&gt; 8&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-9"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-9"&gt; 9&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-10"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-10"&gt;10&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-11"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-11"&gt;11&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-12"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-12"&gt;12&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-13"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-13"&gt;13&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-14"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-14"&gt;14&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-15"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-15"&gt;15&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-16"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-16"&gt;16&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-17"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-17"&gt;17&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-18"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-18"&gt;18&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-19"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-19"&gt;19&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;1#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;2&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;3&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;PID for 1.sh before exec/source/fork:&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$$&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;4&lt;/span&gt; &lt;span style="color:#007020"&gt;export&lt;/span&gt; A
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;5&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;1.sh: \$A is &lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$A&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;6&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;case&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;$1&lt;/span&gt; in
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;7&lt;/span&gt; &lt;span style="color:#007020"&gt;exec&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;8&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;using exec...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;9&lt;/span&gt; &lt;span style="color:#007020"&gt;exec&lt;/span&gt; ./2.sh ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;10&lt;/span&gt; &lt;span style="color:#007020"&gt;source&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;11&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;using source...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;12&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#. ./2.sh ;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;13&lt;/span&gt; &lt;span style="color:#007020"&gt;source&lt;/span&gt; ./2.sh;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;14&lt;/span&gt; *&lt;span style="color:#666"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;15&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;using fork by default...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;16&lt;/span&gt; ./2.sh ;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;17&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;esac&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;18&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;PID for 1.sh after exec/source/fork:&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$$&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;19&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;1.sh: \$A is &lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$A&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;vim 2.sh&lt;/code&gt; 写入以下内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#!/bin/bash &lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;2&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;PID for 2.sh: &lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$$&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;3&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;2.sh get \$A=&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$A&lt;/span&gt;&lt;span style="color:#4070a0"&gt; from 1.sh&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;4&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;C
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;5&lt;/span&gt; &lt;span style="color:#007020"&gt;export&lt;/span&gt; A
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;6&lt;/span&gt; &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;2.sh: \$A is &lt;/span&gt;&lt;span style="color:#bb60d5"&gt;$A&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;分别运行&lt;br&gt;
+&lt;code&gt;./1.sh fork&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;./1.sh source&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;./1.sh exec&lt;/code&gt;&lt;br&gt;
+运行结果&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;* ~/dep/selfcode *&lt;br&gt;
+root→ # ./1.sh fork &lt;br&gt;
+PID for 1.sh before exec/source/fork:31099&lt;br&gt;
+1.sh: $A is B&lt;br&gt;
+using fork by default&amp;hellip;&lt;br&gt;
+PID for 2.sh: 31100&lt;br&gt;
+2.sh get $A=B from 1.sh&lt;br&gt;
+2.sh: $A is C&lt;br&gt;
+PID for 1.sh after exec/source/fork:31099&lt;br&gt;
+1.sh: $A is B&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;* ~/dep/selfcode *&lt;br&gt;
+root→ # ./1.sh source&lt;br&gt;
+PID for 1.sh before exec/source/fork:31105&lt;br&gt;
+1.sh: $A is B&lt;br&gt;
+using source&amp;hellip;&lt;br&gt;
+PID for 2.sh: 31105&lt;br&gt;
+2.sh get $A=B from 1.sh&lt;br&gt;
+2.sh: $A is C&lt;br&gt;
+PID for 1.sh after exec/source/fork:31105&lt;br&gt;
+1.sh: $A is C&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;* ~/dep/selfcode *&lt;br&gt;
+root→ # ./1.sh exec&lt;br&gt;
+PID for 1.sh before exec/source/fork:31110&lt;br&gt;
+1.sh: $A is B&lt;br&gt;
+using exec&amp;hellip;&lt;br&gt;
+PID for 2.sh: 31110&lt;br&gt;
+2.sh get $A=B from 1.sh&lt;br&gt;
+2.sh: $A is C &lt;br&gt;
+注意：父进程后边的代码没有运行&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以上除了fork，父进程和子进程的PID不同外，source和exec父进程和子进程的PID相同，&lt;br&gt;
+但是，source相当于在父进程执行过程中插入了一段子进程的代码运行，&lt;br&gt;
+而exec是用子进程的代码替换掉了父进程的空间。&lt;/p&gt;</description></item><item><title>Shell编程中$(())与$()还有${}的区别</title><link>/post/programing/2019-01-04-shell%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E6%96%B9%E6%B3%95/</link><pubDate>Mon, 15 Apr 2019 16:01:23 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/programing/2019-01-04-shell%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E6%96%B9%E6%B3%95/</guid><description>&lt;h1 id="shell编程中与还有的区别"&gt;Shell编程中$(())与$()还有${}的区别&lt;/h1&gt;
+&lt;h2 id="先来看"&gt;先来看$()&lt;/h2&gt;
+&lt;p&gt;在bash shell中, $()与``(反引号)都是用来做命令替换(command substitution)的。
+例如&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; the last sunday is &lt;span style="color:#007020;font-weight:bold"&gt;$(&lt;/span&gt;date -d &lt;span style="color:#4070a0"&gt;&amp;#34;last sunday&amp;#34;&lt;/span&gt; +%Y-%m-%d&lt;span style="color:#007020;font-weight:bold"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在操作上， 用$()或``都无所谓,但在使用时有一些需要注意的地方。&lt;/p&gt;
+&lt;p&gt;反引号在多命令复合的时候需要加额外的转义，&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;即 command1 `command2 \`command3\` `&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;要不然换成$()就没有问题了&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-1-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-1-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;command1 &lt;span style="color:#007020;font-weight:bold"&gt;$(&lt;/span&gt;commmand2 &lt;span style="color:#007020;font-weight:bold"&gt;$(&lt;/span&gt;command3&lt;span style="color:#007020;font-weight:bold"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;做多少层的替换都没有问题&lt;/p&gt;
+&lt;h2 id="heading"&gt;$&lt;/h2&gt;
+&lt;p&gt;接下来，再让我们看看${}吧&amp;hellip;它其实就是用来做 变量替换用的啦。 一般情况下，$var与${var}并没有啥不一样。 但是用${}会比较精准的界定变量名称的范围，比方说:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-2-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-2-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;$AB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;原本是打算先将$A的结果替换出来， 然后在其后补一个字母B； 但命令行上， 真正的结果却是替换变量名称为AB的值出来&amp;hellip; 若使用${}就没有问题了：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-3-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-3-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt;B &lt;span style="color:#60a0b0;font-style:italic"&gt;#输出就是BB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;例&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-4-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-4-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;$A&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#bb60d5"&gt;$AB&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;$(&lt;/span&gt;A&lt;span style="color:#007020;font-weight:bold"&gt;)&lt;/span&gt;B
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt;b
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;输出如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;B&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./test.sh: line 6: A: command not found&lt;br&gt;
+B&lt;br&gt;
+Bb&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;此外${}还有更强大的功能&lt;/p&gt;
+&lt;h3 id="可以用分别替换获得不同的值"&gt;可以用${}分别替换获得不同的值&lt;/h3&gt;
+&lt;p&gt;首先定义：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-5-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-5-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;/dir1/dir2/dir3/my.file.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="shell-字符串的非贪婪最小匹配左删除"&gt;shell 字符串的非贪婪(最小匹配)左删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-6-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-6-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;#*/&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：dir1/dir2/dir3/my.file.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉第一个&lt;code&gt;/&lt;/code&gt;及其左边的字符串，其结果为：&lt;code&gt; dir1/dir2/dir3/my.file.txt&lt;/code&gt; 。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-7-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-7-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;#*.&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：file.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉第一个&lt;code&gt;.&lt;/code&gt;及其左边的字符串，其结果为： &lt;code&gt;file.txt &lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="shell-字符串的贪婪最大匹配左删除"&gt;shell 字符串的贪婪(最大匹配)左删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-8-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-8-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;##*/&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：my.file.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉最后一个&lt;code&gt;/&lt;/code&gt;及其左边的字符串，其结果为：&lt;code&gt; my.file.txt&lt;/code&gt; 。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-9-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-9-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;##*.&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉最后一个&lt;code&gt;.&lt;/code&gt;及其左边的字符串，其结果为： &lt;code&gt;txt &lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="shell-字符串的非贪婪最小匹配右删除"&gt;shell 字符串的非贪婪(最小匹配)右删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-10-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-10-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;%/*&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：/dir1/dir2/dir3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉最后一个&lt;code&gt;/&lt;/code&gt;及其右边的字符串，其结果为： &lt;code&gt;/dir1/dir2/dir3&lt;/code&gt;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-11-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-11-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;%.*&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：/dir1/dir2/dir3/my.file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉最后一个&lt;code&gt;.&lt;/code&gt;及其右边的字符串，其结果为： &lt;code&gt;/dir1/dir2/dir3/my.file&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="shell-字符串的贪婪最大匹配右删除"&gt;shell 字符串的贪婪(最大匹配)右删除&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-12-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-12-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;%%/*&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：其值为空。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉第一个&lt;code&gt;/&lt;/code&gt;及其右边的字符串，其结果为： 空串。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-13-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-13-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;%%.*&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为：/dir1/dir2/dir3/my。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;拿掉第一个&lt;code&gt;.&lt;/code&gt;及其右边的字符串，其结果为： &lt;code&gt;/dir1/dir2/dir3/my&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="shell-字符串取子串"&gt;shell 字符串取子串&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-14-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-14-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;:&lt;span style="color:#bb60d5"&gt;0&lt;/span&gt;:&lt;span style="color:#bb60d5"&gt;5&lt;/span&gt;&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#提取最左边的5个字符：/dir1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;:&lt;span style="color:#bb60d5"&gt;5&lt;/span&gt;:&lt;span style="color:#bb60d5"&gt;5&lt;/span&gt;&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#提取第5个字符及其右边的5个字符:/dir2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;shell 字符串取子串的格式：${s:pos:length}, 取字符串 s 的子串：从 pos 位置开始的字符(包括该字符)的长度为 length 的的子串； 其中pos为子串的首字符，在 s 中位置； length为子串的长度；&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Note: 字符串中字符的起始编号为0&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id="shell-字符串变量值的替换"&gt;shell 字符串变量值的替换&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-15-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-15-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;/dir/path&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#将第一个dir替换为path：/path1/dir2/dir3/my.file.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;//dir/path&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#将全部的dir替换为path：/path1/path2/path3/my.file.txt&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;shell 字符串变量值的替换格式：&lt;/p&gt;
+&lt;p&gt;首次替换： &lt;code&gt;${s/src_pattern/dst_pattern}&lt;/code&gt; 将字符串s中的第一个src_pattern替换为dst_pattern。&lt;br&gt;
+全部替换： &lt;code&gt;${s//src_pattern/dst_pattern}&lt;/code&gt; 将字符串s中的所有出现的src_pattern替换为dst_pattern.&lt;/p&gt;
+&lt;h4 id="计算-shell-字符串变量的长度"&gt;计算 shell 字符串变量的长度&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-16-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-16-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${#&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;file&lt;/span&gt;&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#其值为27, 因为/dir1/dir2/dir3/my.file.txt刚好为27个字符。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="bash-数组array的处理方法"&gt;bash 数组(array)的处理方法&lt;/h3&gt;
+&lt;p&gt;一般而言, &lt;code&gt;A=&amp;quot;a b c def&amp;quot;&lt;/code&gt; 这样的变量只是将&lt;code&gt;$A&lt;/code&gt;替换为一个字符串， 但是改为 &lt;code&gt;A=(a b c def)&lt;/code&gt;, 则是将&lt;code&gt;$A&lt;/code&gt;定义为数组&amp;hellip;.&lt;/p&gt;
+&lt;p&gt;数组替换方法可参考如下方法&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-17-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-17-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;[@]&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#方法一&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;[*]&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#方法二&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;以上两种方法均可以得到：a b c def, 即数组的全部元素。&lt;/p&gt;
+&lt;h4 id="访问数组的成员"&gt;访问数组的成员&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;${A[0]}&lt;/code&gt;其中，&lt;code&gt;${A[0]}&lt;/code&gt;可得到&lt;code&gt;a&lt;/code&gt;, 即数组&lt;code&gt;A&lt;/code&gt;的第一个元素， 而 &lt;code&gt;${A[1]}&lt;/code&gt;则为数组&lt;code&gt;A&lt;/code&gt;的第二元素，依次类推。&lt;/p&gt;
+&lt;h4 id="数组的-length"&gt;数组的 length&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-18-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-18-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${#&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;[@]&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#方法一&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#70a0d0"&gt;${#&lt;/span&gt;&lt;span style="color:#bb60d5"&gt;A&lt;/span&gt;[*]&lt;span style="color:#70a0d0"&gt;}&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#方法二&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;以上两种方法均可以得到数组的长度: 4, 即数组的所有元素的个数。&lt;/p&gt;
+&lt;p&gt;回忆一下，针对字符串的长度计算，使用&lt;code&gt;${#str_var}&lt;/code&gt;； 我们同样可以将该方法应用于数组的成员:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;${#A[0]}&lt;/code&gt;其中，&lt;code&gt;${#A[0]}&lt;/code&gt;可以得到：1，即数组A的第一个元素(a)的长度； 同理，&lt;code&gt;${#A[3]}&lt;/code&gt;可以得到: 3, 即数组A的第4个元素(def)的长度。&lt;/p&gt;
+&lt;h4 id="数组元素的重新赋值"&gt;数组元素的重新赋值&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;A[3]=xyz&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id="作用"&gt;$(())作用&lt;/h2&gt;
+&lt;p&gt;$(())是用来作整数运算的。&lt;/p&gt;
+&lt;p&gt;在bash中， $(())的整数运算符号大致有这些：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;+- * / #分别为&amp;quot;加、减、乘、除&amp;quot;。&lt;/li&gt;
+&lt;li&gt;% #余数运算,(模数运算)&lt;/li&gt;
+&lt;li&gt;&amp;amp; | ^ ! #分别为&amp;quot;AND、OR、XOR、NOT&amp;quot;运算。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例如：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-6"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-6"&gt;6&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-19-7"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-19-7"&gt;7&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#bb60d5"&gt;a&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;5; &lt;span style="color:#bb60d5"&gt;b&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;7; &lt;span style="color:#bb60d5"&gt;c&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;$((&lt;/span&gt; a &lt;span style="color:#666"&gt;+&lt;/span&gt; b &lt;span style="color:#666"&gt;*&lt;/span&gt; c &lt;span style="color:#007020;font-weight:bold"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;19&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;$((&lt;/span&gt; &lt;span style="color:#666"&gt;(&lt;/span&gt;a &lt;span style="color:#666"&gt;+&lt;/span&gt; b&lt;span style="color:#666"&gt;)/&lt;/span&gt;c &lt;span style="color:#007020;font-weight:bold"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;6&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;$((&lt;/span&gt; &lt;span style="color:#666"&gt;(&lt;/span&gt;a &lt;span style="color:#666"&gt;*&lt;/span&gt; b&lt;span style="color:#666"&gt;)&lt;/span&gt; &lt;span style="color:#666"&gt;%&lt;/span&gt; c &lt;span style="color:#007020;font-weight:bold"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在$(())中的变量名称， 可以在其前面加 $符号来替换， 也可以不用，如： &lt;code&gt;$(( $a + $b * $c ))&lt;/code&gt; 也可以得到19的结果。&lt;/p&gt;
+&lt;p&gt;此外，$(())还可作不同进制(如二进制、八进制、十六进制)的运算， 只是输出结果均为十进制的。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;echo $(( 16#2a ))&lt;/code&gt; 输出结果为：42，(16进制的2a)
+以一个实用的例子来看看吧 : 假如当前的umask是022,那么新建文件的权限即为：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-20-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-20-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;umask&lt;/span&gt; &lt;span style="color:#40a070"&gt;022&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;$ &lt;span style="color:#007020"&gt;echo&lt;/span&gt; &lt;span style="color:#4070a0"&gt;&amp;#34;obase=8; &lt;/span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;$((&lt;/span&gt; &lt;span style="color:#40a070"&gt;8#666&lt;/span&gt; &lt;span style="color:#666"&gt;&amp;amp;&lt;/span&gt; &lt;span style="color:#666"&gt;(&lt;/span&gt;&lt;span style="color:#40a070"&gt;8#777&lt;/span&gt; &lt;span style="color:#666"&gt;^&lt;/span&gt; &lt;span style="color:#40a070"&gt;8#&lt;/span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;$(&lt;/span&gt;&lt;span style="color:#007020"&gt;umask&lt;/span&gt;&lt;span style="color:#007020;font-weight:bold"&gt;)&lt;/span&gt;&lt;span style="color:#666"&gt;)&lt;/span&gt; &lt;span style="color:#007020;font-weight:bold"&gt;))&lt;/span&gt;&lt;span style="color:#4070a0"&gt;&amp;#34;&lt;/span&gt; | bc
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#40a070"&gt;644&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;事实上，单纯用(())也可以重定义变量值，或作 testing：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-21-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-21-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;a&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;5; &lt;span style="color:#666"&gt;((&lt;/span&gt;a++&lt;span style="color:#666"&gt;))&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#可将$a 重定义为6&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;a&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;5; &lt;span style="color:#666"&gt;((&lt;/span&gt;a--&lt;span style="color:#666"&gt;))&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#可将$a 重定义为4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#bb60d5"&gt;a&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;5; &lt;span style="color:#bb60d5"&gt;b&lt;/span&gt;&lt;span style="color:#666"&gt;=&lt;/span&gt;7; &lt;span style="color:#666"&gt;((&lt;/span&gt;a&amp;lt; b&lt;span style="color:#666"&gt;))&lt;/span&gt; &lt;span style="color:#60a0b0;font-style:italic"&gt;#会得到0 (true)返回值。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;Note:使用(())作整数测试时， 请不要跟[]的整数测试搞混乱了。&lt;/p&gt;
+&lt;/blockquote&gt;</description></item></channel></rss>
