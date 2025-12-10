@@ -4425,12 +4425,23 @@ the options specified using the non-subdir variants.
 &lt;p&gt;&lt;a href="https://blog.csdn.net/ly890700/article/details/52800734"&gt;https://blog.csdn.net/ly890700/article/details/52800734&lt;/a&gt; makefile call函数&lt;/p&gt;
 &lt;/blockquote&gt;</description></item><item><title>如何获取跨系统调用的函数调用栈</title><link>/post/os/linux-kernel/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E8%B7%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</link><pubDate>Wed, 10 Dec 2025 10:50:18 +0800</pubDate><author>yuanye.ma@qq.com (Yuanye Ma)</author><guid>/post/os/linux-kernel/%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96%E8%B7%A8%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88/</guid><description>&lt;p&gt;在进行功能调试或者问题定位时，经常需要找一下哪里触发的系统调用，并跟踪一下系统调用过程。&lt;/p&gt;
 &lt;p&gt;一种方法是使用&lt;code&gt;simpleperf&lt;/code&gt; ：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;simpleperf record -g -o &amp;lt;path_to_perf.data&amp;gt; -- &amp;lt;path_to_exe_with_debuginfo&amp;gt;
-python3 &amp;lt;path-to-ndk&amp;gt;/android-ndk-r27c/simpleperf/gecko_profile_generator.py \
--i &amp;lt;path_to_perf.data&amp;gt; \
---symfs &amp;lt;path_to_symbols&amp;gt; \
---kallsyms &amp;lt;path_to_System.map&amp;gt; | gzip &amp;gt; &amp;lt;path_to_perf.json.gz&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;浏览器打开&lt;code&gt;https://profiler.firefox.com/&lt;/code&gt;将生成的&lt;code&gt;add_client.perf.json.gz&lt;/code&gt;拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;
+&lt;table style="border-spacing:0;padding:0;margin:0;border:0;"&gt;&lt;tr&gt;&lt;td style="vertical-align:top;padding:0;margin:0;border:0;"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-1"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-1"&gt;1&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-2"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-2"&gt;2&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-3"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-3"&gt;3&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-4"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-4"&gt;4&lt;/a&gt;
+&lt;/span&gt;&lt;span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f" id="hl-0-5"&gt;&lt;a style="outline:none;text-decoration:none;color:inherit" href="#hl-0-5"&gt;5&lt;/a&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%"&gt;
+&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;simpleperf record -g -o &amp;lt;path_to_perf.data&amp;gt; -- &amp;lt;path_to_exe_with_debuginfo&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;python3 &amp;lt;path-to-ndk&amp;gt;/android-ndk-r27c/simpleperf/gecko_profile_generator.py &lt;span style="color:#4070a0;font-weight:bold"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0;font-weight:bold"&gt;&lt;/span&gt; -i &amp;lt;path_to_perf.data&amp;gt; &lt;span style="color:#4070a0;font-weight:bold"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0;font-weight:bold"&gt;&lt;/span&gt; --symfs &amp;lt;path_to_symbols&amp;gt; &lt;span style="color:#4070a0;font-weight:bold"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#4070a0;font-weight:bold"&gt;&lt;/span&gt; --kallsyms &amp;lt;path_to_System.map&amp;gt; | gzip &amp;gt; &amp;lt;path_to_perf.json.gz&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;浏览器打开&lt;code&gt;https://profiler.firefox.com/&lt;/code&gt;将生成的&lt;code&gt;add_client.perf.json.gz&lt;/code&gt;拖进去，就可以查看调用树、火焰图、栈图等进一步分析函数调用关系。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;参考另一篇文章 尝试通过一个demo分析binder的执行流程 的使用simpleperf抓取通讯双方的函数调用栈小节&lt;/p&gt;
 &lt;/blockquote&gt;
